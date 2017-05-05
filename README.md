@@ -1,6 +1,6 @@
 libWetHair
 ================
-libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under Apache v2.
+libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under Clear BSD License academic and non-commercial use (other licenses may be obtained by contacting the faculty of the Columbia Computer Graphics Group or a Columbia University licensing officer).
 
 It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our project page for more details: http://www.cs.columbia.edu/cg/liquidhair/ ). This code base contains the following parts:
 
@@ -70,39 +70,3 @@ BibTex Citation
     year={2017},
     doi={10.1145/3072959.3073630},
   }
-
-USAGE
-----------------------
-
-   ./libWetHair  [-j <string>] [-o <integer>] [-d <boolean>] [-g <integer>]
-                 [-p <boolean>] [-s <string>] [--] [--version] [-h]
-
-
-Where:
-
-   -j <string>,  --initfile <string>
-     Binary file to load simulation state from for initialization
-
-   -o <integer>,  --readableoutput <integer>
-     readable file to save simulation state to
-
-   -d <boolean>,  --display <boolean>
-     Run the simulation with display enabled if 1, without if 0
-
-   -g <integer>,  --generate <integer>
-     Generate PNG if 1, not if 0
-
-   -p <boolean>,  --paused <boolean>
-     Begin the simulation paused if 1, running if 0
-
-   -s <string>,  --scene <string>
-     Simulation to run; an xml scene file
-
-   --,  --ignore_rest
-     Ignores the rest of the labeled arguments following this flag.
-
-   --version
-     Displays version information and exits.
-
-   -h,  --help
-     Displays usage information and exits.
