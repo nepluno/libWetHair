@@ -116,10 +116,10 @@ void FluidDragForce<2>::preCompute( const VectorXs& x, const VectorXs& v, const 
       scalar l = fabs(mathutils::cross2(dv, dir) / ldv) * (1.0 - prop) + prop;
       scalar radius = radii_V(j);
       
-      scalar D = 3.0 * M_PI * l * sqrt(len * radius * 2.0);
+      scalar D = 6.0 * M_PI * l;
       
-      const scalar b0 = visc * D;
-      const scalar b1 = visc * beta * sqrt(D) * rho;
+      const scalar b0 = visc * D * sqrt(len * radius * 2.0) * 0.5;
+      const scalar b1 = len * radius * beta * sqrt(D) * rho;
       
       scalar ndv2 = dv.squaredNorm();
       scalar ndv = mathutils::softsqrt(ndv2, 1.0 / 200.0);
