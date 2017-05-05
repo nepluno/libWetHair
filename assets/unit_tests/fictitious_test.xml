@@ -1,0 +1,77 @@
+<scene dim="3">
+  <simtype type="DiscreteElasticRods"/>
+  
+  <description text="Two strands hanging."/>
+  <camera dist="14.5613" radius="4.98025" fov="40">
+    <rotation x="0" y="0" z="0" w="1"/>
+    <center x="0" y="0" z="0"/>
+  </camera>
+  <duration time="1.0"/>
+  <integrator type="preconditioned-compliant-euler" maxnewton="0" criterion="1e-7"/>
+
+  <liquid epsilon="1.0" rho="0.95" sigma="20.6" H="1.0" beta="0.0" type="cylinder" theta="1.0471975512" h="0.001" viscosity="0.0" compute="bridge" cell="0.05" drippingmiddle="0" drippingnear="0" dt="0.001" hairstep="1" swestep="1" gravityy="0.0"/>
+
+  <fluidsim ox="-6.0" oy="-6.0" oz="-0.75" width="12.0" gx="96" gy="96" gz="12" init="none" rt="0.5" drawgrid="0" lsv="0.5">
+    <boundary type="capsule" cx="0.0" cy="0.0" cz="0.0" rx="0" ry="1" rz="0" rw="1.57079632679" radius="0.5" halflength="0.5" inside="0"/>
+  </fluidsim>
+
+  <StrandParameters>
+    <radius value="0.005"/>
+    <youngsModulus value="3.4e9"/>
+    <shearModulus value="5.4e7"/>
+    <density value="1.3"/>
+    <viscosity value="5e7"/>
+    <baseRotation value="0.0"/>  
+    <accumulateWithViscous value="1"/>
+    <accumulateViscousOnlyForBendingModes value="0"/>
+  </StrandParameters>
+
+  <script updatesdf="1" target="root" type="rotate" x="0" y="0" z="1" w="6.28318530718" start="0.0" end="1.0" i="0" global="1"/>    
+  <script updatesdf="1" target="solid" type="rotate" x="0" y="0" z="1" w="6.28318530718" start="0.0" end="1.0" i="0" global="1"/>      
+  
+  <StrandMaterialForces params="0" flow="shallow">  
+    <particle x="0.0 -0.500000000000000 0.0" v="0.0 0.0 0.0"        eta="0.1" fixed="1"/>
+    <particle x="0.0 -0.614634000000000 0.0" v="0.0 0.0 0.0"  eta="0.1" fixed="1"/>
+    <particle x="0.0 -0.729268000000000 0.0" v="0.0 0.0 0.0"  eta="0.08"  fixed="1"/>
+    <particle x="0.0 -0.843902000000000 0.0" v="0.0 0.0 0.0"  eta="0.04"  fixed="1"/>
+    <particle x="0.0 -0.9585370000000000 0.0" v="0.0 0.0 0.0"  eta="0.01" fixed="1"/>
+    <particle x="0.0 -1.0731710000000000 0.0" v="0.0 0.0 0.0"  eta="0.0" fixed="1"/>
+    <particle x="0.0 -1.187805000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.302439000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.417073000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.531710000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.646340000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.760980000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.875610000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -1.990240000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"  fixed="1"/>
+    <particle x="0.0 -2.10488000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.21951000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.33415000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.44878000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.56341000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.67805000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.79268000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -2.90732000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.02195000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.13659000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.25122000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.36585000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.48049000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.59512000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.70976000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.82439000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -3.93902000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.05366000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.16829000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.28293000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.39756000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.51220000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.62683000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.74146000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.85610000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -4.97073000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -5.08537000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+    <particle x="0.0 -5.20000000000000 0.0" v="0.0 0.0 0.0"  eta="0.0"   fixed="1"/>
+  </StrandMaterialForces>
+
+</scene>
