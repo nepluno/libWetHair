@@ -1,6 +1,6 @@
 libWetHair
 ================
-libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under Clear BSD License academic and non-commercial use (other licenses may be obtained by contacting the faculty of the Columbia Computer Graphics Group or a Columbia University licensing officer).
+libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under Clear BSD License for academic and non-commercial use (other licenses may be obtained by contacting the faculty of the Columbia Computer Graphics Group or a Columbia University licensing officer).
 
 It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our project page for more details: http://www.cs.columbia.edu/cg/liquidhair/ ). This code base contains the following parts:
 
