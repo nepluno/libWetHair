@@ -1,0 +1,11 @@
+*/frame*.*
+build*/*
+xmlgen/build*/*
+*.mat
+pngs/*
+unit_tests/*
+*.png
+*.bin
+log*.*
+.DS_Store
+*.off
