@@ -701,7 +701,7 @@ void TwoDSceneRenderer<2>::renderParticleSimulation( const TwoDScene<2>& scene )
   glBindBufferARB(GL_ARRAY_BUFFER, m_vertex_hair_core);
   glVertexPointer(3, GL_FLOAT, 0, NULL);
   
-  glDrawElements(GL_TRIANGLES, (int) m_cylinder_elements.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_QUADS, (int) m_cylinder_elements.size(), GL_UNSIGNED_INT, 0);
   
   // render hair flow
   glColor4d(liquid_color(0), liquid_color(1), liquid_color(2), 0.2);
@@ -710,7 +710,7 @@ void TwoDSceneRenderer<2>::renderParticleSimulation( const TwoDScene<2>& scene )
   glBindBufferARB(GL_ARRAY_BUFFER, m_vertex_hair_flow);
   glVertexPointer(3, GL_FLOAT, 0, NULL);
   
-  glDrawElements(GL_TRIANGLES, (int) m_cylinder_elements.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_QUADS, (int) m_cylinder_elements.size(), GL_UNSIGNED_INT, 0);
   
   glBindBufferARB(GL_ARRAY_BUFFER, 0);
   glDisableClientState(GL_VERTEX_ARRAY);
