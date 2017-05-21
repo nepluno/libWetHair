@@ -128,7 +128,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwAddVarRW(bar, "dripping height multiplier", TW_TYPE_DOUBLE, &parameters.dripping_radius_multiplier, " min=0.0 max=1.0 step=0.01 help='Multiplier on the maximal height of reduced liquid held by hairs' ");
   TwAddVarRW(bar, "bulk threshold multiplier", TW_TYPE_DOUBLE, &parameters.bulk_threshold_multiplier, " min=0.0 max=1.0 step=0.01 help='Multiplier on the threshold to differentiate bulk liquid and reduced one' ");
   TwAddVarRW(bar, "capturing rate", TW_TYPE_DOUBLE, &parameters.absorptionRate, " min=0.0 max=0.1 step=0.001 help='Rate for capturing liquid from hairs (s)' ");
-  TwAddVarRW(bar, "air viscosity", TW_TYPE_DOUBLE, &parameters.viscosity, " min=0.0 max=0.01 step=0.0001 help='Air viscosity (dyn·s/cm^2)' ");
+  TwAddVarRW(bar, "air viscosity", TW_TYPE_DOUBLE, &parameters.airviscosity, " min=0.0 max=0.01 step=0.0001 help='Air viscosity (dyn·s/cm^2)' ");
   TwAddVarRW(bar, "porosity multiplier", TW_TYPE_DOUBLE, &parameters.drag_radius_multiplier, " min=0.0 max=30.0 step=0.01 help='Multiplier on the porosity term of drag force applied onto liquid (clamped into [0, 1]).' ");
   TwAddVarRW(bar, "hair-hair cohesion multiplier", TW_TYPE_DOUBLE, &parameters.hair_hair_cohesion_multiplier, " min=0.0 max=10.0 step=0.001 help='Multiplier on the hair-hair cohesion effect' ");
   TwAddVarRW(bar, "hair-solid cohesion multiplier", TW_TYPE_DOUBLE, &parameters.hair_solid_cohesion_multiplier, " min=0.0 max=10.0 step=0.001 help='Multiplier on the hair-solid cohesion effect' ");
