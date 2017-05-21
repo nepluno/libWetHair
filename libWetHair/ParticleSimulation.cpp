@@ -135,7 +135,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwAddVarRW(bar, "hair-hair radius multiplier", TW_TYPE_DOUBLE, &parameters.radius_multiplier, " min=0.0 max=10.0 step=0.01 help='Multiplier for hair radius used in hair-hair collision' ");
   TwAddVarRW(bar, "hair-solid radius multiplier", TW_TYPE_DOUBLE, &parameters.radius_multiplier_planar, " min=0.0 max=10.0 step=0.01 help='Multiplier for hair radius used in hair-solid collision' ");
   TwAddVarRW(bar, "hair-hair collision", TW_TYPE_DOUBLE, &parameters.collision_stiffness, " min=0.0 max=50000.0 step=100 help='Stiffness for hair-hair collision' ");
-  TwAddVarRW(bar, "hair-solid collision", TW_TYPE_DOUBLE, &parameters.collision_stiffness, " min=0.0 max=50000.0 step=100 help='Stiffness for hair-solid collision' ");
+  TwAddVarRW(bar, "hair-solid collision", TW_TYPE_DOUBLE, &parameters.collision_stiffness_planar, " min=0.0 max=50000.0 step=100 help='Stiffness for hair-solid collision' ");
   TwAddVarRW(bar, "hair-hair damping", TW_TYPE_DOUBLE, &parameters.damping_multiplier, " min=0.0 max=1.0 step=0.01 help='Damping for hair-hair collision' ");
   TwAddVarRW(bar, "hair-solid damping", TW_TYPE_DOUBLE, &parameters.damping_multiplier_planar, " min=0.0 max=1.0 step=0.01 help='Damping for hair-solid collision' ");
   TwAddVarRW(bar, "hair-solid friction", TW_TYPE_DOUBLE, &parameters.friction_multiplier_planar, " min=0.0 max=1.0 step=0.01 help='Friction for hair-solid collision' ");
@@ -172,6 +172,11 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwType massmodeType = TwDefineEnum("MassModeType", massmodeEV, MUM_COUNT);
   
   TwAddVarRW(bar, "Reduced-Flow Update Mode", massmodeType, &parameters.mass_update_mode, " help='Modes with different variables updated during the advection of reduced-liquid. Update Momentum: update both liquid mass and momentum of hairs; Mass-Only: only update liquid mass; Velocity-Scaling: directly divide hair velocity with new mass; Constant Mass: never update liquid mass on hairs or momentum of hairs' ");
+  
+  TwAddVarRW(bar, "Render Grid", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_grid, " help='Turn On to Render Grid' ");
+  TwAddVarRW(bar, "Render Particles", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_particles, " help='Turn On to Render Particles' ");
+  TwAddVarRW(bar, "Render Fluid Velocities", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_velocities, " help='Turn On to Render Fluid Velocities' ");
+  TwAddVarRW(bar, "Render Solid Objects", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_boundaries, " help='Turn On to Render Solid Objects' ");
   
   
 }

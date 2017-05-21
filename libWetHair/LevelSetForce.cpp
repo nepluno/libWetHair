@@ -465,7 +465,7 @@ bool LevelSetForce<DIM>::isContained( int pidx )
 template<>
 void LevelSetForce<2>::postStepScene(const scalar& dt )
 {
-  VectorXs& x = m_parent->getX();
+/*  VectorXs& x = m_parent->getX();
   
   const HairFlow<2>* flow = m_parent->getFilmFlows()[m_hidx];
   FluidSim2D* fluid2d = (FluidSim2D*) m_fluidsim;
@@ -487,13 +487,13 @@ void LevelSetForce<2>::postStepScene(const scalar& dt )
       
       x.segment<2>( m_parent->getDof(flow_particles[j]) ) -= phi_value*normal;
     }
-  }
+  }*/
 }
 
 template<>
 void LevelSetForce<3>::postStepScene(const scalar& dt )
 {
-  VectorXs& x = m_parent->getX();
+/*  VectorXs& x = m_parent->getX();
   
   const HairFlow<3>* flow = m_parent->getFilmFlows()[m_hidx];
   FluidSim3D* fluid3d = (FluidSim3D*) m_fluidsim;
@@ -515,7 +515,7 @@ void LevelSetForce<3>::postStepScene(const scalar& dt )
       
       x.segment<3>( m_parent->getDof(flow_particles[j]) ) -= phi_value*normal;
     }
-  }
+  }*/
 }
 
 template<>
