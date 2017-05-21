@@ -453,7 +453,6 @@ void TwoDSceneRenderer<3>::renderParticleSimulation( const TwoDScene<3>& scene )
   
   assert( renderingutils::checkGLErrors() );
   const FluidSim3D* sim = (const FluidSim3D*) scene.getFluidSim();
-  auto& particles = sim->get_particles();
   
   if(sim) {
     if(m_draw_particles) {
@@ -477,6 +476,19 @@ void TwoDSceneRenderer<3>::renderParticleSimulation( const TwoDScene<3>& scene )
       glLineWidth(1);
       draw_grid3d(sim->get_origin(), sim->cellsize(), sim->get_ni(), sim->get_nj(), sim->get_nk());
       glDisable(GL_BLEND);
+    }
+    
+    if(m_draw_velocities) {
+      glEnable(GL_BLEND);
+      glColor4d(1,0,0,0.25);
+      Vector3s vd;
+      m_dc->getCamera().getViewDir(vd);
+      for(int k = 0; k < sim->get_nk(); ++k) for(int j = 0;j < sim->get_nj(); ++j) for(int i = 0; i < sim->get_ni(); ++i) {
+        Vector3s pos = Vector3s((i+0.5)*sim->cellsize(),(j+0.5)*sim->cellsize(),(k+0.5)*sim->cellsize()) + sim->get_origin();
+        draw_arrow3d(pos, pos + 0.01 * sim->get_velocity(pos), vd, 0.1 * sim->cellsize());
+      }
+      glDisable(GL_BLEND);
+      assert( renderingutils::checkGLErrors() );
     }
     
     if(m_draw_boundaries) {
