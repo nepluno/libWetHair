@@ -160,8 +160,13 @@ void BendingForce<ViscousT>::accumulateIntegrationVars(
             unsigned idx_tildek = tildek_start + 2 * (121 * (vtx - 1));
             for(int r = 0; r < 11; ++r) {
                 for(int s = 0; s < 11; ++s){
+                  if(r == 3 || r == 7 || s == 3 || s == 7) {
+                    tildeK[ idx_tildek + r * 11 + s] = Triplets( dfirst + r, dfirst + s, hessKappa.first(r, s) * b * ilen * (kappa(0) - kappaBar(0)) );
+                    tildeK[ idx_tildek + r * 11 + s + 121] = Triplets( dfirst + r, dfirst + s, hessKappa.second(r, s) * b * ilen * (kappa(1) - kappaBar(1)) );
+                  } else {
                     tildeK[ idx_tildek + r * 11 + s] = Triplets( dfirst + r, dfirst + s, hessKappa.first(r, s) * weight0 );
                     tildeK[ idx_tildek + r * 11 + s + 121] = Triplets( dfirst + r, dfirst + s, hessKappa.second(r, s) * weight1 );
+                  }
                 }
             }
         }

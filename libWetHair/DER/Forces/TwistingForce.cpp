@@ -144,7 +144,11 @@ void TwistingForce<ViscousT>::accumulateIntegrationVars(
             unsigned idx_tildek = tildek_start + 121 * (vtx - 1);
             for(int r = 0; r < 11; ++r) {
                 for(int s = 0; s < 11; ++s){
+                  if(r == 3 || r == 7 || s == 3 || s == 7) {
+                    tildeK[ idx_tildek + r * 11 + s] = Triplets( dfirst + r, dfirst + s, hessTwist(r, s) * kt * ilen * (twist - undeformedTwist));
+                  } else {
                     tildeK[ idx_tildek + r * 11 + s] = Triplets( dfirst + r, dfirst + s, hessTwist(r, s) * weight);
+                  }
                 }
             }
         }
