@@ -128,6 +128,8 @@ void TwoDSceneXMLParser::loadScripts( rapidxml::xml_node<>* node, std::vector<Sc
       else if(handlertype == "root") scr.target = Script::ROOT;
       else if(handlertype == "solid") scr.target = Script::SOLID;
       else if(handlertype == "source") scr.target = Script::SOURCE;
+      else if(handlertype == "curlradius") scr.target = Script::CURLRADIUS;
+      else if(handlertype == "curldensity") scr.target = Script::CURLDENSITY;
       else if(handlertype == "all") scr.target = Script::ALL;
       else
       {
@@ -2564,6 +2566,7 @@ void TwoDSceneXMLParser::loadStrandParticleEdges( rapidxml::xml_node<>* node, Tw
           exit(1);      
       }
       scene.setPosition( vtx, pos );
+      particle_pos.push_back(pos);
       
       // Extract the particle's initial velocity
       vel.setZero();
@@ -2625,6 +2628,7 @@ void TwoDSceneXMLParser::loadStrandParticleEdges( rapidxml::xml_node<>* node, Tw
     particle_state_vec.push_back( particle_state );
 
     scene.insertForce( new StrandForce( &scene, particle_indices, paramsIndex, globalStrandID++ ) );
+    scene.insertStrandEquilibriumParameters( new StrandEquilibriumParameters( particle_pos, 0., 0., 0., 0., false ) );
   }
   
   for( rapidxml::xml_node<>* nd = node->first_node("ParameterizedStrand"); nd; nd = nd->next_sibling("ParameterizedStrand") )
@@ -2927,6 +2931,7 @@ void TwoDSceneXMLParser::loadStrandParticleEdges( rapidxml::xml_node<>* node, Tw
     particle_state_vec.push_back( particle_state );
     
     scene.insertForce( new StrandForce( &scene, particle_indices, paramsIndex, globalStrandID++ ) );
+    scene.insertStrandEquilibriumParameters( new StrandEquilibriumParameters( strand_vertices, curl_radius, curl_density, dL, dL, true ) );
   }
 
   scene.computeMassesAndRadiiFromStrands();

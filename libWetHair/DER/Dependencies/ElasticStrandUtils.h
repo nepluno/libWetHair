@@ -125,8 +125,7 @@ Vec3 orthonormalParallelTransport( const Vec3& u, const Vec3& t0, const Vec3& t1
 
 void genCurlyHair( const Vec3& initnorm, const Vec3& startpoint, const double& dL, const int& nv, std::vector<Vec3>& vertices, double curl_radius, double curl_density, double root_length );
 
-void updateCurlyHair( const Vec3& initnorm, const double& dL, std::vector<Vec3>& vertices, double curl_radius, double curl_density, double root_length );
-
+void updateCurlyHair( const double& dL, std::vector<Vec3>& vertices, double curl_radius, double curl_density, double root_length );
 /**
  * \brief Finds an arbitrary unit vector orthogonal to u
  *

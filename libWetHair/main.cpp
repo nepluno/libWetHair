@@ -521,6 +521,15 @@ void keyboard( unsigned char key, int x, int y )
   {
     g_should_dump_state = true;
   }
+  else if( key == 'g' || key == 'G')
+  {
+    int current_step = (int) g_executable_simulation->getCurrentFrame();
+    int sdiv = g_dump_png ? g_dump_png : 1;
+    std::stringstream oss;
+    oss << g_short_file_name << "/frame" << std::setw(5) << std::setfill('0') << (current_step / sdiv) << ".png";
+    dumpPNG(oss.str());
+    oss.clear();
+  }
   assert( renderingutils::checkGLErrors() );
 }
 

@@ -47,8 +47,32 @@
 #include "Dependencies/ElasticStrandUtils.h"
 #include <math.h> // exp 
 
-// -0.021586124150231 gives exactly one for max, and ~0.02 for min, instead of [~0.04, ~1.02]
+struct StrandEquilibriumParameters
+{
+  StrandEquilibriumParameters(const std::vector<Vec3>& vertices,
+                              scalar curl_radius,
+                              scalar curl_density,
+                              scalar dL,
+                              scalar root_length,
+                              scalar valid):
+  m_vertices(vertices),
+  m_curl_radius(curl_radius),
+  m_curl_density(curl_density),
+  m_dL(dL),
+  m_root_length(root_length),
+  m_valid (valid),
+  m_dirty (false) {}
+  
+  mutable std::vector<Vec3> m_vertices;
+  mutable double m_curl_radius;
+  mutable double m_curl_density;
+  mutable double m_dL;
+  mutable double m_root_length;
+  mutable bool m_valid;
+  mutable bool m_dirty;
+};
 
+// -0.021586124150231 gives exactly one for max, and ~0.02 for min, instead of [~0.04, ~1.02]
 struct StrandParameters
 {
   StrandParameters( 

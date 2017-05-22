@@ -305,6 +305,9 @@ void WetHairCore<DIM>::stepSystem()
         t0 = t1;
       }
       
+      std::cout << "[Ryoichi Ando's correction]" << std::endl;
+      m_scene->getFluidSim()->correct(substep);
+      
       t0 = timingutils::seconds();
       
       // 10. transfer the velocity on grid back to the particles with APIC (Sec. 4.7).

@@ -626,9 +626,6 @@ void TwoDScene<DIM>::advectFluidSim(const scalar& dt)
   
   std::cout << "[ADV: passively advect particles]" << std::endl;
   m_fluid_sim->advect_particles(dt);
-  
-  std::cout << "[ADV: Ryoichi Ando's correction]" << std::endl;
-  m_fluid_sim->correct(dt);
 }
 
 template<int DIM>
@@ -1101,6 +1098,32 @@ void TwoDScene<DIM>::applyScript(const scalar& dt)
       m_v.segment<DIM>( getDof( i ) ) = (trans_x0.segment<DIM>(0) - xstar) / dt;
     }
   }
+  
+  if(DIM == 3 && !m_massSpringSim) {
+    int nstrand = m_strandEquilibriumParameters.size();
+    for(int i = 0; i < nstrand; ++i)
+    {
+      if(!m_strandEquilibriumParameters[i] || !m_strandEquilibriumParameters[i]->m_valid || !m_strandEquilibriumParameters[i]->m_dirty) continue;
+      
+      updateCurlyHair(m_strandEquilibriumParameters[i]->m_dL,
+                      m_strandEquilibriumParameters[i]->m_vertices,
+                      m_strandEquilibriumParameters[i]->m_curl_radius,
+                      m_strandEquilibriumParameters[i]->m_curl_density,
+                      m_strandEquilibriumParameters[i]->m_root_length);
+      
+      int nverts = (int) m_strandEquilibriumParameters[i]->m_vertices.size();
+      VecX dof_restshape(nverts * 4 - 1);
+      dof_restshape.setZero();
+      
+      for(int j = 0; j < nverts; ++j)
+      {
+        dof_restshape.segment<3>(j * 4) = m_strandEquilibriumParameters[i]->m_vertices[j];
+      }
+      m_strands[i]->updateRestShape( dof_restshape );
+      
+      m_strandEquilibriumParameters[i]->m_dirty = false;
+    }
+  }
 }
 
 template<int DIM>
@@ -1353,6 +1376,12 @@ void TwoDScene<DIM>::insertStrandParameters( StrandParameters* newparams )
 }
 
 template<int DIM>
+void TwoDScene<DIM>::insertStrandEquilibriumParameters( StrandEquilibriumParameters* newparams )
+{
+  m_strandEquilibriumParameters.push_back(newparams);
+}
+
+template<int DIM>
 scalar TwoDScene<DIM>::computeKineticEnergy() const
 {
   return computeHairParticleKineticEnergy() + computeLiquidParticleKineticEnergy();
@@ -1414,6 +1443,14 @@ StrandParameters* TwoDScene<DIM>::getStrandParameters( const int index )
   assert( 0 <= index );
   assert( index < m_strandParameters.size() );
   return m_strandParameters[index];
+}
+
+template<int DIM>
+StrandEquilibriumParameters* TwoDScene<DIM>::getStrandEquilibriumParameters( const int index )
+{
+  assert( 0 <= index );
+  assert( index < m_strandEquilibriumParameters.size() );
+  return m_strandEquilibriumParameters[index];
 }
 
 template<int DIM>

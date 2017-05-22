@@ -84,8 +84,6 @@ struct Particle
   Vectors<DIM> v;
   
   Vectors<DIM> buf0;
-  Vectors<DIM> buf1;
-  Matrixs<DIM> buf2;
   
   Matrixs<DIM> c;
   

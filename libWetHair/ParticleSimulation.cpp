@@ -176,9 +176,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwAddVarRW(bar, "Render Grid", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_grid, " help='Turn On to Render Grid' ");
   TwAddVarRW(bar, "Render Particles", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_particles, " help='Turn On to Render Particles' ");
   TwAddVarRW(bar, "Render Fluid Velocities", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_velocities, " help='Turn On to Render Fluid Velocities' ");
-  TwAddVarRW(bar, "Render Solid Objects", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_boundaries, " help='Turn On to Render Solid Objects' ");
-  
-  
+  TwAddVarRW(bar, "Render Solid Objects", TW_TYPE_BOOL8, &m_scene_renderer->m_draw_boundaries, " help='Turn On to Render Solid Objects' ");  
 }
 
 template<int DIM>
@@ -522,6 +520,36 @@ bool ParticleSimulation<DIM>::stepScript( const scalar& dt )
     if(current_time >= script.start && current_time + dt <= script.end)
     {
       switch (script.target) {
+        case Script::CURLRADIUS:
+        {
+          scalar dx = script.v(0);
+          scalar vel = 0;
+          if(script.func == Script::CUBIC) {
+            vel = cubic_ease_function(current_time + dt, script.start, script.end, script.start + script.ease_start, script.end - script.ease_end, dx);
+          } else {
+            std::cout << "UNIMPLEMENTED SCRIPT TYPE [" << script.type << "]!" << std::endl;
+          }
+          StrandEquilibriumParameters* parameter = m_scene->getStrandEquilibriumParameters( script.index );
+          if(!parameter || !parameter->m_valid) break;
+          parameter->m_curl_radius += vel * dt;
+          parameter->m_dirty = true;
+        }
+          break;
+        case Script::CURLDENSITY:
+        {
+          scalar dx = script.v(0);
+          scalar vel = 0;
+          if(script.func == Script::CUBIC) {
+            vel = cubic_ease_function(current_time + dt, script.start, script.end, script.start + script.ease_start, script.end - script.ease_end, dx);
+          } else {
+            std::cout << "UNIMPLEMENTED SCRIPT TYPE [" << script.type << "]!" << std::endl;
+          }
+          StrandEquilibriumParameters* parameter = m_scene->getStrandEquilibriumParameters( script.index );
+          if(!parameter || !parameter->m_valid) break;
+          parameter->m_curl_density += vel * dt;
+          parameter->m_dirty = true;
+        }
+          break;
         case Script::CAMERA:
         {
           switch (script.type) {

@@ -75,6 +75,8 @@ struct Script
     ROOT,
     SOLID,
     SOURCE,
+    CURLRADIUS,
+    CURLDENSITY,
     ALL,
     
     TARGET_COUNT
@@ -296,6 +298,8 @@ public:
   void insertForce( Force* newforce );
   
   void insertStrandParameters( StrandParameters* newparams );
+  
+  void insertStrandEquilibriumParameters( StrandEquilibriumParameters* newparams );
 
   void insertFilmFlow( HairFlow<DIM>* flow );
 
@@ -584,6 +588,8 @@ public:
   const Vectors<DIM>& getBoundingBoxMax() const;
   
   StrandParameters* getStrandParameters( const int index );
+  
+  StrandEquilibriumParameters* getStrandEquilibriumParameters( const int index );
 
   void updateStrandParamsTimestep( const scalar& dt );
   void updateStrandStartStates();
@@ -702,6 +708,7 @@ private:
   std::vector< std::unordered_set<int> > m_bp_particle_particle_pairs;
 
   std::vector< StrandParameters* > m_strandParameters;
+  std::vector< StrandEquilibriumParameters* > m_strandEquilibriumParameters;
   
   TwoDSceneSerializer<DIM> m_scene_serializer;
   const bool m_massSpringSim;

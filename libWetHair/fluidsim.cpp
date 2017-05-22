@@ -437,8 +437,6 @@ Particle<DIM>::Particle(const Vectors<DIM>& x_, const Vectors<DIM>& v_, const sc
 {
   c.setZero();
   buf0.setZero();
-  buf1.setZero();
-  buf2.setZero();
   
   bridges.clear();
 
@@ -450,8 +448,6 @@ Particle<DIM>::Particle(const Vectors<DIM>& x_, const Vectors<DIM>& v_, const sc
 {
   c.setZero();
   buf0.setZero();
-  buf1.setZero();
-  buf2.setZero();
   
   bridges.clear();
   
@@ -463,8 +459,6 @@ Particle<DIM>::Particle()
 {
   c.setZero();
   buf0.setZero();
-  buf1.setZero();
-  buf2.setZero();
   
   bridges.clear();
 
@@ -472,7 +466,7 @@ Particle<DIM>::Particle()
 
 template<int DIM>
 Particle<DIM>::Particle(const Particle<DIM>& p)
-: x(p.x), v(p.v), buf0(p.buf0), buf1(p.buf1), buf2(p.buf2), c(p.c), bridges(p.bridges), radii(p.radii), type(p.type), deceased(p.deceased), edge_idx(p.edge_idx), edge_alpha(p.edge_alpha), pressure(p.pressure), fresh(1.0)
+: x(p.x), v(p.v), buf0(p.buf0), c(p.c), bridges(p.bridges), radii(p.radii), type(p.type), deceased(p.deceased), edge_idx(p.edge_idx), edge_alpha(p.edge_alpha), pressure(p.pressure), fresh(1.0)
 {
 }
 

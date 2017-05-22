@@ -84,6 +84,15 @@ void Camera::operator = ( const Camera& that )
   clone(that);
 }
 
+void Camera::getViewDir( Eigen::Vector3d& viewdir ) const
+{
+  Eigen::Matrix3d r; // rotation matrix
+  r.setIdentity();
+  r = this->rotation_.toRotationMatrix();
+  Eigen::Vector3d dir( 0, 0, 1.0 );
+  viewdir = r * dir;
+}
+
 void
 Camera::getLookAt( Eigen::Vector3d& eye, Eigen::Vector3d& center, Eigen::Vector3d& up ) const
 {

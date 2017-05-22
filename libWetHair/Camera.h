@@ -58,6 +58,7 @@ public:
   explicit Camera ( Eigen::Quaterniond& rot, Eigen::Vector3d& center, const double& dist, const double& radius, const double& fov );
   void init( const Eigen::Vector3d& bmin, const Eigen::Vector3d& bmax );
   void clone ( const Camera& that );
+  void getViewDir( Eigen::Vector3d& viewdir ) const;
   void getLookAt( Eigen::Vector3d& eye, Eigen::Vector3d& center, Eigen::Vector3d& up ) const;
   void getEye( Eigen::Vector3d& eye ) const;
   void getPerspective( double& fov, double& zNear, double& zFar ) const;

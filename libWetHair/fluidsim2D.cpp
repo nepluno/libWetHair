@@ -950,20 +950,6 @@ void FluidSim2D::correct(scalar dt)
     }
   });
   
-  // Resample New Velocity
-  threadutils::thread_pool::ParallelFor(0, np, [&] (int n) {
-    Particle<2>& p = particles[n];
-    if(p.type != PT_LIQUID) return;
-  
-    p.buf1 = p.v;
-    p.buf2 = p.c;
-    
-    if(n % ryoichi_correction_step != ryoichi_correction_counter % ryoichi_correction_step) {
-      return;
-    }
-    
-    resample(p.buf0, p.buf1, p.buf2);
-  });
   
   // Update
   threadutils::thread_pool::ParallelFor(0, np, [&] (int n) {
@@ -975,8 +961,6 @@ void FluidSim2D::correct(scalar dt)
     }
     
     p.x = p.buf0;
-    p.v = p.buf1;
-    p.c = p.buf2;
   });
   
   m_sorter->sort(particles.size(), sorter_callback);
