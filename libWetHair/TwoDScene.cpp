@@ -729,6 +729,13 @@ void TwoDScene<DIM>::absorbReleaseParticleFlows(const scalar& dt, bool noabsorb,
   if(m_fluid_sim) {
     if(!noabsorb) m_fluid_sim->shareParticleWithHairs(m_x, dt);
     if(!nodripping) m_fluid_sim->transferLiquidToGridParticle(dt);
+    
+    if(!noabsorb || !nodripping) {
+      const int nflows = m_flows.size();
+      threadutils::thread_pool::ParallelFor(0, nflows, [&] (int i) {
+        m_flows[i]->postUpdateHairFlowHeight(dt);
+      });
+    }
   }
 }
 
