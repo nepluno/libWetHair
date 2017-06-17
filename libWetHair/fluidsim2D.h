@@ -232,6 +232,8 @@ public:
   
   virtual size_t crucial_grid_size() const;
   
+  virtual void apply_viscosity( scalar dt );
+  
 protected:
   
   int ryoichi_correction_counter;

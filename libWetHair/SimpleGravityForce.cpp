@@ -86,11 +86,20 @@ void SimpleGravityForce<3>::preCompute( const VectorXs& x, const VectorXs& v, co
   
   FluidSim3D* fluid3d = (FluidSim3D*) m_scene->getFluidSim();
   
-  tbb::parallel_for(0, np, 1, [&] (int i) {
-    const Vector3s& pos = x.segment<3>( m_scene->getDof( i ) ) - v.segment<3>( m_scene->getDof( i ) ) * dt;
-    const scalar gamma = fluid3d->getClampedLiquidPhiValue(pos);
-    m_buoyancy.segment<3>(i * 3) = fluid3d->get_pressure_gradient(pos) * gamma;
-  });
+  if(m_scene->viscositySolve()) {
+    const scalar rho_L = m_scene->getLiquidDensity();
+    tbb::parallel_for(0, np, 1, [&] (int i) {
+      const Vector3s& pos = x.segment<3>( m_scene->getDof( i ) ) - v.segment<3>( m_scene->getDof( i ) ) * dt;
+      const scalar gamma = fluid3d->getClampedLiquidPhiValue(pos);
+      m_buoyancy.segment<3>(i * 3) = (fluid3d->get_pressure_gradient(pos) - fluid3d->get_visc_impulse(pos) * rho_L) * gamma;
+    });
+  } else {
+    tbb::parallel_for(0, np, 1, [&] (int i) {
+      const Vector3s& pos = x.segment<3>( m_scene->getDof( i ) ) - v.segment<3>( m_scene->getDof( i ) ) * dt;
+      const scalar gamma = fluid3d->getClampedLiquidPhiValue(pos);
+      m_buoyancy.segment<3>(i * 3) = fluid3d->get_pressure_gradient(pos) * gamma;
+    });
+  }
 }
 
 template<int DIM>

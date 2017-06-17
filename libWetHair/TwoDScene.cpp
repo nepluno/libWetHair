@@ -94,6 +94,7 @@ use_ctcd(false),
 global_volume_control(true),
 individual_transfer(true),
 volume_summary(false),
+viscous_solve(false),
 mass_update_mode(MUM_MOMENTUM),
 gravity(0.0, -981.0, 0.0)
 {
@@ -643,6 +644,14 @@ void TwoDScene<DIM>::addGravityFluidSim(const scalar& dt)
 }
 
 template<int DIM>
+void TwoDScene<DIM>::viscousSolveFluidSim(const scalar& dt)
+{
+  if(!m_fluid_sim) return;
+  
+  m_fluid_sim->apply_viscosity(dt);
+}
+
+template<int DIM>
 void TwoDScene<DIM>::pressureSolveFluidSim(const scalar& dt)
 {
   if(!m_fluid_sim) return;
@@ -729,13 +738,6 @@ void TwoDScene<DIM>::absorbReleaseParticleFlows(const scalar& dt, bool noabsorb,
   if(m_fluid_sim) {
     if(!noabsorb) m_fluid_sim->shareParticleWithHairs(m_x, dt);
     if(!nodripping) m_fluid_sim->transferLiquidToGridParticle(dt);
-    
-    if(!noabsorb || !nodripping) {
-      const int nflows = m_flows.size();
-      threadutils::thread_pool::ParallelFor(0, nflows, [&] (int i) {
-        m_flows[i]->postUpdateHairFlowHeight(dt);
-      });
-    }
   }
 }
 
@@ -1863,6 +1865,12 @@ template<int DIM>
 void TwoDScene<DIM>::getAffectedForces(int icol, std::vector<Force*>& forces)
 {
   for( std::vector<Force*>::size_type i = 0; i < m_forces.size(); ++i ) if(m_forces[i]->isContained(icol)) forces.push_back(m_forces[i]);
+}
+
+template<int DIM>
+bool TwoDScene<DIM>::viscositySolve() const
+{
+  return m_parameters.viscous_solve;
 }
 
 template<int DIM>

@@ -105,6 +105,7 @@ public:
   Vector3s get_nodal_solid_phi_gradient(const Vector3s& position) const;
   Vector3s get_solid_velocity(const Vector3s& position) const;
   Vector3s get_pressure_gradient(const Vector3s& position) const;
+  Vector3s get_visc_impulse(const Vector3s& position) const;
   scalar get_pressure(const Vector3s& position) const;
   Vector3s get_hair_velocity(const Vector3s& position) const;
   Vector3s get_particle_velocity(const Vector3s& position) const;
@@ -155,6 +156,10 @@ public:
 
   virtual void correct(scalar dt);
   virtual void resample(Vector3s& p, Vector3s& u, Matrix3s& c);
+  
+  virtual void apply_viscosity( scalar dt );
+  
+  virtual void compute_viscosity_weights();
   
   virtual void shareParticleWithHairs( VectorXs& x, scalar dt );
   
@@ -293,6 +298,7 @@ protected:
   
   // Static geometry representation
   Array3s nodal_solid_phi;
+  Array3s cell_solid_phi;
   Array3s u_weights, v_weights, w_weights;
   Array3c u_valid, v_valid, w_valid;
   
@@ -306,6 +312,12 @@ protected:
   Array3c valid, old_valid;
   
   std::vector<FluidDragForce<3>*> drag_forces;
+  
+  //Data for viscosity solve
+  Array3s u_vol_liquid, v_vol_liquid, w_vol_liquid,
+  ex_vol_liquid, ey_vol_liquid, ez_vol_liquid, c_vol_liquid;
+  
+  Array3s u_visc_impulse, v_visc_impulse, w_visc_impulse;
   
   // Solver data
   robertbridson::PCGSolver<scalar> solver;

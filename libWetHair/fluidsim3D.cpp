@@ -55,6 +55,9 @@
 #include "sorter.h"
 #include "FluidDragForce.h"
 
+#include "volume_fractions.h"
+#include "viscosity3d.h"
+
 #include <fstream>
 #include <numeric>
 #include <iomanip>
@@ -68,6 +71,9 @@ using namespace mathutils;
 const static int MAX_BRIDGE_PER_EDGE = 64;
 
 void extrapolate(Array3s& grid, Array3s& old_grid, const Array3s& grid_weight, const Array3s& grid_liquid_weight, Array3c& valid, Array3c old_valid, const Vector3i& offset);
+void estimate_volume_fractions(Array3s& volumes,
+                               const Vector3s& start_centre, const scalar dx,
+                               const Array3s& phi, const Vector3s& phi_origin, const scalar phi_dx);
 
 FluidSim3D* g_fluid3d_iptr = NULL;
 
@@ -122,23 +128,26 @@ FluidSim3D::FluidSim3D(const Vector3s& origin_, scalar width, int ni_, int nj_, 
   u_weight_hair.resize(ni+1,nj,nk); u_valid.resize(ni+1,nj,nk); u_hair.resize(ni+1,nj,nk);
   u_particle.resize(ni+1, nj,nk); u_weight_particle.resize(ni+1,nj,nk);
   u_drag.resize(ni+1, nj,nk); u_weight_total.resize(ni+1, nj, nk);
-  u_pressure_grad.resize(ni+1,nj,nk); u_solid.resize(ni+1, nj, nk);
+  u_pressure_grad.resize(ni+1,nj,nk); u_solid.resize(ni+1, nj, nk); u_visc_impulse.resize(ni+1,nj,nk);
   
   v.resize(ni,nj+1,nk); temp_v.resize(ni,nj+1,nk); v_weights.resize(ni,nj+1,nk);
   v_weight_hair.resize(ni,nj+1,nk); v_valid.resize(ni,nj+1,nk); v_hair.resize(ni,nj+1,nk);
   v_particle.resize(ni, nj+1, nk); v_weight_particle.resize(ni,nj+1,nk);
   v_drag.resize(ni, nj+1, nk); v_weight_total.resize(ni, nj+1, nk);
-  v_pressure_grad.resize(ni, nj+1, nk); v_solid.resize(ni, nj+1, nk);
+  v_pressure_grad.resize(ni, nj+1, nk); v_solid.resize(ni, nj+1, nk); v_visc_impulse.resize(ni,nj+1,nk);
   
   w.resize(ni,nj,nk+1); temp_w.resize(ni,nj,nk+1); w_weights.resize(ni,nj,nk+1);
   w_weight_hair.resize(ni,nj,nk+1); w_valid.resize(ni,nj,nk+1); w_hair.resize(ni,nj,nk+1);
   w_particle.resize(ni, nj, nk+1); w_weight_particle.resize(ni,nj,nk+1);
   w_drag.resize(ni, nj, nk+1); w_weight_total.resize(ni, nj, nk+1);
-  w_pressure_grad.resize(ni, nj, nk+1); w_solid.resize(ni, nj, nk+1);
+  w_pressure_grad.resize(ni, nj, nk+1); w_solid.resize(ni, nj, nk+1); w_visc_impulse.resize(ni,nj,nk+1);
   
   u.set_zero();
   v.set_zero();
   w.set_zero();
+  u_visc_impulse.set_zero();
+  v_visc_impulse.set_zero();
+  w_visc_impulse.set_zero();
   u_pressure_grad.set_zero();
   v_pressure_grad.set_zero();
   w_pressure_grad.set_zero();
@@ -172,10 +181,19 @@ FluidSim3D::FluidSim3D(const Vector3s& origin_, scalar width, int ni_, int nj_, 
   temp_w.set_zero();
   
   nodal_solid_phi.resize(ni+1,nj+1,nk+1);
+  cell_solid_phi.resize(ni,nj,nk);
   valid.resize(ni+1, nj+1, nk+1);
   old_valid.resize(ni+1, nj+1, nk+1);
   liquid_phi.resize(ni, nj, nk);
   liquid_phi.assign(3*dx);
+  
+  c_vol_liquid.resize(ni, nj, nk, 0);
+  u_vol_liquid.resize(ni+1, nj, nk, 0);
+  v_vol_liquid.resize(ni, nj+1, nk, 0);
+  w_vol_liquid.resize(ni, nj, nk+1, 0);
+  ex_vol_liquid.resize(ni, nj+1, nk+1, 0);
+  ey_vol_liquid.resize(ni+1, nj, nk+1, 0);
+  ez_vol_liquid.resize(ni+1, nj+1, nk, 0);
   
   pressure.resize(ni * nj * nk, 0.0);
  
@@ -224,6 +242,15 @@ void FluidSim3D::update_boundary() {
       Vector3s pos(i*dx,j*dx,k*dx);
       Vector3s vel;
       nodal_solid_phi(i,j,k) = compute_phi_vel(pos + origin, vel);
+    }
+  });
+  
+  threadutils::thread_pool::ParallelFor(0, nk, [&] (int k) {
+    for(int j = 0; j < nj; ++j) for(int i = 0; i < ni; ++i) {
+      Vector3s pos_cell((i + 0.5)*dx,(j + 0.5)*dx,(k + 0.5)*dx);
+      Vector3s vel;
+      
+      cell_solid_phi(i,j,k) = compute_phi_vel(pos_cell + origin, vel);
     }
   });
   
@@ -1541,6 +1568,11 @@ Vector3s FluidSim3D::get_velocity(const Vector3s& position, const Array3s& u_, c
   return Vector3s(u_value, v_value, w_value);
 }
 
+Vector3s FluidSim3D::get_visc_impulse(const Vector3s& position) const
+{
+  return get_velocity(position, u_visc_impulse, v_visc_impulse, w_visc_impulse);
+}
+
 Vector3s FluidSim3D::get_pressure_gradient(const Vector3s& position) const
 {
   return get_velocity(position, u_pressure_grad, v_pressure_grad, w_pressure_grad);
@@ -1679,123 +1711,116 @@ void FluidSim3D::solve_pressure(scalar dt) {
      }
   }
   
-  threadutils::thread_pool::ParallelFor(0, system_size, [&](int thread_idx)
-  {
-    int k = thread_idx/slice;
-    int j = (thread_idx%slice)/ni;
-    int i = thread_idx%ni;
-    if(i>=1 && i<ni-1 && j>=1 && j<nj-1 && k>=1 && k<nk-1)
+  for(int k = 1; k < nk - 1; ++k) for(int j = 1; j < nj - 1; ++j) for(int i = 1; i < ni - 1; ++i) {
+    scalar centre_phi = liquid_phi(i,j,k);
+    unsigned dof_idx = dof_index(i,j,k);
+    if(centre_phi < 0)
     {
-      float centre_phi = liquid_phi(i,j,k);
-      unsigned dof_idx = dof_index(i,j,k);
-      if(centre_phi < 0)
-      {
-        rhs[dof_idx] = 0;
-        //right neighbour
-        float term = u_weights(i+1,j,k) * dt / sqr(dx) / rho;
-        float right_phi = liquid_phi(i+1,j,k);
-        if(right_phi < 0) {
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term);
-          matrix.add_to_element(dof_idx,
-                                dof_index(i+1,j,k), -term);
-        }
-        else {
-          float theta = fraction_inside(centre_phi, right_phi);
-          if(theta < 0.01f) theta = 0.01f;
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term/theta);
-        }
-        rhs[dof_idx] -= (u_weights(i+1,j,k)*u(i+1,j,k) + (1.0-u_weights(i+1,j,k)) * u_solid(i+1,j,k)) / dx;
-        
-        //left neighbour
-        term = u_weights(i,j,k) * dt / sqr(dx) / rho;
-        float left_phi = liquid_phi(i-1,j,k);
-        if(left_phi < 0) {
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term);
-          matrix.add_to_element(dof_idx,
-                                dof_index(i-1,j,k), -term);
-        }
-        else {
-          float theta = fraction_inside(centre_phi, left_phi);
-          if(theta < 0.01f) theta = 0.01f;
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term/theta);
-        }
-        rhs[dof_idx] += (u_weights(i,j,k)*u(i,j,k) + (1.0-u_weights(i,j,k)) * u_solid(i,j,k)) / dx;
-        
-        //top neighbour
-        term = v_weights(i,j+1,k) * dt / sqr(dx) / rho;
-        float top_phi = liquid_phi(i,j+1,k);
-        if(top_phi < 0) {
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term);
-          matrix.add_to_element(dof_idx,
-                                dof_index(i,j+1,k), -term);
-        }
-        else {
-          float theta = fraction_inside(centre_phi, top_phi);
-          if(theta < 0.01f) theta = 0.01f;
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term/theta);
-        }
-        rhs[dof_idx] -= (v_weights(i,j+1,k)*v(i,j+1,k) + (1.0-v_weights(i,j+1,k)) * v_solid(i,j+1,k)) / dx;
-        
-        //bottom neighbour
-        term = v_weights(i,j,k) * dt / sqr(dx) / rho;
-        float bot_phi = liquid_phi(i,j-1,k);
-        if(bot_phi < 0) {
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term);
-          matrix.add_to_element(dof_idx,
-                                dof_index(i,j-1,k), -term);
-        }
-        else {
-          float theta = fraction_inside(centre_phi, bot_phi);
-          if(theta < 0.01f) theta = 0.01f;
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term/theta);
-        }
-        rhs[dof_idx] += (v_weights(i,j,k)*v(i,j,k) + (1.0-v_weights(i,j,k)) * v_solid(i,j,k)) / dx;
-        
-        
-        //far neighbour
-        term = w_weights(i,j,k+1) * dt / sqr(dx) / rho;
-        float far_phi = liquid_phi(i,j,k+1);
-        if(far_phi < 0) {
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term);
-          matrix.add_to_element(dof_idx,
-                                dof_index(i,j,k+1), -term);
-        }
-        else {
-          float theta = fraction_inside(centre_phi, far_phi);
-          if(theta < 0.01f) theta = 0.01f;
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term/theta);
-        }
-        rhs[dof_idx] -= (w_weights(i,j,k+1)*w(i,j,k+1) + (1.0-w_weights(i,j,k+1)) * w_solid(i,j,k+1)) / dx;
-        
-        //near neighbour
-        term = w_weights(i,j,k) * dt / sqr(dx) / rho;
-        float near_phi = liquid_phi(i,j,k-1);
-        if(near_phi < 0) {
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term);
-          matrix.add_to_element(dof_idx,
-                                dof_index(i,j,k-1), -term);
-        }
-        else {
-          float theta = fraction_inside(centre_phi, near_phi);
-          if(theta < 0.01f) theta = 0.01f;
-          matrix.add_to_element(dof_idx,
-                                dof_idx, term/theta);
-        }
-        rhs[dof_idx] += (w_weights(i,j,k)*w(i,j,k) + (1.0-w_weights(i,j,k)) * w_solid(i,j,k)) / dx;
+      rhs[dof_idx] = 0;
+      //right neighbour
+      scalar term = u_weights(i+1,j,k) * dt / sqr(dx) / rho;
+      scalar right_phi = liquid_phi(i+1,j,k);
+      if(right_phi < 0) {
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term);
+        matrix.add_to_element(dof_idx,
+                              dof_index(i+1,j,k), -term);
       }
+      else {
+        scalar theta = fraction_inside(centre_phi, right_phi);
+        if(theta < 0.01) theta = 0.01;
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term/theta);
+      }
+      rhs[dof_idx] -= (u_weights(i+1,j,k)*u(i+1,j,k) + (1.0-u_weights(i+1,j,k)) * u_solid(i+1,j,k)) / dx;
+      
+      //left neighbour
+      term = u_weights(i,j,k) * dt / sqr(dx) / rho;
+      scalar left_phi = liquid_phi(i-1,j,k);
+      if(left_phi < 0) {
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term);
+        matrix.add_to_element(dof_idx,
+                              dof_index(i-1,j,k), -term);
+      }
+      else {
+        scalar theta = fraction_inside(centre_phi, left_phi);
+        if(theta < 0.01) theta = 0.01;
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term/theta);
+      }
+      rhs[dof_idx] += (u_weights(i,j,k)*u(i,j,k) + (1.0-u_weights(i,j,k)) * u_solid(i,j,k)) / dx;
+      
+      //top neighbour
+      term = v_weights(i,j+1,k) * dt / sqr(dx) / rho;
+      scalar top_phi = liquid_phi(i,j+1,k);
+      if(top_phi < 0) {
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term);
+        matrix.add_to_element(dof_idx,
+                              dof_index(i,j+1,k), -term);
+      }
+      else {
+        scalar theta = fraction_inside(centre_phi, top_phi);
+        if(theta < 0.01) theta = 0.01;
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term/theta);
+      }
+      rhs[dof_idx] -= (v_weights(i,j+1,k)*v(i,j+1,k) + (1.0-v_weights(i,j+1,k)) * v_solid(i,j+1,k)) / dx;
+      
+      //bottom neighbour
+      term = v_weights(i,j,k) * dt / sqr(dx) / rho;
+      scalar bot_phi = liquid_phi(i,j-1,k);
+      if(bot_phi < 0) {
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term);
+        matrix.add_to_element(dof_idx,
+                              dof_index(i,j-1,k), -term);
+      }
+      else {
+        scalar theta = fraction_inside(centre_phi, bot_phi);
+        if(theta < 0.01) theta = 0.01;
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term/theta);
+      }
+      rhs[dof_idx] += (v_weights(i,j,k)*v(i,j,k) + (1.0-v_weights(i,j,k)) * v_solid(i,j,k)) / dx;
+      
+      
+      //far neighbour
+      term = w_weights(i,j,k+1) * dt / sqr(dx) / rho;
+      scalar far_phi = liquid_phi(i,j,k+1);
+      if(far_phi < 0) {
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term);
+        matrix.add_to_element(dof_idx,
+                              dof_index(i,j,k+1), -term);
+      }
+      else {
+        scalar theta = fraction_inside(centre_phi, far_phi);
+        if(theta < 0.01) theta = 0.01;
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term/theta);
+      }
+      rhs[dof_idx] -= (w_weights(i,j,k+1)*w(i,j,k+1) + (1.0-w_weights(i,j,k+1)) * w_solid(i,j,k+1)) / dx;
+      
+      //near neighbour
+      term = w_weights(i,j,k) * dt / sqr(dx) / rho;
+      scalar near_phi = liquid_phi(i,j,k-1);
+      if(near_phi < 0) {
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term);
+        matrix.add_to_element(dof_idx,
+                              dof_index(i,j,k-1), -term);
+      }
+      else {
+        scalar theta = fraction_inside(centre_phi, near_phi);
+        if(theta < 0.01) theta = 0.01;
+        matrix.add_to_element(dof_idx,
+                              dof_idx, term/theta);
+      }
+      rhs[dof_idx] += (w_weights(i,j,k)*w(i,j,k) + (1.0-w_weights(i,j,k)) * w_solid(i,j,k)) / dx;
     }
-  });
+  }
   
   //Solve the system using Robert Bridson's incomplete Cholesky PCG solver
   
@@ -1807,7 +1832,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
   solver.set_solver_parameters(1e-18, 1000);
   success = solver.solve(matrix, rhs, pressure, tolerance, iterations);
 #else
-  success = AMGPCGSolveSparse(matrix,rhs,x,dof_ijk,1e-6,50,tolerance,iterations,ni,nj,nk);
+  success = AMGPCGSolveSparse(matrix,rhs,x,dof_ijk,1e-6,500,tolerance,iterations,ni,nj,nk);
   
 #endif
 
@@ -3367,6 +3392,51 @@ void FluidSim3D::addGradEToTotal( const VectorXs& x, const VectorXs& v, const Ve
   int nforces = drag_forces.size();
   threadutils::thread_pool::ParallelFor(0, nforces, [&] (int i) {
     drag_forces[i]->addGradEToTotal(x, v, m, gradE);
+  });
+}
+
+void FluidSim3D::apply_viscosity(scalar dt) {
+  compute_viscosity_weights();
+  
+  const scalar& visc = m_parent->getViscosity();
+  
+  advance_viscosity_implicit_weighted(u, v, w, u_visc_impulse, v_visc_impulse, w_visc_impulse,
+                                      u_vol_liquid, v_vol_liquid, w_vol_liquid,
+                                      c_vol_liquid, ex_vol_liquid, ey_vol_liquid, ez_vol_liquid, cell_solid_phi, visc, dt, dx);
+}
+
+void FluidSim3D::compute_viscosity_weights()
+{
+  estimate_volume_fractions(c_vol_liquid,  Vector3s(0.5*dx, 0.5*dx, 0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+  estimate_volume_fractions(u_vol_liquid,  Vector3s(0,       0.5*dx, 0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+  estimate_volume_fractions(v_vol_liquid,  Vector3s(0.5*dx, 0,       0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+  estimate_volume_fractions(w_vol_liquid,  Vector3s(0.5*dx, 0.5*dx, 0),       dx, liquid_phi, Vector3s(0,0,0), dx);
+  estimate_volume_fractions(ex_vol_liquid, Vector3s(0.5*dx, 0,       0),       dx, liquid_phi, Vector3s(0,0,0), dx);
+  estimate_volume_fractions(ey_vol_liquid, Vector3s(0,       0.5*dx, 0),       dx, liquid_phi, Vector3s(0,0,0), dx);
+  estimate_volume_fractions(ez_vol_liquid, Vector3s(0,       0,       0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+}
+
+void estimate_volume_fractions(Array3s& volumes,
+                               const Vector3s& start_centre, const scalar dx,
+                               const Array3s& phi, const Vector3s& phi_origin, const scalar phi_dx)
+{
+  threadutils::thread_pool::ParallelFor(0, volumes.nk, [&] (int k) {
+    for(int j = 0; j < volumes.nj; ++j) for(int i = 0; i < volumes.ni; ++i)  {
+      Vector3s centre = start_centre + Vector3s(i*dx, j*dx, k*dx);
+      
+      scalar offset = 0.5*dx;
+      
+      scalar phi000 = interpolate_value(Vector3s(centre + Vector3s(-offset,-offset,-offset)), phi, phi_origin, phi_dx);
+      scalar phi001 = interpolate_value(Vector3s(centre + Vector3s(-offset,-offset,+offset)), phi, phi_origin, phi_dx);
+      scalar phi010 = interpolate_value(Vector3s(centre + Vector3s(-offset,+offset,-offset)), phi, phi_origin, phi_dx);
+      scalar phi011 = interpolate_value(Vector3s(centre + Vector3s(-offset,+offset,+offset)), phi, phi_origin, phi_dx);
+      scalar phi100 = interpolate_value(Vector3s(centre + Vector3s(+offset,-offset,-offset)), phi, phi_origin, phi_dx);
+      scalar phi101 = interpolate_value(Vector3s(centre + Vector3s(+offset,-offset,+offset)), phi, phi_origin, phi_dx);
+      scalar phi110 = interpolate_value(Vector3s(centre + Vector3s(+offset,+offset,-offset)), phi, phi_origin, phi_dx);
+      scalar phi111 = interpolate_value(Vector3s(centre + Vector3s(+offset,+offset,+offset)), phi, phi_origin, phi_dx);
+      
+      volumes(i,j,k) = volume_fraction(phi000, phi100, phi010, phi110, phi001, phi101, phi011, phi111);
+    }
   });
 }
 

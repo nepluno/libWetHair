@@ -627,6 +627,8 @@ void CylindricalShallowFlow<2>::updateFromFilteredGrid(const VectorXs& x, Vector
   int ne = HairFlow<2>::m_global_edges.size();
   int np = HairFlow<2>::m_particle_indices.size();
   
+  const scalar rho_L = m_parent->getLiquidDensity();
+  
   for(int i = 0; i < ne; ++i)
   {
     auto& e = HairFlow<2>::m_global_edges[i];
@@ -639,7 +641,7 @@ void CylindricalShallowFlow<2>::updateFromFilteredGrid(const VectorXs& x, Vector
     Vector2s edge_center = (x0 + x1) * 0.5;
     
     Vector2s pressure_grad = fluid2d->get_pressure_gradient( edge_center );
-    HairFlow<2>::m_u(i) -= pressure_grad.dot(dir) * dt;
+    HairFlow<2>::m_u(i) -= pressure_grad.dot(dir) * dt / rho_L;
   }
   
   for(int i = 0; i < np; ++i)
@@ -958,6 +960,9 @@ void CylindricalShallowFlow<3>::updateFromFilteredGrid(const VectorXs& x, Vector
   int ne = HairFlow<3>::m_global_edges.size();
   int np = HairFlow<3>::m_particle_indices.size();
   
+  const scalar rho_L = m_parent->getLiquidDensity();
+  bool visc_solve = m_parent->viscositySolve();
+  
   for(int i = 0; i < ne; ++i)
   {
     auto& e = HairFlow<3>::m_global_edges[i];
@@ -970,7 +975,12 @@ void CylindricalShallowFlow<3>::updateFromFilteredGrid(const VectorXs& x, Vector
     Vector3s edge_center = (x0 + x1) * 0.5;
 
     Vector3s pressure_grad = fluid3d->get_pressure_gradient( edge_center );
-    HairFlow<3>::m_u(i) -= pressure_grad.dot(dir) * dt;
+    
+    HairFlow<3>::m_u(i) -= pressure_grad.dot(dir) * dt / rho_L;
+    
+    if(visc_solve) {
+      HairFlow<3>::m_u(i) += fluid3d->get_visc_impulse( edge_center ).dot(dir) * dt;
+    }
   }
   
   for(int i = 0; i < np; ++i)

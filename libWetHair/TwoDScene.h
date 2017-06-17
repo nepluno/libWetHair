@@ -177,6 +177,7 @@ struct WetHairParameter
   bool global_volume_control;
   bool individual_transfer;
   bool volume_summary;
+  bool viscous_solve;
   
   MASS_UPDATE_MODE mass_update_mode;
   Vector3s gravity;
@@ -454,6 +455,8 @@ public:
   
   void uniformlyIncreaseHairLiquid(const scalar& dh, int group_idx);
   
+  void viscousSolveFluidSim(const scalar& dt);
+  
   void pressureSolveFluidSim(const scalar& dt);
   
   void advectRigidBodies(const scalar& dt);
@@ -618,6 +621,8 @@ public:
   bool drippingFar() const;
   
   bool drippingMiddle() const;
+  
+  bool viscositySolve() const;
   
   void applyScript(const scalar& dt);
   

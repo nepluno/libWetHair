@@ -2608,6 +2608,11 @@ int FluidSim2D::default_particle_in_cell() const
   return 4;
 }
 
+void FluidSim2D::apply_viscosity(scalar dt)
+{
+  std::cerr << "FluidSim2D::apply_viscosity UNIMPLIMENTED!" << std::endl;
+}
+
 scalar FluidSim2D::get_clamped_particle_weight(const Vector2s& position) const
 {
   const scalar standard_radius = dx * default_radius_multiplier();

@@ -243,6 +243,7 @@ public:
   virtual void combine_velocity_field() = 0;
   virtual void compute_liquid_phi() = 0;
   
+  virtual void apply_viscosity(scalar dt) = 0;
   virtual void project(scalar dt) = 0;
   virtual void compute_weights() = 0;
   virtual void solve_pressure(scalar dt) = 0;

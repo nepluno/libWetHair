@@ -62,6 +62,14 @@ T interpolate_value(const Eigen::Matrix<S, 3, 1>& point, const Array3<T, Array1<
 }
 
 template<class S, class T>
+T interpolate_value(const Eigen::Matrix<S, 3, 1>& point, const Array3<T, Array1<T> >& grid, const Eigen::Matrix<S, 3, 1>& origin, const S dx)
+{
+  S inv_dx = (S) 1. / dx;
+  Eigen::Matrix<S, 3, 1> temp = (point - origin) * inv_dx;
+  return interpolate_value(temp, grid);
+}
+
+template<class S, class T>
 T interpolate_value(const Eigen::Matrix<S, 3, 1>& point, const std::vector<T>& grid, int ni, int nj, int nk) {
   int i,j,k;
   S fi,fj,fk;

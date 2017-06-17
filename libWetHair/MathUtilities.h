@@ -193,29 +193,31 @@ namespace mathutils
     else if(a1>amax) amax=a1;
   }
   
+  // swap so that a<b
+  template<class T>
+  inline void sort(T &a, T &b)
+  {
+    if(a>b) swap(a,b);
+  }
+  
+  // swap so that a<b<c
   template<class T>
   inline void sort(T &a, T &b, T &c)
   {
-    T temp;
-    if(a<b){
-      if(a<c){
-        if(c<b){ // a<c<b
-          temp=c;c=b;b=temp;
-        } // else: a<b<c
-      }else{ // c<a<b
-        temp=c;c=b;b=a;a=temp;
-      }
-    }else{
-      if(b<c){
-        if(a<c){ //b<a<c
-          temp=b;b=a;a=temp;
-        }else{ // b<c<a
-          temp=b;b=c;c=a;a=temp;
-        }
-      }else{ // c<b<a
-        temp=c;c=a;a=temp;
-      }
-    }
+    if(a>b) swap(a,b);
+    if(a>c) swap(a,c);
+    if(b>c) swap(b,c);
+  }
+  
+  // swap so that a<b<c<d
+  template<class T>
+  inline void sort(T &a, T &b, T &c, T &d)
+  {
+    if(a>b) swap(a,b);
+    if(c>d) swap(c,d);
+    if(a>c) swap(a,c);
+    if(b>d) swap(b,d);
+    if(b>c) swap(b,c);
   }
   
   template<class T>

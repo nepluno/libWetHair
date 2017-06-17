@@ -1525,7 +1525,17 @@ void TwoDSceneXMLParser::loadLiquidParameter( rapidxml::xml_node<> *node, TwoDSc
     {
       if( !stringutils::extractFromString(std::string(timend->value()),parameter.global_volume_control) )
       {
-        std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Failed to parse 'globalvolumecontrol' attribute for liquid. Value must be numeric. Exiting." << std::endl;
+        std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Failed to parse 'globalvolumecontrol' attribute for liquid. Value must be boolean. Exiting." << std::endl;
+        exit(1);
+      }
+    }
+    
+    timend = nd->first_attribute("viscoussolve");
+    if( timend != NULL )
+    {
+      if( !stringutils::extractFromString(std::string(timend->value()),parameter.viscous_solve) )
+      {
+        std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Failed to parse 'viscoussolve' attribute for liquid. Value must be boolean. Exiting." << std::endl;
         exit(1);
       }
     }

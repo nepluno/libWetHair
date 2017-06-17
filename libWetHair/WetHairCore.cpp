@@ -287,7 +287,13 @@ void WetHairCore<DIM>::stepSystem()
       t1 = timingutils::seconds();
       m_timing_statistics[12] += (t1 - t0); // combine velocity
       t0 = t1;
-      // 7. solve the Poisson equation and do pressure projection (Sec. 4.7).
+      
+      // 7. solve the Viscous and/or Poisson equation and do pressure projection (Sec. 4.7).
+      if(parameter.viscous_solve && parameter.viscosity > 0.0) {
+        std::cout << "[viscous solve - fluid simulation]" << std::endl;
+        m_scene->viscousSolveFluidSim(substep);
+      }
+      
       std::cout << "[pressure solve - fluid simulation]" << std::endl;
       m_scene->pressureSolveFluidSim(substep);
 
