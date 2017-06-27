@@ -1507,7 +1507,7 @@ void FluidSim2D::solve_pressure(scalar dt) {
             theta = mathutils::fraction_inside(liquid_phi(i-1,j), liquid_phi(i,j));
           if(theta < 0.01) theta = 0.01;
           scalar pressure_grad = (pressure[index] - pressure[index-1]) / dx / theta;
-          u(i,j) -= dt * pressure_grad / rho;
+          u(i,j) = u_particle(i,j) - dt * pressure_grad / rho;
           u_pressure_grad(i, j) = pressure_grad;
         }
         u_valid(i,j) = 1;
@@ -1526,7 +1526,7 @@ void FluidSim2D::solve_pressure(scalar dt) {
             theta = mathutils::fraction_inside(liquid_phi(i,j-1), liquid_phi(i,j));
           if(theta < 0.01) theta = 0.01;
           scalar pressure_grad = (pressure[index] - pressure[index-ni]) / dx / theta;
-          v(i,j) -= dt * pressure_grad / rho;
+          v(i,j) = v_particle(i,j) - dt * pressure_grad / rho;
           v_pressure_grad(i, j) = pressure_grad;
         }
         v_valid(i,j) = 1;
@@ -1657,8 +1657,6 @@ void FluidSim2D::sort_particles()
 
 void FluidSim2D::map_p2g(bool with_hair_particles)
 {
-  const scalar rho = m_parent->getLiquidDensity();
-  
   //u-component of velocity
   threadutils::thread_pool::ParallelFor(0, nj, [&] (int j){
     //for(int j = 0; j < nj; ++j)
@@ -1671,7 +1669,7 @@ void FluidSim2D::map_p2g(bool with_hair_particles)
         Particle<2>& p = particles[pidx];
         Vector2s diff = p.x - pos;
         
-        scalar w = dropvol(p.radii) * rho * mathutils::linear_kernel(diff, dx);
+        scalar w = dropvol(p.radii) * mathutils::linear_kernel(diff, dx);
         sumu += w * (p.v(0) - p.c.col(0).dot(diff));
         sumw += w;
       });
@@ -1692,7 +1690,7 @@ void FluidSim2D::map_p2g(bool with_hair_particles)
         Particle<2>& p = particles[pidx];
         Vector2s diff = p.x - pos;
         
-        scalar w = dropvol(p.radii) * rho * linear_kernel(diff, dx);
+        scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
         sumu += w * (p.v(1) - p.c.col(1).dot(diff));
         sumw += w;
       });
@@ -1788,7 +1786,7 @@ void FluidSim2D::done_update_from_hair()
         u_drag(i, j) = 0.0;
       }
       
-      u_weight_hair(i, j) = sum_weight;
+      u_weight_hair(i, j) = sum_vol;
     }
   });
   
@@ -1824,7 +1822,7 @@ void FluidSim2D::done_update_from_hair()
         v_drag(i, j) = 0.0;
       }
       
-      v_weight_hair(i, j) = sum_weight;
+      v_weight_hair(i, j) = sum_vol;
     }
   });
 }

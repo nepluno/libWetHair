@@ -95,6 +95,7 @@ global_volume_control(true),
 individual_transfer(true),
 volume_summary(false),
 viscous_solve(false),
+apply_coriolis(false),
 mass_update_mode(MUM_MOMENTUM),
 gravity(0.0, -981.0, 0.0)
 {
@@ -165,6 +166,12 @@ template<int DIM>
 bool TwoDScene<DIM>::isIndividualTransfer() const
 {
   return m_parameters.individual_transfer;
+}
+
+template<int DIM>
+bool TwoDScene<DIM>::applyCoriolis() const
+{
+  return m_parameters.apply_coriolis;
 }
 
 

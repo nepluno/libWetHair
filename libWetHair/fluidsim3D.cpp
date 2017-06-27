@@ -1121,60 +1121,81 @@ void FluidSim3D::add_gravity(scalar dt)
 {
   const Vector3s& gravity = m_parent->getSimpleGravity();
   
-  const scalar& lat = m_parent->getLatitude();
-  const Vector3s omega = Vector3s(-sin(lat), cos(lat), 0.0) * m_parent->getEarthRotation();
-  const Vector3s earth_R = Vector3s(0.0, m_parent->getEarthRadius(), 0.0);
-  
-  temp_u = u_particle;
-  temp_v = v_particle;
-  temp_w = w_particle;
-  
-  threadutils::thread_pool::ParallelFor(0, u.nk, [&] (int k){
-    for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i)
-    {
-      Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-
-      Vector3s vel = get_temp_velocity(pos);
-      
-      Vector3s r0 = earth_R + Vector3s(0.0, pos(1), 0.0);
-      Vector3s acc_centri = omega.cross(omega.cross(r0));
-      Vector3s acc_coriolis = 2.0 * omega.cross(vel);
-      
-      u_particle(i, j, k) -= (-gravity(0) + acc_coriolis(0) + acc_centri(0)) * dt;
-      
-    }
-  });
-
-  threadutils::thread_pool::ParallelFor(0, v.nk, [&] (int k){
-    for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i)
-    {
-      Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
-      
-      Vector3s vel = get_temp_velocity(pos);
-      
-      Vector3s r0 = earth_R + Vector3s(0.0, pos(1), 0.0);
-      Vector3s acc_centri = omega.cross(omega.cross(r0));
-      Vector3s acc_coriolis = 2.0 * omega.cross(vel);
-      
-      v_particle(i, j, k) -= (-gravity(1) + acc_coriolis(1) + acc_centri(1)) * dt;
-    }
-  });
-  
-  threadutils::thread_pool::ParallelFor(0, w.nk, [&] (int k){
-    for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
-    {
-      Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
-
-      Vector3s vel = get_temp_velocity(pos);
-      
-      Vector3s r0 = earth_R + Vector3s(0.0, pos(1), 0.0);
-      Vector3s acc_centri = omega.cross(omega.cross(r0));
-      Vector3s acc_coriolis = 2.0 * omega.cross(vel);
-      
-      w_particle(i, j, k) -= (-gravity(2) + acc_coriolis(2) + acc_centri(2)) * dt;
-    }
-  });
-  
+  if(m_parent->applyCoriolis()) {
+    const scalar& lat = m_parent->getLatitude();
+    const Vector3s omega = Vector3s(-sin(lat), cos(lat), 0.0) * m_parent->getEarthRotation();
+    const Vector3s earth_R = Vector3s(0.0, m_parent->getEarthRadius(), 0.0);
+    
+    temp_u = u_particle;
+    temp_v = v_particle;
+    temp_w = w_particle;
+    
+    threadutils::thread_pool::ParallelFor(0, u.nk, [&] (int k){
+      for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i)
+      {
+        Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
+        
+        Vector3s vel = get_temp_velocity(pos);
+        
+        Vector3s r0 = earth_R + Vector3s(0.0, pos(1), 0.0);
+        Vector3s acc_centri = omega.cross(omega.cross(r0));
+        Vector3s acc_coriolis = 2.0 * omega.cross(vel);
+        
+        u_particle(i, j, k) -= (-gravity(0) + acc_coriolis(0) + acc_centri(0)) * dt;
+      }
+    });
+    
+    threadutils::thread_pool::ParallelFor(0, v.nk, [&] (int k){
+      for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i)
+      {
+        Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
+        
+        Vector3s vel = get_temp_velocity(pos);
+        
+        Vector3s r0 = earth_R + Vector3s(0.0, pos(1), 0.0);
+        Vector3s acc_centri = omega.cross(omega.cross(r0));
+        Vector3s acc_coriolis = 2.0 * omega.cross(vel);
+        
+        v_particle(i, j, k) -= (-gravity(1) + acc_coriolis(1) + acc_centri(1)) * dt;
+      }
+    });
+    
+    threadutils::thread_pool::ParallelFor(0, w.nk, [&] (int k){
+      for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
+      {
+        Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
+        
+        Vector3s vel = get_temp_velocity(pos);
+        
+        Vector3s r0 = earth_R + Vector3s(0.0, pos(1), 0.0);
+        Vector3s acc_centri = omega.cross(omega.cross(r0));
+        Vector3s acc_coriolis = 2.0 * omega.cross(vel);
+        
+        w_particle(i, j, k) -= (-gravity(2) + acc_coriolis(2) + acc_centri(2)) * dt;
+      }
+    });
+  } else {
+    threadutils::thread_pool::ParallelFor(0, u.nk, [&] (int k){
+      for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i)
+      {
+        u_particle(i, j, k) -= (-gravity(0)) * dt;
+      }
+    });
+    
+    threadutils::thread_pool::ParallelFor(0, v.nk, [&] (int k){
+      for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i)
+      {
+        v_particle(i, j, k) -= (-gravity(1)) * dt;
+      }
+    });
+    
+    threadutils::thread_pool::ParallelFor(0, w.nk, [&] (int k){
+      for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
+      {
+        w_particle(i, j, k) -= (-gravity(2)) * dt;
+      }
+    });
+  }
 }
 
 //For extrapolated points, replace the normal component
@@ -1485,6 +1506,9 @@ void FluidSim3D::compute_liquid_phi()
 
 void FluidSim3D::combine_velocity_field()
 {
+  // Combine the velocity field only for pressure computation later,
+  // we replace the penalty method in [Bandara & Soga 2015] with a Poisson solver.
+  
   threadutils::thread_pool::ParallelFor(0, u.nk, [&](int k){
     for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i) {
       scalar weight = u_weight_particle(i, j, k) + u_weight_hair(i, j, k);
@@ -1918,7 +1942,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
             theta = fraction_inside(liquid_phi(i-1,j,k), liquid_phi(i,j,k));
           if(theta < 0.01) theta = 0.01;
           scalar pressure_grad = (pressure[index] - pressure[index-1]) / dx / theta;
-          u(i,j,k) -= dt * pressure_grad / rho;
+          u(i,j,k) = u_particle(i, j, k) - dt * pressure_grad / rho;
           u_pressure_grad(i, j, k) = pressure_grad;
           u_valid(i,j,k) = 1;
         }
@@ -1947,7 +1971,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
             theta = fraction_inside(liquid_phi(i,j-1,k), liquid_phi(i,j,k));
           if(theta < 0.01) theta = 0.01;
           scalar pressure_grad = (pressure[index] - pressure[index-ni]) / dx / theta;
-          v(i,j,k) -= dt * pressure_grad / rho;
+          v(i,j,k) = v_particle(i, j, k) - dt * pressure_grad / rho;
           v_pressure_grad(i, j, k) = pressure_grad;
           v_valid(i,j,k) = 1;
         }
@@ -1976,7 +2000,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
             theta = fraction_inside(liquid_phi(i,j,k-1), liquid_phi(i,j,k));
           if(theta < 0.01) theta = 0.01;
           scalar pressure_grad = (pressure[index] - pressure[index-ni*nj]) / dx / theta;
-          w(i,j,k) -= dt * pressure_grad / rho;
+          w(i,j,k) = w_particle(i, j, k) - dt * pressure_grad / rho;
           w_pressure_grad(i, j, k) = pressure_grad;
           w_valid(i,j,k) = 1;
         }
@@ -2109,7 +2133,6 @@ scalar FluidSim3D::dropradius(const scalar& vol) const
 
 void FluidSim3D::map_p2g(bool with_hair_particles)
 {
-  const scalar rho = m_parent->getLiquidDensity();
   //u-component of velocity
   threadutils::thread_pool::ParallelFor(0, nk, [&] (int k){
     for(int j = 0; j < nj; ++j) for(int i = 0; i < ni+1; ++i) {
@@ -2124,7 +2147,7 @@ void FluidSim3D::map_p2g(bool with_hair_particles)
         
         Vector3s diff = p.x - pos;
         
-        scalar w = dropvol(p.radii) * rho * linear_kernel(diff, dx);
+        scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
         sumu += w * (p.v(0) - p.c.col(0).dot(diff));
         sumw += w;
         if(p.type == PT_LIQUID) sumw_pure += w;
@@ -2149,7 +2172,7 @@ void FluidSim3D::map_p2g(bool with_hair_particles)
         if(!with_hair_particles && p.type == PT_HAIR) return;
         Vector3s diff = p.x - pos;
         
-        scalar w = dropvol(p.radii) * rho * linear_kernel(diff, dx);
+        scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
         sumu += w * (p.v(1) - p.c.col(1).dot(diff));
         sumw += w;
         if(p.type == PT_LIQUID) sumw_pure += w;
@@ -2173,7 +2196,7 @@ void FluidSim3D::map_p2g(bool with_hair_particles)
         if(!with_hair_particles && p.type == PT_HAIR) return;
         Vector3s diff = p.x - pos;
         
-        scalar w = dropvol(p.radii) * rho * linear_kernel(diff, dx);
+        scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
         sumu += w * (p.v(2) - p.c.col(2).dot(diff));
         sumw += w;
         if(p.type == PT_LIQUID) sumw_pure += w;
@@ -2278,7 +2301,7 @@ void FluidSim3D::done_update_from_hair()
         u_drag(i, j, k) = 0.0;
       }
       
-      u_weight_hair(i, j, k) = sum_weight;
+      u_weight_hair(i, j, k) = sum_vol;
     }
   });
   
@@ -2314,7 +2337,7 @@ void FluidSim3D::done_update_from_hair()
         v_drag(i, j, k) = 0.0;
       }
       
-      v_weight_hair(i, j, k) = sum_weight;
+      v_weight_hair(i, j, k) = sum_vol;
     }
   });
   
@@ -2350,7 +2373,7 @@ void FluidSim3D::done_update_from_hair()
         w_drag(i, j, k) = 0.0;
       }
       
-      w_weight_hair(i, j, k) = sum_weight;
+      w_weight_hair(i, j, k) = sum_vol;
     }
   });
 }

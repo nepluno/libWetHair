@@ -161,6 +161,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwAddVarRW(bar, "dripping @ middle", TW_TYPE_BOOL8, &parameters.drippingmiddle, " help='Turn On to Drip in the Middle' ");
   TwAddVarRW(bar, "viscous solve", TW_TYPE_BOOL8, &parameters.viscous_solve, " help='Turn On to Solve Viscous Effect for Bulk Liquid' ");
   TwAddVarRW(bar, "CTCD", TW_TYPE_BOOL8, &parameters.use_ctcd, " help='Turn On for Continuous-Time Collision Detection on Hairs' ");
+  TwAddVarRW(bar, "apply coriolis force", TW_TYPE_BOOL8, &parameters.apply_coriolis, " help='Turn On for Coriolis force on 3D Liquid' ");
   TwAddVarRW(bar, "reduce volume loss", TW_TYPE_BOOL8, &parameters.global_volume_control, " help='Turn On to Reduce Volume Loss for Bulk Liquid' ");
   
   TwAddVarRW(bar, "individual transfer", TW_TYPE_BOOL8, &parameters.individual_transfer, " help='Turn On to Forbid Liquid Transfer between Hairs' ");

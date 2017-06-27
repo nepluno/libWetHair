@@ -1678,6 +1678,16 @@ void TwoDSceneXMLParser::loadLiquidParameter( rapidxml::xml_node<> *node, TwoDSc
       }
     }
     
+    if( nd->first_attribute("coriolis") )
+    {
+      std::string attribute(nd->first_attribute("coriolis")->value());
+      if( !stringutils::extractFromString(attribute, parameter.apply_coriolis ) )
+      {
+        std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Failed to parse value of coriolis attribute for fluidsim parameters. Value must be boolean. Exiting." << std::endl;
+        exit(1);
+      }
+    }
+    
     if( nd->first_attribute("drippingmiddle") )
     {
       std::string attribute(nd->first_attribute("drippingmiddle")->value());

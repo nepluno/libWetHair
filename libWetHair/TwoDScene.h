@@ -174,6 +174,7 @@ struct WetHairParameter
   bool drippingfar;
   bool drippingmiddle;
   bool use_ctcd;
+  bool apply_coriolis;
   bool global_volume_control;
   bool individual_transfer;
   bool volume_summary;
@@ -376,6 +377,8 @@ public:
   const scalar& getEarthRotation() const;
   
   const scalar& getHeightSmooth() const;
+  
+  bool applyCoriolis() const;
   
   const MASS_UPDATE_MODE getMassUpdateMode() const;
   
