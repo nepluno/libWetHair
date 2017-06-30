@@ -1,20 +1,10 @@
 # libWetHair Executable
 
-append_files (Headers "h" . pcgsolver)
-append_files (Sources "cpp" . pcgsolver)
-append_files (Sources "c" . pcgsolver)
+append_files (Headers "h" . App Core Core/DER Core/DER/Forces Core/DER/Dependencies Core/pcgsolver)
+append_files (Sources "cpp" . App Core Core/DER Core/DER/Forces Core/DER/Dependencies Core/pcgsolver)
+append_files (Sources "c" . App Core Core/DER Core/DER/Forces Core/DER/Dependencies Core/pcgsolver)
 
-append_files (Headers "h" . DER)
-append_files (Sources "cpp" . DER)
-append_files (Sources "c" . DER)
-
-append_files (Headers "h" . DER/Forces)
-append_files (Sources "cpp" . DER/Forces)
-append_files (Sources "c" . DER/Forces)
-
-append_files (Headers "h" . DER/Dependencies)
-append_files (Sources "cpp" . DER/Dependencies)
-append_files (Sources "c" . DER/Dependencies)
+include_directories (Core)
 
 #find_package (TCLAP REQUIRED)
 #include_directories (${TCLAP_INCLUDE_DIR})
