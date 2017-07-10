@@ -173,7 +173,7 @@ scalar CohesionTable::interpolate_table(const scalar& A, const scalar& d0, const
   dEdd0 = mathutils::lerp(v00, v01, fq0);
   dEdd1 = mathutils::lerp(v10, v11, fq1);
   
-  if(isnan(dEdd0)) {
+  if(std::isnan(dEdd0)) {
     std::cout << "dEdd0 is NAN!" << std::endl;
     std::cout << "A: " << A << std::endl;
     std::cout << "d0: " << d0 << std::endl;
@@ -184,7 +184,7 @@ scalar CohesionTable::interpolate_table(const scalar& A, const scalar& d0, const
     exit(0);
   }
   
-  if(isnan(dEdd1)) {
+  if(std::isnan(dEdd1)) {
     std::cout << "dEdd1 is NAN!" << std::endl;
     std::cout << "A: " << A << std::endl;
     std::cout << "d0: " << d0 << std::endl;

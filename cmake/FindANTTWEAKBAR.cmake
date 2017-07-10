@@ -38,9 +38,9 @@ ELSE (WIN32)
 
 FIND_PATH(ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
       PATHS
-      ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar
-      ${PROJECT_SOURCE_DIR}/../include/AntTweakBar
-			${PROJECT_SOURCE_DIR}/include/AntTweakBar
+      ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/include
+      ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/include
+      ${PROJECT_SOURCE_DIR}/include/AntTweakBar/include
       /usr/local/include
       /usr/X11/include
       /usr/include
