@@ -4,7 +4,6 @@
 #  NANOFLANN_FOUND        - True if nana found.
 
 # Look for the header file.
-MESSAGE(${CMAKE_SOURCE_DIR})
 FIND_PATH(NANOFLANN_INCLUDE_DIR NAMES nanoflann/nanoflann.hpp
       PATHS
       ${CMAKE_SOURCE_DIR}/include
