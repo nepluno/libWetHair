@@ -55,6 +55,39 @@ to run the simulation of the scene containing two hairs being cohesive to each o
 
 All the parameters can be modified offline in the scene description XML files. Some can be changed online in the user interface provided by the demo program.
 
+USAGE: 
+
+   /Users/adelacheng/filmflowtest/build/libWetHair/Release/libWetHair  [-j <string>] [-o <integer>] [-d <boolean>] [-g <integer>] [-p <boolean>] [-s <string>] [--] [--version] [-h]
+
+Where: 
+
+   -j <string>,  --initfile <string>
+     Binary file to load simulation state from for initialization
+
+   -o <integer>,  --readableoutput <integer>
+     readable file to save simulation state to; *after getting the output here, you may do surface reconstruction and rendering with the Houdini .HIP file provided* at http://www.cs.columbia.edu/cg/liquidhair/pseudo_dog.hipnc by renaming the HIP file into the name of the folder storing all output files (please check the python scripts in the HIP file for details).
+
+   -d <boolean>,  --display <boolean>
+     Run the simulation with display enabled if 1, without if 0
+
+   -g <integer>,  --generate <integer>
+     Generate PNG if 1, not if 0
+
+   -p <boolean>,  --paused <boolean>
+     Begin the simulation paused if 1, running if 0
+
+   -s <string>,  --scene <string>
+     Simulation to run; an xml scene file
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
 Contact
 -----------
 Please contact the author (yf2320@columbia.edu) for questions and bug report, or consulting for the usage of this code base.
