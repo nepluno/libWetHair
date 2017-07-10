@@ -9,18 +9,6 @@ include_directories (Core)
 #find_package (TCLAP REQUIRED)
 #include_directories (${TCLAP_INCLUDE_DIR})
 
-add_definitions(-DBOOST_ALL_NO_LIB)
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-find_package(Boost COMPONENTS serialization) 
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS}) 
-  set (LIBWETHAIR_LIBRARIES ${Boost_LIBRARIES})
-else (Boost_FOUND)
-  message (SEND_ERROR "Unable to locate Boost")
-endif()
-
 # Locate OpenGL
 find_package (OpenGL REQUIRED)
 if (OPENGL_FOUND)

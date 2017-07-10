@@ -40,8 +40,6 @@
 // DAMAGE.
 
 #include "ElasticStrandUtils.h"
-#include <boost/random.hpp>
-#include <boost/generator_iterator.hpp>
 #include "../../TimingUtilities.h"
 
 Vec3 parallelTransport( const Vec3& u, const Vec3& t0, const Vec3& t1 )

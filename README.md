@@ -19,7 +19,6 @@ libWetHair depends on following libraries (some of them have been included in th
 - RapidXML* (http://rapidxml.sourceforge.net)
 - tclap* (http://tclap.sourceforge.net)
 - AntTweakBar (http://anttweakbar.sourceforge.net/doc/)
-- Boost (http://www.boost.org)
 - Intel TBB (https://www.threadingbuildingblocks.org)
 - GLUT (https://www.opengl.org/resources/libraries/glut/)
 - GLEW (http://glew.sourceforge.net)

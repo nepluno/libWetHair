@@ -67,27 +67,6 @@ public:
         return "PhysicalRadius";
     }
 
-    friend class boost::serialization::access;
-    template<class Archive>
-    void save( Archive & ar, const unsigned int version ) const
-    {
-        // Can't use get() or compute() here as boost require save() to be const.
-        // So we'll just issue a warning if someone tries to save a dirty value.
-        if( isDirty() )
-        {
-            std::cerr << "Saving dirty value for " << name() << std::endl;
-        }
-        ar & m_value;
-    }
-    template<class Archive>
-    void load( Archive & ar, const unsigned int version )
-    {
-        scalar value;
-        ar & value;
-        set( value );
-    }
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
-
 protected    :
     virtual void compute()
     {}
