@@ -243,15 +243,23 @@ if(NOT TBB_FOUND)
     endif()
   endforeach()
 
-  set(TBB_LIBRARIES "${TBB_LIBRARIES_${TBB_BUILD_TYPE}}")
-
   ##################################
-  # Set compile flags
+  # Set compile flags and libraries
   ##################################
 
   set(TBB_DEFINITIONS_RELEASE "")
   set(TBB_DEFINITIONS_DEBUG "-DTBB_USE_DEBUG=1")
-  set(TBB_DEFINITIONS "${TBB_DEFINITIONS_${TBB_BUILD_TYPE}}")
+    
+  if(TBB_LIBRARIES_${TBB_BUILD_TYPE})
+    set(TBB_DEFINITIONS "${TBB_DEFINITIONS_${TBB_BUILD_TYPE}}")
+    set(TBB_LIBRARIES "${TBB_LIBRARIES_${TBB_BUILD_TYPE}}")
+  elseif(TBB_LIBRARIES_RELEASE)
+    set(TBB_DEFINITIONS "${TBB_DEFINITIONS_RELEASE}")
+    set(TBB_LIBRARIES "${TBB_LIBRARIES_RELEASE}")
+  elseif(TBB_LIBRARIES_DEBUG)
+    set(TBB_DEFINITIONS "${TBB_DEFINITIONS_DEBUG}")
+    set(TBB_LIBRARIES "${TBB_LIBRARIES_DEBUG}")
+  endif()
 
   find_package_handle_standard_args(TBB 
       REQUIRED_VARS TBB_INCLUDE_DIRS TBB_LIBRARIES
@@ -263,16 +271,25 @@ if(NOT TBB_FOUND)
   ##################################
 
   if(NOT CMAKE_VERSION VERSION_LESS 3.0 AND TBB_FOUND)
-    add_library(tbb INTERFACE)
-    target_include_directories(tbb INTERFACE ${TBB_INCLUDE_DIRS})
+    add_library(tbb SHARED IMPORTED)
+    set_target_properties(tbb PROPERTIES
+          INTERFACE_INCLUDE_DIRECTORIES  ${TBB_INCLUDE_DIRS}
+          IMPORTED_LOCATION              ${TBB_LIBRARIES})
     if(TBB_LIBRARIES_RELEASE AND TBB_LIBRARIES_DEBUG)
-      target_compile_definitions(tbb INTERFACE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:TBB_USE_DEBUG=1>)
-      target_link_libraries(tbb INTERFACE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:${TBB_LIBRARIES_DEBUG}> $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>,$<CONFIG:>>:${TBB_LIBRARIES_RELEASE}>)
+      set_target_properties(tbb PROPERTIES
+          INTERFACE_COMPILE_DEFINITIONS "$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:TBB_USE_DEBUG=1>"
+          IMPORTED_LOCATION_DEBUG          ${TBB_LIBRARIES_DEBUG}
+          IMPORTED_LOCATION_RELWITHDEBINFO ${TBB_LIBRARIES_DEBUG}
+          IMPORTED_LOCATION_RELEASE        ${TBB_LIBRARIES_RELEASE}
+          IMPORTED_LOCATION_MINSIZEREL     ${TBB_LIBRARIES_RELEASE}
+          )
     elseif(TBB_LIBRARIES_RELEASE)
-      target_link_libraries(tbb INTERFACE ${TBB_LIBRARIES_RELEASE})
+      set_target_properties(tbb PROPERTIES IMPORTED_LOCATION ${TBB_LIBRARIES_RELEASE})
     else()
-      target_compile_definitions(tbb INTERFACE ${TBB_DEFINITIONS_DEBUG})
-      target_link_libraries(tbb INTERFACE ${TBB_LIBRARIES_DEBUG})
+      set_target_properties(tbb PROPERTIES
+          INTERFACE_COMPILE_DEFINITIONS "${TBB_DEFINITIONS_DEBUG}"
+          IMPORTED_LOCATION              ${TBB_LIBRARIES_DEBUG}
+          )
     endif()
   endif()
 
@@ -284,3 +301,4 @@ if(NOT TBB_FOUND)
   unset(TBB_DEFAULT_SEARCH_DIR)
 
 endif()
+
