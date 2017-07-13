@@ -56,7 +56,7 @@ All the parameters can be modified offline in the scene description XML files. S
 
 USAGE: 
 
-   /Users/adelacheng/filmflowtest/build/libWetHair/Release/libWetHair  [-j <string>] [-o <integer>] [-d <boolean>] [-g <integer>] [-p <boolean>] [-s <string>] [--] [--version] [-h]
+   ./libWetHair  [-j <string>] [-o <integer>] [-d <boolean>] [-g <integer>] [-p <boolean>] [-s <string>] [--] [--version] [-h]
 
 Where: 
 
