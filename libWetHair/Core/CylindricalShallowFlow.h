@@ -297,22 +297,27 @@ namespace mathutils {
                                       const VectorXs& pressure,
                                       const VectorXs& porosity_e,
                                       const VectorXs& eta_edge,
+                                      const VectorXs& radii_edge,
                                       const scalar& dt,
                                       const VectorXs& accel_e,
                                       const scalar& rho,
                                       const scalar& visc,
+                                      const scalar& friction,
                                       VectorXs& u_next)
     {
       u_next = u_star + (accel_e - (1.0 / rho) * dir_f_exp * gradF * pressure) * dt;
       
       int np = u_next.size();
+      
+      if(friction == 0.0 || visc == 0.0) return;
+      
       for(int i = 0; i < np; ++i)
       {
-        scalar Sa = std::max(1e-63, porosity_e(i));
-        scalar phi = std::max(1 - Sa, 1e-63);
-        scalar V = M_PI * eta_edge(i) * eta_edge(i);
-        scalar beta = std::max(0.0, 4 * M_PI / (-log(phi)-1.476+2.*phi-0.5*phi*phi));
-        u_next(i) *= 1.0 / (1.0 + beta * visc * dt + 0.14 * visc * rho * pow(Sa, -2.5) * sqrt(beta) * fabs(u_next(i) * dt));
+        // Here we generalize [Gerbeau & Perthame 2000] for porous flow
+        scalar A = M_PI * (eta_edge(i) + radii_edge(i) * 2.0) * eta_edge(i) * porosity_e(i);
+        scalar vb = 3.0 * visc * A + friction * A * A;
+        scalar vc = vb / (vb + 3.0 * friction * dt * visc);
+        u_next(i) *= vc;
       }
     }
     

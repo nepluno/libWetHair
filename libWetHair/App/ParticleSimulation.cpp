@@ -118,6 +118,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwAddVarRW(bar, "liquid density", TW_TYPE_DOUBLE, &parameters.rho, " min=0.1 max=10.0 step=0.1 help='Liquid density  (g/cm^3)' ");
   TwAddVarRW(bar, "surface tension", TW_TYPE_DOUBLE, &parameters.sigma, " min=0.0 max=400.0 step=0.1 help='Surface tension coefficient (dyn/cm)' ");
   TwAddVarRW(bar, "viscosity", TW_TYPE_DOUBLE, &parameters.viscosity, " min=0.0 max=100.0 step=0.0001 help='Liquid viscosity (dyn·s/cm^2)' ");
+  TwAddVarRW(bar, "hair friction", TW_TYPE_DOUBLE, &parameters.friction, " min=0.0 max=1.0 step=0.0001 help='Hair friction coefficient' ");
   TwAddVarRW(bar, "max flow/radius ratio", TW_TYPE_DOUBLE, &parameters.max_limited_eta_prop, " min=0.0 max=30.0 step=0.1 help='Maximal ratio between height of reduced-flow and radius of hair' ");
   TwAddVarRW(bar, "min flow/radius ratio", TW_TYPE_DOUBLE, &parameters.regularizer_shell, " min=0.0 max=5.0 step=0.1 help='Minimal ratio between height of reduced-flow and radius of hair, used to alleviating singularity in stiffness matrix' ");
   TwAddVarRW(bar, "latitude", TW_TYPE_DOUBLE, &parameters.latitude, " min=-1.5707 max=1.5707 step=0.001 help='Geographical latitude (for Coriolis effect, radian)' ");

@@ -1317,9 +1317,11 @@ void CylindricalShallowFlow<DIM>::add_force(const VectorXs& x, const VectorXs& a
                         m_pressure,
                         m_porosity_e,
                         HairFlow<DIM>::m_edge_eta,
+                        HairFlow<DIM>::m_edge_rad_vec,
                         dt, m_accel_e,
                         HairFlow<DIM>::m_parent->getLiquidDensity(),
                         HairFlow<DIM>::m_parent->getViscosity(),
+                        HairFlow<DIM>::m_parent->getHairFrictionCoeff(),
                         HairFlow<DIM>::m_u);
   
   

@@ -57,6 +57,7 @@ rho(1.0),
 sigma(72.0),
 theta(M_PI / 3),
 viscosity(8.9e-3),
+friction(0.36),
 max_limited_eta_prop(6.0),
 latitude(0.71226395812),
 earth_radius(6.37662216306e8),
@@ -906,6 +907,12 @@ template<int DIM>
 const scalar& TwoDScene<DIM>::getViscosity() const
 {
   return m_parameters.viscosity;
+}
+
+template<int DIM>
+const scalar& TwoDScene<DIM>::getHairFrictionCoeff() const
+{
+  return m_parameters.friction;
 }
 
 template<int DIM>

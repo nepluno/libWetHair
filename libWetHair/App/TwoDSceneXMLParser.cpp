@@ -1316,6 +1316,16 @@ void TwoDSceneXMLParser::loadLiquidParameter( rapidxml::xml_node<> *node, TwoDSc
       }
     }
     
+    timend = nd->first_attribute("friction");
+    if( timend != NULL )
+    {
+      if( !stringutils::extractFromString(std::string(timend->value()),parameter.friction) )
+      {
+        std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Failed to parse 'friction' attribute for liquid. Value must be numeric. Exiting." << std::endl;
+        exit(1);
+      }
+    }
+    
     timend = nd->first_attribute("radiusmultiplier");
     if( timend != NULL )
     {
