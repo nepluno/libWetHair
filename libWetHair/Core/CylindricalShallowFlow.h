@@ -314,7 +314,8 @@ namespace mathutils {
       for(int i = 0; i < np; ++i)
       {
         // Here we generalize [Gerbeau & Perthame 2000] for porous flow
-        scalar A = M_PI * (eta_edge(i) + radii_edge(i) * 2.0) * eta_edge(i) * porosity_e(i);
+        scalar H = eta_edge(i) + radii_edge(i);
+        scalar A = M_PI * H * H * porosity_e(i);
         scalar vb = 3.0 * visc * A + friction * A * A;
         scalar vc = vb / (vb + 3.0 * friction * dt * visc);
         u_next(i) *= vc;
