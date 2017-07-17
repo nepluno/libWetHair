@@ -65,6 +65,7 @@ void GradTwists::compute()
     for( IndexType vtx = m_firstValidIndex; vtx < size(); ++vtx )
     {
         Vec11& Dtwist = m_value[vtx];
+		Dtwist.setZero();
 
         const Vec3& kb = curvatureBinormals[vtx];
 
@@ -102,9 +103,9 @@ void HessTwists::compute()
     for( IndexType vtx = m_firstValidIndex; vtx < size(); ++vtx )
     {
         Mat11& DDtwist = m_value[vtx];
-#ifndef NDEBUG
+
         DDtwist.setZero();
-#endif
+
         const Vec3& te = tangents[vtx - 1];
         const Vec3& tf = tangents[vtx];
         const scalar norm_e = lengths[vtx - 1];

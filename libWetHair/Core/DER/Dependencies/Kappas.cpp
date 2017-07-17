@@ -155,6 +155,9 @@ void HessKappas::compute()
         Mat11& DDkappa1 = HessKappa.first;
         Mat11& DDkappa2 = HessKappa.second;
 
+		DDkappa1.setZero();
+		DDkappa2.setZero();
+
         const scalar norm_e = lengths[vtx - 1];
         const scalar norm_f = lengths[vtx];
         const scalar norm2_e = square( norm_e ); // That's bloody stupid, taking the square of a square root.
@@ -341,6 +344,9 @@ void ThetaHessKappas::compute()
         ThetaHessKType& HessKappa = m_value[vtx];
         Mat2& DDkappa1 = HessKappa.first;
         Mat2& DDkappa2 = HessKappa.second;
+
+		DDkappa1.setZero();
+		DDkappa2.setZero();
 
         const Vec3& m1e = materialFrames1[vtx - 1];
         const Vec3& m2e = materialFrames2[vtx - 1];
