@@ -134,6 +134,7 @@ struct WetHairParameter
   scalar sigma;
   scalar theta;
   scalar viscosity;
+  scalar quadratic_dragging;
   scalar friction;
   scalar max_limited_eta_prop;
   scalar latitude;
@@ -388,6 +389,8 @@ public:
   const scalar& getMaxLimitEtaProp() const;
   
   const scalar& getViscosity() const;
+  
+  const scalar& getQuadraticDragging() const;
   
   const scalar& getHairFrictionCoeff() const;
   

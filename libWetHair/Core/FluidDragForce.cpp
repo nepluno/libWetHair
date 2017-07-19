@@ -79,6 +79,8 @@ void FluidDragForce<2>::preCompute( const VectorXs& x, const VectorXs& v, const 
   
   scalar visc = m_scene.getViscosity();
   
+  scalar quaddrag = m_scene.getQuadraticDragging();
+  
   m_k0.setZero();
   m_liquid_u.setZero();
   
@@ -119,7 +121,7 @@ void FluidDragForce<2>::preCompute( const VectorXs& x, const VectorXs& v, const 
       scalar D = 6.0 * M_PI * l;
       
       const scalar b0 = visc * D * sqrt(len * radius * 2.0) * 0.5;
-      const scalar b1 = len * radius * beta * sqrt(D) * rho;
+      const scalar b1 = quaddrag * len * radius * beta * sqrt(D) * rho;
       
       scalar ndv2 = dv.squaredNorm();
       scalar ndv = mathutils::softsqrt(ndv2, 1.0 / 200.0);
@@ -140,6 +142,8 @@ void FluidDragForce<3>::preCompute( const VectorXs& x, const VectorXs& v, const 
   scalar rho = m_scene.getLiquidDensity();
   
   scalar visc = m_scene.getViscosity();
+  
+  scalar quaddrag = m_scene.getQuadraticDragging();
   
   m_k0.setZero();
   m_liquid_u.setZero();
@@ -182,7 +186,7 @@ void FluidDragForce<3>::preCompute( const VectorXs& x, const VectorXs& v, const 
       scalar D = 6.0 * M_PI * l;
       
       const scalar b0 = visc * D * sqrt(len * radius * 2.0) * 0.5;
-      const scalar b1 = len * radius * beta * sqrt(D) * rho;
+      const scalar b1 = quaddrag * len * radius * beta * sqrt(D) * rho;
 
       scalar ndv2 = dv.squaredNorm();
       scalar ndv = mathutils::softsqrt(ndv2, 1.0 / 200.0);

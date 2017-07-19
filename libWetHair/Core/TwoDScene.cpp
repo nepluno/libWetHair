@@ -70,6 +70,7 @@ bulk_threshold_multiplier(0.5),
 absorptionRate(0.001),
 airviscosity(0.0),
 drag_radius_multiplier(1.0),
+quadratic_dragging(1.0),
 hair_hair_cohesion_multiplier(1.0),
 hair_solid_cohesion_multiplier(1.0),
 radius_multiplier(1.6),
@@ -901,6 +902,12 @@ template<int DIM>
 const scalar& TwoDScene<DIM>::getMaxLimitEtaProp() const
 {
   return m_parameters.max_limited_eta_prop;
+}
+
+template<int DIM>
+const scalar& TwoDScene<DIM>::getQuadraticDragging() const
+{
+  return m_parameters.quadratic_dragging;
 }
 
 template<int DIM>
