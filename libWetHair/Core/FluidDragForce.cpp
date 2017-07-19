@@ -316,6 +316,26 @@ int FluidDragForce<DIM>::getAffectedHair( const std::vector<int> particle_to_hai
 }
 
 template<int DIM>
+void FluidDragForce<DIM>::addGradEToTotal( const VectorXs& x, const VectorXs& v, const VectorXs& m, VectorXs& gradE )
+{
+  assert( x.size() == v.size() );
+  assert( x.size() == m.size() );
+  assert( x.size() == gradE.size() );
+  
+  const HairFlow<DIM>* flow = m_scene.getFilmFlows()[m_hidx];
+  
+  int np = flow->size();
+  const std::vector<int>& particles = flow->getParticleIndices();
+  
+  for( int i = 0; i < np; ++i ) {
+    int pidx = particles[i];
+    Vectors<DIM> dv = v.segment<DIM>( m_scene.getDof(pidx) ) - m_liquid_u.segment<DIM>(DIM * i);
+    scalar k = m_k0(i);
+    gradE.segment<DIM>( m_scene.getDof(pidx) ) += k * dv;
+  }
+}
+
+template<int DIM>
 bool FluidDragForce<DIM>::isContained( int colidx )
 {
   int idir = m_scene.getComponent(colidx);

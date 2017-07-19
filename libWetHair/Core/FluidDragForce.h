@@ -93,6 +93,8 @@ public:
 
   virtual bool isContained( int pidx );
   
+  virtual void addGradEToTotal( const VectorXs& x, const VectorXs& v, const VectorXs& m, VectorXs& gradE );
+  
   virtual const char* name();
   
 private:
