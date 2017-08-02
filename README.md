@@ -2,7 +2,7 @@ libWetHair
 ================
 libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under Clear BSD License for academic and non-commercial use (other licenses may be obtained by contacting the faculty of the Columbia Computer Graphics Group or a Columbia University licensing officer).
 
-It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our project page for more details: http://www.cs.columbia.edu/cg/liquidhair/ ). This code base contains the following parts:
+It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our project page for more details: http://libwethair.info ). This code base contains the following parts:
 
  - A liquid simulator implementing the affine-particle-in-cell method.
  - A hair simulator implementing the elastic rods model.
@@ -22,8 +22,9 @@ libWetHair depends on following libraries (some of them have been included in th
 - Intel TBB (https://www.threadingbuildingblocks.org)
 - GLUT (https://www.opengl.org/resources/libraries/glut/)
 - GLEW (http://glew.sourceforge.net)
+- libPNG (https://libpng.sourceforge.io/)
 
-On Mac OS X or Linux-based systems, all of the dependencies are either included, or can be easily installed with Homebrew (https://brew.sh) or the APT package handling utility.
+On Mac OS X or Linux-based systems, most of the dependencies are either included, or can be easily installed with Homebrew (https://brew.sh) or the APT package handling utility. For Intel TBB, you may download and install from the link provided above.
 
 On Windows you may need manually download and install some of them.
 
