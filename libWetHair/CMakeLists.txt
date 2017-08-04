@@ -26,10 +26,6 @@ else (GLEW_FOUND)
   message (SEND_ERROR "Unable to locate GLEW")
 endif()
 
-# Locate NANOFLANN
-find_package (NANOFLANN REQUIRED)
-include_directories( ${NANOFLANN_INCLUDE_DIR} )
-
 find_package (TBB REQUIRED)
 if (TBB_FOUND)
   include_directories (${TBB_INCLUDE_DIRS})

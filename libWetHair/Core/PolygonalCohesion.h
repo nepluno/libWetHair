@@ -54,7 +54,6 @@
 #include <fstream>
 #include <sstream>
 #include <deque>
-#include <nanoflann/nanoflann.hpp>
 #include <thread>
 #include "sorter.h"
 
@@ -244,7 +243,6 @@ class PolygonalCohesion: public Force
   
   VectorXs m_particle_length;
   
-  nanoflann::KDTreeEigenMatrixAdaptor< MatrixXs, DIM>* m_tree;
   Sorter* m_sorter;
   
   MatrixXs m_edge_buffer;

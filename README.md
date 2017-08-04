@@ -15,7 +15,6 @@ Dependencies
 libWetHair depends on following libraries (some of them have been included in the code base, marked with asterisk*):
 
 - Eigen* (http://eigen.tuxfamily.org/)
-- Nanoflann* (https://github.com/jlblancoc/nanoflann)
 - RapidXML* (http://rapidxml.sourceforge.net)
 - tclap* (http://tclap.sourceforge.net)
 - AntTweakBar (http://anttweakbar.sourceforge.net/doc/)

@@ -44,6 +44,7 @@
 
 #include <Eigen/Core>
 #include <iostream>
+#include <algorithm>
 #include "ThreadUtils.h"
 #include "MathDefs.h"
 
@@ -234,6 +235,21 @@ namespace mathutils
     if(r<0) return 0;
     else if(r>1) return 1;
     return r*r*r*(10+r*(-15+r*6));
+  }
+  
+  template<class T>
+  inline int bipart_closest(const Eigen::Matrix<T, Eigen::Dynamic, 1>& v, T val)
+  {
+    std::vector<T> buff(v.size());
+    
+    memcpy(&buff[0], v.data(), v.size() * sizeof(T));
+    
+    std::sort(buff.begin(), buff.end());
+    
+    auto const it = std::lower_bound(buff.begin(), buff.end(), val);
+    if (it == buff.end()) { return v.size() - 1; }
+    
+    return std::distance(buff.begin(), it);
   }
   
   // only makes sense with T=float or double

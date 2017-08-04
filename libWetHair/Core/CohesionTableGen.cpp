@@ -41,7 +41,6 @@
 
 #include "CohesionTableGen.h"
 #include "MathUtilities.h"
-#include <nanoflann/nanoflann.hpp>
 #include <iostream>
 #include <numeric>
 
@@ -531,44 +530,18 @@ void CohesionTable::construct_alpha_table()
   
   //std::cout << m_A_table << std::endl;
   
-  typedef nanoflann::KDTreeEigenMatrixAdaptor< const VectorXs, 1 >  my_kd_tree_t;
-  
   for(int i = 0; i < m_discretization; ++i)
   {
     const VectorXs& v = m_A_table.col(i);
-    my_kd_tree_t mat_index(1, v, 10);
-    const size_t num_results = 1;
 
     scalar A_inc = (m_max_As(i) - m_min_As(i)) / m_discretization;
     
     for(int j = 0; j < m_discretization; ++j)
     {
-      
-      std::vector<size_t>   ret_indexes(num_results);
-      std::vector<scalar> out_dists_sqr(num_results);
-      
-      nanoflann::KNNResultSet<scalar> resultSet(num_results);
-      
-      resultSet.init(&ret_indexes[0], &out_dists_sqr[0] );
-      
       scalar A_target = A_inc * (scalar) j + m_min_As(i);
-      mat_index.index->findNeighbors(resultSet, &A_target, nanoflann::SearchParams());
-      
-      int retidx = ret_indexes[0];
-      int otheridx;
-      if(retidx == 0) {
-        otheridx = retidx + 1;
-      } else if(retidx == m_discretization - 1) {
-        otheridx = retidx - 1;
-      } else {
-        int upperidx = retidx + 1;
-        int loweridx = retidx - 1;
-        if(fabs(A_target - m_A_table(upperidx, i)) < fabs(A_target - m_A_table(loweridx, i))) {
-          otheridx = upperidx;
-        } else {
-          otheridx = loweridx;
-        }
-      }
+
+      int retidx = std::min(mathutils::bipart_closest(v, A_target), m_discretization - 1);
+      int otheridx = std::min(m_discretization - 1, retidx + 1);
       
       scalar A0 = m_A_table(retidx, i);
       scalar A1 = m_A_table(otheridx, i);
@@ -652,44 +625,19 @@ void CohesionTable::construct_planar_alpha_table()
   
   //std::cout << m_A_planar_table << std::endl;
   
-  typedef nanoflann::KDTreeEigenMatrixAdaptor< const VectorXs, 1 >  my_kd_tree_t;
-  
   for(int i = 0; i < m_discretization; ++i)
   {
     const VectorXs& v = m_A_planar_table.col(i);
-    my_kd_tree_t mat_index(1, v, 10);
     const size_t num_results = 1;
     
     scalar A_inc = (m_max_A_planars(i) - m_min_A_planars(i)) / m_discretization;
     
     for(int j = 0; j < m_discretization; ++j)
     {
-      
-      std::vector<size_t>   ret_indexes(num_results);
-      std::vector<scalar> out_dists_sqr(num_results);
-      
-      nanoflann::KNNResultSet<scalar> resultSet(num_results);
-      
-      resultSet.init(&ret_indexes[0], &out_dists_sqr[0] );
-      
       scalar A_target = A_inc * (scalar) j + m_min_A_planars(i);
-      mat_index.index->findNeighbors(resultSet, &A_target, nanoflann::SearchParams());
-      
-      int retidx = ret_indexes[0];
-      int otheridx;
-      if(retidx == 0) {
-        otheridx = retidx + 1;
-      } else if(retidx == m_discretization - 1) {
-        otheridx = retidx - 1;
-      } else {
-        int upperidx = retidx + 1;
-        int loweridx = retidx - 1;
-        if(fabs(A_target - m_A_planar_table(upperidx, i)) < fabs(A_target - m_A_planar_table(loweridx, i))) {
-          otheridx = upperidx;
-        } else {
-          otheridx = loweridx;
-        }
-      }
+
+      int retidx = std::min(mathutils::bipart_closest(v, A_target), m_discretization - 1);
+      int otheridx = std::min(m_discretization - 1, retidx + 1);
       
       scalar A0 = m_A_planar_table(retidx, i);
       scalar A1 = m_A_planar_table(otheridx, i);

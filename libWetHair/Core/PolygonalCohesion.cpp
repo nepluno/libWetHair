@@ -51,7 +51,6 @@
 
 #include <stack>
 #include <deque>
-#include <nanoflann/nanoflann.hpp>
 #include <set>
 #include <numeric>
 #include <algorithm>
@@ -61,7 +60,7 @@
 
 template<int DIM>
 PolygonalCohesion<DIM>::PolygonalCohesion(TwoDScene<DIM>* scene) :
-m_parent(scene), m_tree(NULL), m_sorter(NULL), m_use_decoupled_force(false), m_compute_particle_poe_mapping(true), m_min_cohesion_table(NULL), m_max_cohesion_table(NULL)
+m_parent(scene), m_sorter(NULL), m_use_decoupled_force(false), m_compute_particle_poe_mapping(true), m_min_cohesion_table(NULL), m_max_cohesion_table(NULL)
 {
   m_sorter = new Sorter(0, 0, 0);
   
