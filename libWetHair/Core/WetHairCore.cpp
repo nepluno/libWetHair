@@ -122,16 +122,16 @@ void WetHairCore<DIM>::stepSystem()
     
     m_scene->applyScript(dt);
     
+    std::cout << "[advect rigid bodies]" << std::endl;
+    m_scene->advectRigidBodies(substep);
+    
+    if(updateSDF) {
+      FluidSim* fluidsim = m_scene->getFluidSim();
+      if(fluidsim) fluidsim->update_boundary();
+    }
+    
     // 0. advect the free-flow particles (Sec. 4.2).
     if(!parameter.no_fluids) {
-      std::cout << "[advect rigid bodies]" << std::endl;
-      m_scene->advectRigidBodies(substep);
-      
-      if(updateSDF) {
-        FluidSim* fluidsim = m_scene->getFluidSim();
-        fluidsim->update_boundary();
-      }
-
       std::cout << "[advect fluid simulation]" << std::endl;
       m_scene->advectFluidSim(substep);
       
