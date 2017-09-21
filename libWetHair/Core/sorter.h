@@ -79,13 +79,13 @@ public:
     tbb::parallel_sort(array_idx.begin(), array_idx.end());
 
     tbb::parallel_for(0, np, 1, [&] (int pidx) {
-      unsigned int G_ID = (unsigned int) pidx;
-      unsigned int G_ID_PREV = (G_ID == 0)? (unsigned int) np : G_ID; G_ID_PREV--;
-      unsigned int G_ID_NEXT = G_ID + 1; if (G_ID_NEXT == (unsigned int) np) { G_ID_NEXT = 0; }
-      
+      int G_ID = pidx;
+      int G_ID_PREV = G_ID - 1;
+      int G_ID_NEXT = G_ID + 1;
+
       unsigned int cell = (unsigned int) ( array_idx[G_ID] >> 32UL );
-      unsigned int cell_prev = (unsigned int) ( array_idx[G_ID_PREV] >> 32UL );
-      unsigned int cell_next = (unsigned int) ( array_idx[G_ID_NEXT] >> 32UL );
+      unsigned int cell_prev = G_ID_PREV < 0 ? -1U : (unsigned int) ( array_idx[G_ID_PREV] >> 32UL );
+      unsigned int cell_next = G_ID_NEXT >= np ? -1U : (unsigned int) ( array_idx[G_ID_NEXT] >> 32UL );
       if (cell != cell_prev)
       {
         // I'm the start of a cell
