@@ -45,6 +45,7 @@
 // Simple placeholder code for BLAS calls - replace with calls to a real BLAS library
 
 #include <vector>
+#include <Eigen/Core>
 
 namespace robertbridson {
 
@@ -55,23 +56,19 @@ inline double dot(const std::vector<double> &x, const std::vector<double> &y)
 {
    double sum = 0;
    size_t n = x.size() < y.size() ? x.size() : y.size();
-   for(size_t i = 0; i < n; ++i)
-      sum += x[i]*y[i];
-   return sum;
+   return Eigen::Map<Eigen::VectorXd>((double*) &y[0], n).dot(Eigen::Map<Eigen::VectorXd>((double*) &x[0], n));
 }
 
 // inf-norm (maximum absolute value: index of max returned) ==================
 
 inline int index_abs_max(const std::vector<double> &x)
-{ 
+{
    int maxind = 0;
-   double maxvalue = 0;
-   for(int i = 0; i < x.size(); ++i) {
-      if(fabs(x[i]) > maxvalue) {
-         maxvalue = fabs(x[i]);
-         maxind = i;
-      }
-   }
+   int col = 0;
+
+   size_t n = x.size();
+   Eigen::Map<Eigen::VectorXd>((double*) &x[0], n).cwiseAbs().maxCoeff(&maxind, &col);
+
    return maxind;
 }
 
@@ -84,9 +81,9 @@ inline double abs_max(const std::vector<double> &x)
 // saxpy (y=alpha*x+y) =======================================================
 
 inline void add_scaled(double alpha, const std::vector<double> &x, std::vector<double> &y)
-{ 
-   for(int i = 0; i < y.size(); ++i)
-      y[i] += alpha*x[i];
+{
+    size_t n = x.size() < y.size() ? x.size() : y.size();
+    Eigen::Map<Eigen::VectorXd>((double*) &y[0], n) += Eigen::Map<const Eigen::VectorXd>((const double*) &x[0], n) * alpha;
 }
 }
 }

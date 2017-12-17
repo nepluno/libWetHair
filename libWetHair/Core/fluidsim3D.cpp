@@ -1052,7 +1052,7 @@ void FluidSim3D::correct(scalar dt)
       const Particle<3> &np = particles[pidx];
       if(n != pidx)
       {
-        scalar re = 1.5 * sqrt(p.radii * np.radii);
+        scalar re = sqrt(p.radii * np.radii);
         scalar dist = (p.x - np.x).norm();
         scalar w = coeff * mathutils::smooth_kernel(dist * dist, re);
         if( dist > 1e-4 * re )
@@ -1473,7 +1473,7 @@ void FluidSim3D::compute_liquid_phi()
       
       m_sorter->getNeigboringParticles_cell(i, j, k, -2, 2, -2, 2, -2, 2, [&] (int pidx) {
         const Particle<3>& p = particles[pidx];
-        phi_min = std::min(phi_min, (pos - p.x).norm() - 1.02 * std::max(dx / sqrt(3.0), p.radii));
+        phi_min = std::min(phi_min, (pos - p.x).norm() - std::max(dx * 0.883644, p.radii));
       });
       liquid_phi(i,j,k) = std::min(liquid_phi(i,j,k), phi_min);
     }
@@ -1483,19 +1483,10 @@ void FluidSim3D::compute_liquid_phi()
   threadutils::thread_pool::ParallelFor(0, nk, [&](int k){
     for(int j = 0; j < nj; ++j) {
       for(int i = 0; i < ni; ++i) {
-        if(liquid_phi(i,j,k) < 0.5*dx) {
-          float solid_phi_val = 0.125 * (
-                                        nodal_solid_phi(i,j,k) +
-                                        nodal_solid_phi(i+1,j,k) +
-                                        nodal_solid_phi(i,j+1,k) +
-                                        nodal_solid_phi(i+1,j+1,k) +
-                                        nodal_solid_phi(i,j,k+1) +
-                                        nodal_solid_phi(i+1,j,k+1) +
-                                        nodal_solid_phi(i,j+1,k+1) +
-                                        nodal_solid_phi(i+1,j+1,k+1));
-          if(solid_phi_val < 0)
-            liquid_phi(i,j,k) = -0.5*dx;
-        }
+          Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
+          Vector3s vel;
+          scalar solid_phi_val = compute_phi_vel(pos, vel);
+          liquid_phi(i,j,k) = std::min(liquid_phi(i,j,k), solid_phi_val);
       }
     }
   });
@@ -1670,19 +1661,19 @@ Matrix3s FluidSim3D::get_affine_matrix(const Vector3s& position) const
 void FluidSim3D::compute_weights() {
   threadutils::thread_pool::ParallelFor(0, u_weights.nk, [&] (int k) {
     for(int j = 0; j < u_weights.nj; ++j) for(int i = 0; i < u_weights.ni; ++i) {
-      u_weights(i,j,k) = 1 - mathutils::fraction_inside(nodal_solid_phi(i,j+1,k+1), nodal_solid_phi(i,j,k));
+      u_weights(i,j,k) = 1 - mathutils::fraction_inside(nodal_solid_phi(i,j,k), nodal_solid_phi(i,j+1,k), nodal_solid_phi(i,j,k+1), nodal_solid_phi(i,j+1,k+1));
       u_weights(i,j,k) = hardclamp(u_weights(i,j,k), 0.0, 1.0);
     }
   });
   threadutils::thread_pool::ParallelFor(0, v_weights.nk, [&] (int k) {
     for(int j = 0; j < v_weights.nj; ++j) for(int i = 0; i < v_weights.ni; ++i) {
-      v_weights(i,j,k) = 1 - mathutils::fraction_inside(nodal_solid_phi(i+1,j,k+1), nodal_solid_phi(i,j,k));
+      v_weights(i,j,k) = 1 - mathutils::fraction_inside(nodal_solid_phi(i,j,k), nodal_solid_phi(i+1,j,k), nodal_solid_phi(i,j,k+1), nodal_solid_phi(i+1,j,k+1));
       v_weights(i,j,k) = hardclamp(v_weights(i,j,k), 0.0, 1.0);
     }
   });
   threadutils::thread_pool::ParallelFor(0, w_weights.nk, [&] (int k) {
     for(int j = 0; j < w_weights.nj; ++j) for(int i = 0; i < w_weights.ni; ++i) {
-      w_weights(i,j,k) = 1 - mathutils::fraction_inside(nodal_solid_phi(i+1,j+1,k), nodal_solid_phi(i,j,k));
+      w_weights(i,j,k) = 1 - mathutils::fraction_inside(nodal_solid_phi(i,j,k), nodal_solid_phi(i,j+1,k), nodal_solid_phi(i+1,j,k), nodal_solid_phi(i+1,j+1,k));
       w_weights(i,j,k) = hardclamp(w_weights(i,j,k), 0.0, 1.0);
     }
   });
@@ -1726,7 +1717,9 @@ void FluidSim3D::solve_pressure(scalar dt) {
   
   for (int k=0;k<nk;k++)for(int j=0;j<nj;j++)for(int i=0;i<ni;i++)
   {
-	   if (liquid_phi(i,j,k)<0)
+	   if (liquid_phi(i,j,k)<0 && (u_weights(i, j, k) > 1e-12 || u_weights(i+1, j, k) > 1e-12 ||
+                                   v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
+                                   w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
      {
        dof_index(i,j,k) = x.size();
        dof_ijk.push_back(Vector3i(i,j,k));

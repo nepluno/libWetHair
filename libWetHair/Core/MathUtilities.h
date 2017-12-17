@@ -3647,6 +3647,96 @@ namespace mathutils
     else
       return (T) 0.0;
   }
+    
+    inline void cycle_array(scalar* arr, int size) {
+        scalar t = arr[0];
+        for(int i = 0; i < size-1; ++i)
+            arr[i] = arr[i+1];
+        arr[size-1] = t;
+    }
+    
+    inline scalar fraction_inside(const scalar& phi_bl, const scalar& phi_br,
+                                  const scalar& phi_tl, const scalar& phi_tr) {
+        
+        int inside_count = (phi_bl<0?1:0) + (phi_tl<0?1:0) + (phi_br<0?1:0) + (phi_tr<0?1:0);
+        scalar list[] = { phi_bl, phi_br, phi_tr, phi_tl };
+        
+        if(inside_count == 4)
+            return 1.;
+        else if (inside_count == 3) {
+            //rotate until the positive value is in the first position
+            while(list[0] < 0) {
+                cycle_array(list,4);
+            }
+            
+            //Work out the area of the exterior triangle
+            scalar side0 = 1.-fraction_inside(list[0], list[3]);
+            scalar side1 = 1.-fraction_inside(list[0], list[1]);
+            return 1. - 0.5*side0*side1;
+        }
+        else if(inside_count == 2) {
+            
+            //rotate until a negative value is in the first position, and the next negative is in either slot 1 or 2.
+            while(list[0] >= 0 || !(list[1] < 0 || list[2] < 0)) {
+                cycle_array(list,4);
+            }
+            
+            if(list[1] < 0) { //the matching signs are adjacent
+                scalar side_left = fraction_inside(list[0], list[3]);
+                scalar side_right = fraction_inside(list[1], list[2]);
+                return  0.5*(side_left + side_right);
+            }
+            else { //matching signs are diagonally opposite
+                //determine the centre point's sign to disambiguate this case
+                scalar middle_point = 0.25*(list[0] + list[1] + list[2] + list[3]);
+                if(middle_point < 0) {
+                    scalar area = 0.;
+                    
+                    //first triangle (top left)
+                    scalar side1 = 1.-fraction_inside(list[0], list[3]);
+                    scalar side3 = 1.-fraction_inside(list[2], list[3]);
+                    
+                    area += 0.5*side1*side3;
+                    
+                    //second triangle (top right)
+                    scalar side2 = 1-fraction_inside(list[2], list[1]);
+                    scalar side0 = 1-fraction_inside(list[0], list[1]);
+                    area += 0.5*side0*side2;
+                    
+                    return 1.-area;
+                }
+                else {
+                    scalar area = 0.;
+                    
+                    //first triangle (bottom left)
+                    scalar side0 = fraction_inside(list[0], list[1]);
+                    scalar side1 = fraction_inside(list[0], list[3]);
+                    area += 0.5*side0*side1;
+                    
+                    //second triangle (top right)
+                    scalar side2 = fraction_inside(list[2], list[1]);
+                    scalar side3 = fraction_inside(list[2], list[3]);
+                    area += 0.5*side2*side3;
+                    return area;
+                }
+                
+            }
+        }
+        else if(inside_count == 1) {
+            //rotate until the negative value is in the first position
+            while(list[0] >= 0) {
+                cycle_array(list,4);
+            }
+            
+            //Work out the area of the interior triangle, and subtract from 1.
+            scalar side0 = fraction_inside(list[0], list[3]);
+            scalar side1 = fraction_inside(list[0], list[1]);
+            return 0.5*side0*side1;
+        }
+        else
+            return 0;
+        
+    }
   
   template<typename T>
   inline void closestDistanceBetweenLines(const Eigen::Matrix<T, 3, 1>& a0,
