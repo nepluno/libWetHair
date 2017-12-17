@@ -1715,131 +1715,130 @@ void FluidSim3D::solve_pressure(scalar dt) {
   
   const scalar rho = m_parent->getLiquidDensity();
   
-  for (int k=0;k<nk;k++)for(int j=0;j<nj;j++)for(int i=0;i<ni;i++)
+  for (int k=1;k<nk-1;k++)for(int j=1;j<nj-1;j++)for(int i=1;i<ni-1;i++)
   {
-	   if (liquid_phi(i,j,k)<0 && (u_weights(i, j, k) > 1e-12 || u_weights(i+1, j, k) > 1e-12 ||
-                                   v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
-                                   w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
-     {
-       dof_index(i,j,k) = x.size();
-       dof_ijk.push_back(Vector3i(i,j,k));
-       x.push_back(0);
-     }
-  }
-  
-  for(int k = 1; k < nk - 1; ++k) for(int j = 1; j < nj - 1; ++j) for(int i = 1; i < ni - 1; ++i) {
-    scalar centre_phi = liquid_phi(i,j,k);
-    unsigned dof_idx = dof_index(i,j,k);
-    if(centre_phi < 0 && (u_weights(i, j, k) > 1e-12 || u_weights(i+1, j, k) > 1e-12 ||
-                          v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
-                          w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
+    if (liquid_phi(i,j,k)<0 && (u_weights(i, j, k) > 1e-12 || u_weights(i+1, j, k) > 1e-12 ||
+                                v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
+                                w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
     {
-      rhs[dof_idx] = 0;
-      //right neighbour
-      scalar term = u_weights(i+1,j,k) * dt / sqr(dx) / rho;
-      scalar right_phi = liquid_phi(i+1,j,k);
-      if(right_phi < 0) {
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term);
-        matrix.add_to_element(dof_idx,
-                              dof_index(i+1,j,k), -term);
-      }
-      else {
-        scalar theta = fraction_inside(centre_phi, right_phi);
-        if(theta < 0.01) theta = 0.01;
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term/theta);
-      }
-      rhs[dof_idx] -= (u_weights(i+1,j,k)*u(i+1,j,k) + (1.0-u_weights(i+1,j,k)) * u_solid(i+1,j,k)) / dx;
-      
-      //left neighbour
-      term = u_weights(i,j,k) * dt / sqr(dx) / rho;
-      scalar left_phi = liquid_phi(i-1,j,k);
-      if(left_phi < 0) {
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term);
-        matrix.add_to_element(dof_idx,
-                              dof_index(i-1,j,k), -term);
-      }
-      else {
-        scalar theta = fraction_inside(centre_phi, left_phi);
-        if(theta < 0.01) theta = 0.01;
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term/theta);
-      }
-      rhs[dof_idx] += (u_weights(i,j,k)*u(i,j,k) + (1.0-u_weights(i,j,k)) * u_solid(i,j,k)) / dx;
-      
-      //top neighbour
-      term = v_weights(i,j+1,k) * dt / sqr(dx) / rho;
-      scalar top_phi = liquid_phi(i,j+1,k);
-      if(top_phi < 0) {
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term);
-        matrix.add_to_element(dof_idx,
-                              dof_index(i,j+1,k), -term);
-      }
-      else {
-        scalar theta = fraction_inside(centre_phi, top_phi);
-        if(theta < 0.01) theta = 0.01;
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term/theta);
-      }
-      rhs[dof_idx] -= (v_weights(i,j+1,k)*v(i,j+1,k) + (1.0-v_weights(i,j+1,k)) * v_solid(i,j+1,k)) / dx;
-      
-      //bottom neighbour
-      term = v_weights(i,j,k) * dt / sqr(dx) / rho;
-      scalar bot_phi = liquid_phi(i,j-1,k);
-      if(bot_phi < 0) {
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term);
-        matrix.add_to_element(dof_idx,
-                              dof_index(i,j-1,k), -term);
-      }
-      else {
-        scalar theta = fraction_inside(centre_phi, bot_phi);
-        if(theta < 0.01) theta = 0.01;
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term/theta);
-      }
-      rhs[dof_idx] += (v_weights(i,j,k)*v(i,j,k) + (1.0-v_weights(i,j,k)) * v_solid(i,j,k)) / dx;
-      
-      
-      //far neighbour
-      term = w_weights(i,j,k+1) * dt / sqr(dx) / rho;
-      scalar far_phi = liquid_phi(i,j,k+1);
-      if(far_phi < 0) {
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term);
-        matrix.add_to_element(dof_idx,
-                              dof_index(i,j,k+1), -term);
-      }
-      else {
-        scalar theta = fraction_inside(centre_phi, far_phi);
-        if(theta < 0.01) theta = 0.01;
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term/theta);
-      }
-      rhs[dof_idx] -= (w_weights(i,j,k+1)*w(i,j,k+1) + (1.0-w_weights(i,j,k+1)) * w_solid(i,j,k+1)) / dx;
-      
-      //near neighbour
-      term = w_weights(i,j,k) * dt / sqr(dx) / rho;
-      scalar near_phi = liquid_phi(i,j,k-1);
-      if(near_phi < 0) {
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term);
-        matrix.add_to_element(dof_idx,
-                              dof_index(i,j,k-1), -term);
-      }
-      else {
-        scalar theta = fraction_inside(centre_phi, near_phi);
-        if(theta < 0.01) theta = 0.01;
-        matrix.add_to_element(dof_idx,
-                              dof_idx, term/theta);
-      }
-      rhs[dof_idx] += (w_weights(i,j,k)*w(i,j,k) + (1.0-w_weights(i,j,k)) * w_solid(i,j,k)) / dx;
+      dof_index(i,j,k) = x.size();
+      dof_ijk.push_back(Vector3i(i,j,k));
+      x.push_back(0);
     }
   }
   
+  threadutils::thread_pool::ParallelFor(0, (int) dof_ijk.size(), [&] (int ind_ijk) {
+    const int i = dof_ijk[ind_ijk](0);
+    const int j = dof_ijk[ind_ijk](1);
+    const int k = dof_ijk[ind_ijk](2);
+    
+    scalar centre_phi = liquid_phi(i,j,k);
+    unsigned dof_idx = dof_index(i,j,k);
+    rhs[dof_idx] = 0;
+    //right neighbour
+    scalar term = u_weights(i+1,j,k) * dt / sqr(dx) / rho;
+    scalar right_phi = liquid_phi(i+1,j,k);
+    if(right_phi < 0) {
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term);
+      matrix.add_to_element(dof_idx,
+                            dof_index(i+1,j,k), -term);
+    }
+    else {
+      scalar theta = fraction_inside(centre_phi, right_phi);
+      if(theta < 0.01) theta = 0.01;
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term/theta);
+    }
+    rhs[dof_idx] -= (u_weights(i+1,j,k)*u(i+1,j,k) + (1.0-u_weights(i+1,j,k)) * u_solid(i+1,j,k)) / dx;
+    
+    //left neighbour
+    term = u_weights(i,j,k) * dt / sqr(dx) / rho;
+    scalar left_phi = liquid_phi(i-1,j,k);
+    if(left_phi < 0) {
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term);
+      matrix.add_to_element(dof_idx,
+                            dof_index(i-1,j,k), -term);
+    }
+    else {
+      scalar theta = fraction_inside(centre_phi, left_phi);
+      if(theta < 0.01) theta = 0.01;
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term/theta);
+    }
+    rhs[dof_idx] += (u_weights(i,j,k)*u(i,j,k) + (1.0-u_weights(i,j,k)) * u_solid(i,j,k)) / dx;
+    
+    //top neighbour
+    term = v_weights(i,j+1,k) * dt / sqr(dx) / rho;
+    scalar top_phi = liquid_phi(i,j+1,k);
+    if(top_phi < 0) {
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term);
+      matrix.add_to_element(dof_idx,
+                            dof_index(i,j+1,k), -term);
+    }
+    else {
+      scalar theta = fraction_inside(centre_phi, top_phi);
+      if(theta < 0.01) theta = 0.01;
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term/theta);
+    }
+    rhs[dof_idx] -= (v_weights(i,j+1,k)*v(i,j+1,k) + (1.0-v_weights(i,j+1,k)) * v_solid(i,j+1,k)) / dx;
+    
+    //bottom neighbour
+    term = v_weights(i,j,k) * dt / sqr(dx) / rho;
+    scalar bot_phi = liquid_phi(i,j-1,k);
+    if(bot_phi < 0) {
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term);
+      matrix.add_to_element(dof_idx,
+                            dof_index(i,j-1,k), -term);
+    }
+    else {
+      scalar theta = fraction_inside(centre_phi, bot_phi);
+      if(theta < 0.01) theta = 0.01;
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term/theta);
+    }
+    rhs[dof_idx] += (v_weights(i,j,k)*v(i,j,k) + (1.0-v_weights(i,j,k)) * v_solid(i,j,k)) / dx;
+    
+    
+    //far neighbour
+    term = w_weights(i,j,k+1) * dt / sqr(dx) / rho;
+    scalar far_phi = liquid_phi(i,j,k+1);
+    if(far_phi < 0) {
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term);
+      matrix.add_to_element(dof_idx,
+                            dof_index(i,j,k+1), -term);
+    }
+    else {
+      scalar theta = fraction_inside(centre_phi, far_phi);
+      if(theta < 0.01) theta = 0.01;
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term/theta);
+    }
+    rhs[dof_idx] -= (w_weights(i,j,k+1)*w(i,j,k+1) + (1.0-w_weights(i,j,k+1)) * w_solid(i,j,k+1)) / dx;
+    
+    //near neighbour
+    term = w_weights(i,j,k) * dt / sqr(dx) / rho;
+    scalar near_phi = liquid_phi(i,j,k-1);
+    if(near_phi < 0) {
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term);
+      matrix.add_to_element(dof_idx,
+                            dof_index(i,j,k-1), -term);
+    }
+    else {
+      scalar theta = fraction_inside(centre_phi, near_phi);
+      if(theta < 0.01) theta = 0.01;
+      matrix.add_to_element(dof_idx,
+                            dof_idx, term/theta);
+    }
+    rhs[dof_idx] += (w_weights(i,j,k)*w(i,j,k) + (1.0-w_weights(i,j,k)) * w_solid(i,j,k)) / dx;
+  });
+
   //Solve the system using Robert Bridson's incomplete Cholesky PCG solver
   
   scalar tolerance;
