@@ -1730,7 +1730,9 @@ void FluidSim3D::solve_pressure(scalar dt) {
   for(int k = 1; k < nk - 1; ++k) for(int j = 1; j < nj - 1; ++j) for(int i = 1; i < ni - 1; ++i) {
     scalar centre_phi = liquid_phi(i,j,k);
     unsigned dof_idx = dof_index(i,j,k);
-    if(centre_phi < 0)
+    if(centre_phi < 0 && (u_weights(i, j, k) > 1e-12 || u_weights(i+1, j, k) > 1e-12 ||
+                          v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
+                          w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
     {
       rhs[dof_idx] = 0;
       //right neighbour
@@ -2094,9 +2096,9 @@ void FluidSim3D::init_random_particles(const scalar& rl, const scalar& rr, const
     {
       for(int j = 0; j < nj; ++j) {
         for(int r = 0; r < default_particle_in_cell(); ++r) {
-          scalar x = ((scalar) i + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5) ) * dx;
-          scalar y = ((scalar) j + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5) ) * dx;
-          scalar z = ((scalar) k + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5) ) * dx;
+          scalar x = ((scalar) i + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0) ) * dx;
+          scalar y = ((scalar) j + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0) ) * dx;
+          scalar z = ((scalar) k + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0) ) * dx;
           Vector3s pt = Vector3s(x,y,z) + origin;
           
           Vector3s vel;
