@@ -1704,8 +1704,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
   
   std::vector<double> x;
   std::vector<Vector3i> dof_ijk;
-  x.resize(0);
-  x.reserve(system_size);
+
   dof_ijk.resize(0);
   dof_ijk.reserve(system_size);
   
@@ -1721,19 +1720,20 @@ void FluidSim3D::solve_pressure(scalar dt) {
                                 v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
                                 w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
     {
-      dof_index(i,j,k) = x.size();
+      dof_index(i,j,k) = dof_ijk.size();
       dof_ijk.push_back(Vector3i(i,j,k));
-      x.push_back(0);
     }
   }
   
-  threadutils::thread_pool::ParallelFor(0, (int) dof_ijk.size(), [&] (int ind_ijk) {
-    const int i = dof_ijk[ind_ijk](0);
-    const int j = dof_ijk[ind_ijk](1);
-    const int k = dof_ijk[ind_ijk](2);
+  x.resize(dof_ijk.size());
+  x.assign(dof_ijk.size(), 0);
+  
+  threadutils::thread_pool::ParallelFor(0, (int) dof_ijk.size(), [&] (int dof_idx) {
+    const int i = dof_ijk[dof_idx](0);
+    const int j = dof_ijk[dof_idx](1);
+    const int k = dof_ijk[dof_idx](2);
     
     scalar centre_phi = liquid_phi(i,j,k);
-    unsigned dof_idx = dof_index(i,j,k);
     rhs[dof_idx] = 0;
     //right neighbour
     scalar term = u_weights(i+1,j,k) * dt / sqr(dx) / rho;
