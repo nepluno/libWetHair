@@ -1910,9 +1910,12 @@ void FluidSim3D::solve_pressure(scalar dt) {
     exit(0);
   }
   
-  threadutils::thread_pool::ParallelFor(0, ni*nj*nk, [&](int idx) {
-    if(liquid_phi.a[idx]<0)
-      pressure[idx] = x[dof_index.a[idx]];
+  threadutils::thread_pool::ParallelFor(0, (int) dof_ijk.size(), [&] (int dof_idx) {
+    const int i = dof_ijk[dof_idx](0);
+    const int j = dof_ijk[dof_idx](1);
+    const int k = dof_ijk[dof_idx](2);
+    
+    pressure[k * ni * nj + j * ni + i] = x[dof_idx];
   });
   
   //Apply the velocity update
