@@ -1692,14 +1692,10 @@ void FluidSim3D::solve_pressure(scalar dt) {
   
   int system_size = ni*nj*nk;
   int slice = ni*nj;
-  if((int) rhs.size() != system_size) {
-    rhs.resize(system_size);
+  if((int) pressure.size() != system_size) {
     pressure.resize(system_size);
-    matrix.resize(system_size);
   }
-  matrix.zero();
   
-  rhs.assign(rhs.size(), 0);
   pressure.assign(pressure.size(), 0);
   
   std::vector<double> x;
@@ -1727,6 +1723,14 @@ void FluidSim3D::solve_pressure(scalar dt) {
   
   x.resize(dof_ijk.size());
   x.assign(dof_ijk.size(), 0);
+    
+  if(rhs.size() != x.size()) {
+    rhs.resize(x.size());
+    matrix.resize(x.size());
+  }
+  
+  rhs.assign(rhs.size(), 0);
+  matrix.zero();
   
   threadutils::thread_pool::ParallelFor(0, (int) dof_ijk.size(), [&] (int dof_idx) {
     const int i = dof_ijk[dof_idx](0);
