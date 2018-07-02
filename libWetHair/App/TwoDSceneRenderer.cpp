@@ -457,8 +457,8 @@ void TwoDSceneRenderer<3>::renderParticleSimulation( const TwoDScene<3>& scene )
   if(sim) {
     if(m_draw_particles) {
       glEnable(GL_BLEND);
-      glColor4d(0,0,1,0.3);
-      glPointSize(5);
+      glColor4d(0,0,1,0.25);
+      glPointSize(3);
       
       glEnableClientState(GL_VERTEX_ARRAY);
       glBindBufferARB(GL_ARRAY_BUFFER, m_vertex_fluids);

@@ -117,7 +117,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   TwAddVarRW(bar, "dt", TW_TYPE_DOUBLE, &parameters.dt, " min=0.0001 max=0.01 step=0.0001 help='Time step (s)' ");
   TwAddVarRW(bar, "liquid density", TW_TYPE_DOUBLE, &parameters.rho, " min=0.1 max=10.0 step=0.1 help='Liquid density  (g/cm^3)' ");
   TwAddVarRW(bar, "surface tension", TW_TYPE_DOUBLE, &parameters.sigma, " min=0.0 max=400.0 step=0.1 help='Surface tension coefficient (dyn/cm)' ");
-  TwAddVarRW(bar, "viscosity", TW_TYPE_DOUBLE, &parameters.viscosity, " min=0.0 max=100.0 step=0.0001 help='Liquid viscosity (dyn·s/cm^2)' ");
+  TwAddVarRW(bar, "viscosity", TW_TYPE_DOUBLE, &parameters.viscosity, " min=0.0 max=10000.0 step=0.0001 help='Liquid viscosity (dyn·s/cm^2)' ");
   TwAddVarRW(bar, "quadratic dragging", TW_TYPE_DOUBLE, &parameters.quadratic_dragging, " min=0.0 max=100.0 step=0.0001 help='Liquid quadratic dragging coefficient' ");
   TwAddVarRW(bar, "hair friction", TW_TYPE_DOUBLE, &parameters.friction, " min=0.0 max=1.0 step=0.0001 help='Hair friction coefficient' ");
   TwAddVarRW(bar, "max flow/radius ratio", TW_TYPE_DOUBLE, &parameters.max_limited_eta_prop, " min=0.0 max=30.0 step=0.1 help='Maximal ratio between height of reduced-flow and radius of hair' ");
@@ -150,7 +150,7 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer()
   
   TwAddVarRW(bar, "# hair substeps", TW_TYPE_UINT32, &parameters.hairsteps, " min=1 max=100 step=1 help='Number of Substeps for Hairs' ");
   TwAddVarRW(bar, "# reduced-liquid substeps", TW_TYPE_UINT32, &parameters.swesteps, " min=1 max=100 step=1 help='Number of Substeps for Reduced Liquid' ");
-  TwAddVarRW(bar, "# fluid-correction steps", TW_TYPE_UINT32, &parameters.fluidcorrectionsteps, " min=1 max=100 step=1 help='Number of Steps to Perform Correction to Fluid Particles' ");
+  TwAddVarRW(bar, "# fluid-correction steps", TW_TYPE_UINT32, &parameters.fluidcorrectionsteps, " min=0 max=100 step=1 help='Number of Steps to Perform Correction to Fluid Particles' ");
   
   TwAddVarRW(bar, "NO fluids", TW_TYPE_BOOL8, &parameters.no_fluids, " help='Turn On to Ignore Fluids' ");
   TwAddVarRW(bar, "NO reduced-liquid", TW_TYPE_BOOL8, &parameters.no_swe, " help='Turn On to Ignore Reduced Liquid' ");

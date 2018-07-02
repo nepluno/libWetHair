@@ -1214,15 +1214,8 @@ void FluidSim3D::constrain_velocity() {
       if(u_weights(i,j,k) == 0) {
         //apply constraint
         Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-        Vector3s vel = get_velocity(pos);
-        Vector3s normal(0,0,0);
-        interpolate_gradient(normal, Vector3s(i, j + 0.5, k + 0.5), nodal_solid_phi);
-        normal.normalize();
-        scalar perp_component = vel.dot(normal);
-        vel -= perp_component*normal;
-        Vector3s vel_sol = get_solid_velocity(pos);
-        vel += vel_sol.dot(normal) * normal;
-        temp_u(i,j,k) = vel[0];
+		Vector3s vel_sol = get_solid_velocity(pos);
+        temp_u(i,j,k) = vel_sol[0];
       }
     }
   });
@@ -1233,15 +1226,8 @@ void FluidSim3D::constrain_velocity() {
       if(v_weights(i,j,k) == 0) {
         //apply constraint
         Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
-        Vector3s vel = get_velocity(pos);
-        Vector3s normal(0,0,0);
-        interpolate_gradient(normal, Vector3s(i + 0.5, j, k + 0.5), nodal_solid_phi);
-        normal.normalize();
-        scalar perp_component = vel.dot(normal);
-        vel -= perp_component*normal;
-        Vector3s vel_sol = get_solid_velocity(pos);
-        vel += vel_sol.dot(normal) * normal;
-        temp_v(i,j,k) = vel[1];
+		Vector3s vel_sol = get_solid_velocity(pos);
+		temp_v(i,j,k) = vel_sol[1];
       }
     }
   });
@@ -1252,15 +1238,8 @@ void FluidSim3D::constrain_velocity() {
       if(w_weights(i,j,k) == 0) {
         //apply constraint
         Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
-        Vector3s vel = get_velocity(pos);
-        Vector3s normal(0,0,0);
-        interpolate_gradient(normal, Vector3s(i + 0.5, j + 0.5, k), nodal_solid_phi);
-        normal.normalize();
-        scalar perp_component = vel.dot(normal);
-        vel -= perp_component*normal;
-        Vector3s vel_sol = get_solid_velocity(pos);
-        vel += vel_sol.dot(normal) * normal;
-        temp_w(i,j,k) = vel[2];
+		Vector3s vel_sol = get_solid_velocity(pos);
+		temp_w(i,j,k) = vel_sol[2];
       }
     }
   });
@@ -1372,9 +1351,9 @@ void FluidSim3D::advect_particles(scalar dt) {
       
       for(int k = 0; k < num_p_need; ++k)
       {
-        scalar x = ((scalar) ix + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5) ) * dx;
-        scalar y = ((scalar) iy + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5) ) * dx;
-        scalar z = ((scalar) iz + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5) ) * dx;
+        scalar x = ((scalar) ix + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) - 0.5) ) * dx;
+        scalar y = ((scalar) iy + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) - 0.5) ) * dx;
+        scalar z = ((scalar) iz + 0.5 + (((scalar)rand() / (scalar)RAND_MAX) - 0.5) ) * dx;
         Vector3s pt = Vector3s(x, y, z) + origin;
         
         scalar phi_value = interpolate_value(pp, nodal_solid_phi);
@@ -1483,10 +1462,12 @@ void FluidSim3D::compute_liquid_phi()
   threadutils::thread_pool::ParallelFor(0, nk, [&](int k){
     for(int j = 0; j < nj; ++j) {
       for(int i = 0; i < ni; ++i) {
-          Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-          Vector3s vel;
-          scalar solid_phi_val = compute_phi_vel(pos, vel);
-          liquid_phi(i,j,k) = std::min(liquid_phi(i,j,k), solid_phi_val);
+				scalar solid_phi_val = 0.125*(nodal_solid_phi(i,j,k) + nodal_solid_phi(i+1,j,k) + nodal_solid_phi(i,j+1,k) + nodal_solid_phi(i+1,j+1,k)
+					+ nodal_solid_phi(i,j,k+1) + nodal_solid_phi(i+1,j,k+1)
+					+ nodal_solid_phi(i,j+1,k+1) + nodal_solid_phi(i+1,j+1,k+1));
+				if(solid_phi_val < 0.) {
+					liquid_phi(i,j,k) = -0.5 * dx;
+				}
       }
     }
   });
@@ -1712,9 +1693,9 @@ void FluidSim3D::solve_pressure(scalar dt) {
   
   for (int k=1;k<nk-1;k++)for(int j=1;j<nj-1;j++)for(int i=1;i<ni-1;i++)
   {
-    if (liquid_phi(i,j,k)<0 && (u_weights(i, j, k) > 1e-12 || u_weights(i+1, j, k) > 1e-12 ||
-                                v_weights(i, j, k) > 1e-12 || v_weights(i, j+1, k) > 1e-12 ||
-                                w_weights(i, j, k) > 1e-12 || w_weights(i, j, k+1) > 1e-12))
+		if (liquid_phi(i,j,k)<0 && (u_weights(i, j, k) > 0. || u_weights(i+1, j, k) > 0. ||
+																v_weights(i, j, k) > 0. || v_weights(i, j+1, k) > 0. ||
+																w_weights(i, j, k) > 0. || w_weights(i, j, k+1) > 0.))
     {
       dof_index(i,j,k) = dof_ijk.size();
       dof_ijk.push_back(Vector3i(i,j,k));
@@ -1865,7 +1846,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
   solver.set_solver_parameters(1e-18, 1000);
   success = solver.solve(matrix, rhs, pressure, tolerance, iterations);
 #else
-  success = AMGPCGSolveSparse(matrix,rhs,x,dof_ijk,1e-6,500,tolerance,iterations,ni,nj,nk);
+  success = AMGPCGSolveSparse(matrix,rhs,x,dof_ijk,1e-18, 1000,tolerance,iterations,ni,nj,nk);
   
 #endif
 
@@ -3364,20 +3345,20 @@ void FluidSim3D::apply_viscosity(scalar dt) {
   
   const scalar& visc = m_parent->getViscosity();
   
-  advance_viscosity_implicit_weighted(u, v, w, u_visc_impulse, v_visc_impulse, w_visc_impulse,
+  advance_viscosity_implicit_weighted(u_particle, v_particle, w_particle, u_visc_impulse, v_visc_impulse, w_visc_impulse,
                                       u_vol_liquid, v_vol_liquid, w_vol_liquid,
                                       c_vol_liquid, ex_vol_liquid, ey_vol_liquid, ez_vol_liquid, cell_solid_phi, visc, dt, dx);
 }
 
 void FluidSim3D::compute_viscosity_weights()
 {
-  estimate_volume_fractions(c_vol_liquid,  Vector3s(0.5*dx, 0.5*dx, 0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
-  estimate_volume_fractions(u_vol_liquid,  Vector3s(0,       0.5*dx, 0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
-  estimate_volume_fractions(v_vol_liquid,  Vector3s(0.5*dx, 0,       0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
-  estimate_volume_fractions(w_vol_liquid,  Vector3s(0.5*dx, 0.5*dx, 0),       dx, liquid_phi, Vector3s(0,0,0), dx);
-  estimate_volume_fractions(ex_vol_liquid, Vector3s(0.5*dx, 0,       0),       dx, liquid_phi, Vector3s(0,0,0), dx);
-  estimate_volume_fractions(ey_vol_liquid, Vector3s(0,       0.5*dx, 0),       dx, liquid_phi, Vector3s(0,0,0), dx);
-  estimate_volume_fractions(ez_vol_liquid, Vector3s(0,       0,       0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(c_vol_liquid,  Vector3s(0.5*dx, 0.5*dx, 0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(u_vol_liquid,  Vector3s(0,       0.5*dx, 0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(v_vol_liquid,  Vector3s(0.5*dx, 0,       0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(w_vol_liquid,  Vector3s(0.5*dx, 0.5*dx, 0),       dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(ex_vol_liquid, Vector3s(0.5*dx, 0,       0),       dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(ey_vol_liquid, Vector3s(0,       0.5*dx, 0),       dx, liquid_phi, Vector3s(0,0,0), dx);
+	estimate_volume_fractions(ez_vol_liquid, Vector3s(0,       0,       0.5*dx), dx, liquid_phi, Vector3s(0,0,0), dx);
 }
 
 void estimate_volume_fractions(Array3s& volumes,
@@ -3415,7 +3396,7 @@ void extrapolate(Array3s& grid, Array3s& old_grid, const Array3s& grid_weight, c
   
   for(int k = 1; k < grid.nk - 1; ++k) for(int j = 1; j < grid.nj - 1; ++j) for(int i = 1; i < grid.ni - 1; ++i)
     valid(i,j,k) = grid_weight(i,j,k) > 0 && (grid_liquid_weight(i, j, k) < 0 || grid_liquid_weight(i + offset(0), j + offset(1), k + offset(2)) < 0 );
-  
+	
   Array3s* pgrid[2] = {&grid, &old_grid};
   Array3c* pvalid[2] = {&valid, &old_valid};
   

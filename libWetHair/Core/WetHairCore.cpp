@@ -275,24 +275,24 @@ void WetHairCore<DIM>::stepSystem()
     if(!parameter.no_fluids) {
       std::cout << "[add drag force - fluid simulation]" << std::endl;
       m_scene->addForceFluidSim(substep);
-      t1 = timingutils::seconds();
-      m_timing_statistics[11] += (t1 - t0); // add drag force
-      t0 = t1;
-      
-      // 6. combine the two velocity fields in a momentum-conservative style (Sec. 4.7).
+			
+			// 6. solve the Viscous and/or Poisson equation and do pressure projection (Sec. 4.7).
+			if(parameter.viscous_solve && parameter.viscosity > 0.0) {
+				std::cout << "[viscous solve - fluid simulation]" << std::endl;
+				m_scene->viscousSolveFluidSim(substep);
+			}
+			t1 = timingutils::seconds();
+			m_timing_statistics[11] += (t1 - t0); // add drag force
+			t0 = t1;
+			
+      // 7. combine the two velocity fields in a momentum-conservative style (Sec. 4.7).
       std::cout << "[combine velocity field]" << std::endl;
       
       m_scene->combineVelocityField();
       t1 = timingutils::seconds();
       m_timing_statistics[12] += (t1 - t0); // combine velocity
       t0 = t1;
-      
-      // 7. solve the Viscous and/or Poisson equation and do pressure projection (Sec. 4.7).
-      if(parameter.viscous_solve && parameter.viscosity > 0.0) {
-        std::cout << "[viscous solve - fluid simulation]" << std::endl;
-        m_scene->viscousSolveFluidSim(substep);
-      }
-      
+
       std::cout << "[pressure solve - fluid simulation]" << std::endl;
       m_scene->pressureSolveFluidSim(substep);
 
