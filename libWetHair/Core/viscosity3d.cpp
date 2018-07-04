@@ -192,12 +192,10 @@ void advance_viscosity_implicit_weighted(Array3s& u, Array3s& v, Array3s& w, Arr
 	
   scalar factor = dt*sqr(over_dx);
 	
-	threadutils::thread_pool::ParallelFor(u_base_idx, v_base_idx, [&] (int dof_idx) {
-		const int i = dof_ijk[dof_idx](0);
-		const int j = dof_ijk[dof_idx](1);
-		const int k = dof_ijk[dof_idx](2);
-		
-		unsigned index = u_ind(i, j, k, nx, ny);
+	threadutils::thread_pool::ParallelFor(u_base_idx, v_base_idx, [&] (int index) {
+		const int i = dof_ijk[index](0);
+		const int j = dof_ijk[index](1);
+		const int k = dof_ijk[index](2);
 		
 		rhs[index] = vol_u(i, j, k)*u(i, j, k);
 		matrix.set_element(index, index, vol_u(i, j, k));
@@ -318,12 +316,10 @@ void advance_viscosity_implicit_weighted(Array3s& u, Array3s& v, Array3s& w, Arr
 		}
 	});
 	
-	threadutils::thread_pool::ParallelFor(v_base_idx, w_base_idx, [&] (int dof_idx) {
-		const int i = dof_ijk[dof_idx](0);
-		const int j = dof_ijk[dof_idx](1);
-		const int k = dof_ijk[dof_idx](2) - nz;
-
-		unsigned index = v_ind(i, j, k, nx, ny, nz);
+	threadutils::thread_pool::ParallelFor(v_base_idx, w_base_idx, [&] (int index) {
+		const int i = dof_ijk[index](0);
+		const int j = dof_ijk[index](1);
+		const int k = dof_ijk[index](2) - nz;
 		
 		rhs[index] = vol_v(i, j, k)*v(i, j, k);
 		matrix.set_element(index, index, vol_v(i, j, k));
@@ -445,12 +441,11 @@ void advance_viscosity_implicit_weighted(Array3s& u, Array3s& v, Array3s& w, Arr
 		
 	});
 	
-	threadutils::thread_pool::ParallelFor(w_base_idx, total_ijk_size, [&] (int dof_idx) {
-		const int i = dof_ijk[dof_idx](0);
-		const int j = dof_ijk[dof_idx](1);
-		const int k = dof_ijk[dof_idx](2) - (nz * 2);
+	threadutils::thread_pool::ParallelFor(w_base_idx, total_ijk_size, [&] (int index) {
+		const int i = dof_ijk[index](0);
+		const int j = dof_ijk[index](1);
+		const int k = dof_ijk[index](2) - (nz * 2);
 		
-		unsigned index = w_ind(i, j, k, nx, ny, nz);
 		rhs[index] = vol_w(i, j, k)*w(i, j, k);
 		matrix.set_element(index, index, vol_w(i, j, k));
 		
