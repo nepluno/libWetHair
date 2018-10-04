@@ -92,71 +92,85 @@ m_parent(scene), m_sorter(NULL), m_use_decoupled_force(false), m_compute_particl
     
     m_min_cohesion_table->construct_planar_alpha_table();
     m_max_cohesion_table->construct_planar_alpha_table();
-  }
   
 #ifdef DEBUG_COHESION_TABLE
-  scalar max_vol = M_PI * ((max_eta + avg_rad) * (max_eta + avg_rad) - avg_rad * avg_rad);
-  std::cout << "[sweep adhesive/repulsive table]" << std::endl;
-  
-  MatrixXs stiffness_table(disc, disc);
-  MatrixXs force_table(disc, disc);
-  MatrixXs dEdd_table(disc, disc);
-  const scalar d_star = m_cohesion_table.getDStar();
-  for(int i = 0; i < disc; ++i)
-  {
-    for(int j = 0; j < disc; ++j)
-    {
-      scalar d = max_dist / (scalar) disc * (scalar) i;
-      scalar A_L = max_vol / (scalar) disc * (scalar) j;
-      scalar stiffness = m_cohesion_table.getStiffness(d, A_L, 1.0);
-      scalar dEdd = m_cohesion_table.interpolate_dEdd(A_L, d);
-      dEdd_table(j, i) = dEdd;
-      stiffness_table(j, i) = stiffness;
-      force_table(j, i) = stiffness * (d - d_star);
-    }
-  }
-  
-  std::cout << "[adhesive table]" << std::endl;
-  std::cout << dEdd_table << std::endl;
-  
-  std::cout << "[stiffness table]" << std::endl;
-  std::cout << stiffness_table << std::endl;
-  
-  std::cout << "[force table]" << std::endl;
-  std::cout << force_table << std::endl;
+    auto debug_cohesion_table = [&] (scalar rad, CohesionTable* cohesion_table) {
+      scalar max_vol = M_PI * ((max_eta + rad) * (max_eta + rad) - rad * rad);
+      const scalar max_dist = max_eta * 2.0;
+      
+      std::cout << "[sweep adhesive/repulsive table]" << std::endl;
+      
+      MatrixXs stiffness_table(disc, disc);
+      MatrixXs force_table(disc, disc);
+      MatrixXs dEdd_table(disc, disc);
+      const scalar d_star = cohesion_table->getDStar();
+      for(int i = 0; i < disc; ++i)
+      {
+        for(int j = 0; j < disc; ++j)
+        {
+          scalar d = max_dist / (scalar) disc * (scalar) i;
+          scalar A_L = max_vol / (scalar) disc * (scalar) j;
+          scalar stiffness = cohesion_table->getStiffness(d, A_L, 1.0);
+          scalar dEdd = cohesion_table->interpolate_dEdd(A_L, d);
+          dEdd_table(j, i) = dEdd;
+          stiffness_table(j, i) = stiffness;
+          force_table(j, i) = stiffness * (d - d_star);
+        }
+      }
+      
+      std::cout << "[adhesive table]" << std::endl;
+      std::cout << dEdd_table << std::endl;
+      
+      std::cout << "[stiffness table]" << std::endl;
+      std::cout << stiffness_table << std::endl;
+      
+      std::cout << "[force table]" << std::endl;
+      std::cout << force_table << std::endl;
+    };
+    
+    debug_cohesion_table(min_rad, m_min_cohesion_table);
+    debug_cohesion_table(max_rad, m_max_cohesion_table);
 #endif
-  
+    
 #ifdef DEBUG_PLANAR_COHESION_TABLE
-  scalar max_vol = M_PI * ((max_eta + avg_rad) * (max_eta + avg_rad) - avg_rad * avg_rad);
-  std::cout << "[sweep planar adhesive/repulsive table]" << std::endl;
-  
-  MatrixXs stiffness_table(disc, disc);
-  MatrixXs force_table(disc, disc);
-  MatrixXs dEdd_table(disc, disc);
-  const scalar d_star = m_cohesion_table.getDStarPlanar();
-  for(int i = 0; i < disc; ++i)
-  {
-    for(int j = 0; j < disc; ++j)
-    {
-      scalar d = max_dist / (scalar) disc * (scalar) i;
-      scalar A_L = max_vol / (scalar) disc * (scalar) j;
-      scalar stiffness = m_cohesion_table.getStiffnessPlanar(d, A_L, 1.0);
-      scalar dEdd = m_cohesion_table.interpolate_dEdd_planar(A_L, d);
-      dEdd_table(j, i) = dEdd;
-      stiffness_table(j, i) = stiffness;
-      force_table(j, i) = stiffness * (d - d_star);
-    }
-  }
-  
-  std::cout << "[planar adhesive table]" << std::endl;
-  std::cout << dEdd_table << std::endl;
-  
-  std::cout << "[planar stiffness table]" << std::endl;
-  std::cout << stiffness_table << std::endl;
-  
-  std::cout << "[planar force table]" << std::endl;
-  std::cout << force_table << std::endl;
+    auto debug_planar_cohesion_table = [&] (scalar rad, CohesionTable* cohesion_table) {
+      scalar max_vol = M_PI * ((max_eta + rad) * (max_eta + rad) - rad * rad);
+      const scalar max_dist = max_eta * 2.0;
+      
+      std::cout << "[sweep planar adhesive/repulsive table]" << std::endl;
+      
+      MatrixXs stiffness_table(disc, disc);
+      MatrixXs force_table(disc, disc);
+      MatrixXs dEdd_table(disc, disc);
+      const scalar d_star = cohesion_table->getDStarPlanar();
+      for(int i = 0; i < disc; ++i)
+      {
+        for(int j = 0; j < disc; ++j)
+        {
+          scalar d = max_dist / (scalar) disc * (scalar) i;
+          scalar A_L = max_vol / (scalar) disc * (scalar) j;
+          scalar stiffness = cohesion_table->getStiffnessPlanar(d, A_L, 1.0);
+          scalar dEdd = cohesion_table->interpolate_dEdd_planar(A_L, d);
+          dEdd_table(j, i) = dEdd;
+          stiffness_table(j, i) = stiffness;
+          force_table(j, i) = stiffness * (d - d_star);
+        }
+      }
+      
+      std::cout << "[planar adhesive table]" << std::endl;
+      std::cout << dEdd_table << std::endl;
+      
+      std::cout << "[planar stiffness table]" << std::endl;
+      std::cout << stiffness_table << std::endl;
+      
+      std::cout << "[planar force table]" << std::endl;
+      std::cout << force_table << std::endl;
+    };
+    
+    debug_planar_cohesion_table(min_rad, m_min_cohesion_table);
+    debug_planar_cohesion_table(max_rad, m_max_cohesion_table);
 #endif
+  }
 }
 
 template<int DIM>
