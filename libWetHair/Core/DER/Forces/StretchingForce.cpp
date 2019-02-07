@@ -134,7 +134,7 @@ void StretchingForce<ViscousT>::accumulateIntegrationVars(
         const scalar length = strand.m_strandState->m_lengths[vtx];
         unsigned idx_pos = pos_start + vtx;
         Phi[ idx_pos ] = length - ViscousT::ellBar( strand, vtx );
-        stiffness[ idx_pos ] = Triplets( idx_pos, idx_pos, ViscousT::ks( strand, vtx ) );
+        stiffness[ idx_pos ] = Triplets( idx_pos, idx_pos, ViscousT::ks( strand, vtx ) / ViscousT::ellBar( strand, vtx ) );
 
         const Vec3& edge = strand.m_strandState->m_tangents[ vtx ];
         unsigned idx_j = j_start + 6 * vtx;
