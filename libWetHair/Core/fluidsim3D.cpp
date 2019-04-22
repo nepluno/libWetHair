@@ -1482,36 +1482,24 @@ void FluidSim3D::combine_velocity_field()
   
   threadutils::thread_pool::ParallelFor(0, u.nk, [&](int k){
     for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i) {
-      scalar weight = u_weight_particle(i, j, k) + u_weight_hair(i, j, k);
-      if(weight > 0) {
-        u(i, j, k) = (u_weight_particle(i, j, k) * u_particle(i, j, k) + u_weight_hair(i, j, k) * u_hair(i, j, k)) / weight;
-      } else {
-        u(i, j, k) = 0.0;
-      }
+      scalar weight = u_weight_particle(i, j, k);
+      u(i, j, k) = u_particle(i, j, k);
       u_weight_total(i, j, k) = weight;
     }
   });
   
   threadutils::thread_pool::ParallelFor(0, v.nk, [&](int k){
     for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i) {
-      scalar weight = v_weight_particle(i, j, k) + v_weight_hair(i, j, k);
-      if(weight > 0) {
-        v(i, j, k) = (v_weight_particle(i, j, k) * v_particle(i, j, k) + v_weight_hair(i, j, k) * v_hair(i, j, k)) / weight;
-      } else {
-        v(i, j, k) = 0.0;
-      }
+      scalar weight = v_weight_particle(i, j, k);
+      v(i, j, k) = v_particle(i, j, k);
       v_weight_total(i, j, k) = weight;
     }
   });
   
   threadutils::thread_pool::ParallelFor(0, w.nk, [&](int k){
     for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i) {
-      scalar weight = w_weight_particle(i, j, k) + w_weight_hair(i, j, k);
-      if(weight > 0) {
-        w(i, j, k) = (w_weight_particle(i, j, k) * w_particle(i, j, k) + w_weight_hair(i, j, k) * w_hair(i, j, k)) / weight;
-      } else {
-        w(i, j, k) = 0.0;
-      }
+      scalar weight = w_weight_particle(i, j, k);
+        w(i, j, k) = w_particle(i, j, k);
       w_weight_total(i, j, k) = weight;
     }
   });
