@@ -2408,33 +2408,9 @@ Vectors<DIM> TwoDScene<DIM>::computeHairDrag()
 }
 
 template<>
-Vectors<2> TwoDScene<2>::computeHairGridDrag()
-{
-  return ((FluidSim2D*) m_fluid_sim)->computeHairGridDrag();
-}
-
-template<>
-Vectors<3> TwoDScene<3>::computeHairGridDrag()
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeHairGridDrag();
-}
-
-template<>
 scalar TwoDScene<3>::computeLiquidOverallDivergence() const
 {
   return ((FluidSim3D*) m_fluid_sim)->computeOverallDivergence();
-}
-
-template<>
-Vectors<3> TwoDScene<3>::computeParticleWeightedCombinedGridMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeParticleWeightedCombinedGridMomentum();
-}
-
-template<>
-Vectors<3> TwoDScene<3>::computeHairWeightedCombinedGridMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeHairWeightedCombinedGridMomentum();
 }
 
 template<>
@@ -2462,27 +2438,9 @@ scalar TwoDScene<3>::computeLiquidParticleKineticEnergy() const
 }
 
 template<>
-Vectors<3> TwoDScene<3>::computeLiquidGridMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeParticleGridMomentum();
-}
-
-template<>
 scalar TwoDScene<3>::computeLiquidGridKineticEnergy() const
 {
   return ((FluidSim3D*) m_fluid_sim)->computeParticleKineticEnergy();
-}
-
-template<>
-Vectors<3> TwoDScene<3>::computeHairGridMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeHairGridMomentum();
-}
-
-template<>
-scalar TwoDScene<3>::computeHairGridKineticEnergy() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeHairGridKineticEnergy();
 }
 
 template<>
@@ -2498,30 +2456,6 @@ scalar TwoDScene<3>::computeCombinedGridKineticEnergy() const
 }
 
 template<>
-Vectors<3> TwoDScene<3>::computeReweightedLiquidGridMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeReweightedParticleGridMomentum();  
-}
-
-template<>
-Vectors<3> TwoDScene<3>::computeReweightedHairGridMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeReweightedHairGridMomentum();  
-}
-
-template<>
-Vector3s TwoDScene<3>::computeHairGridAngularMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeHairGridAngularMomentum();
-}
-
-template<>
-Vector3s TwoDScene<3>::computeReweightedHairGridAngularMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeReweightedHairGridAngularMomentum();
-}
-
-template<>
 Vector3s TwoDScene<3>::computeReweightedLiquidGridAngularMomentum() const
 {
   return ((FluidSim3D*) m_fluid_sim)->computeReweightedParticleGridAngularMomentum();
@@ -2531,18 +2465,6 @@ template<>
 Vector3s TwoDScene<3>::computeCombinedGridAngularMomentum() const
 {
   return ((FluidSim3D*) m_fluid_sim)->computeCombinedGridAngularMomentum();
-}
-
-template<>
-Vector3s TwoDScene<3>::computeParticleWeightedCombinedGridAngularMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeParticleWeightedCombinedGridAngularMomentum();
-}
-
-template<>
-Vector3s TwoDScene<3>::computeHairWeightedCombinedGridAngularMomentum() const
-{
-  return ((FluidSim3D*) m_fluid_sim)->computeHairWeightedCombinedGridAngularMomentum();
 }
 
 template<int DIM>

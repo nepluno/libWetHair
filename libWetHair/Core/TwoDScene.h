@@ -356,8 +356,6 @@ public:
   scalar computeCombinedGridKineticEnergy() const;
   
   Vectors<DIM> computeHairDrag();
-  
-  Vectors<DIM> computeHairGridDrag();
 
   void copyState( const TwoDScene& otherscene );
 

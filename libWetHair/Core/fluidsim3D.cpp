@@ -124,19 +124,19 @@ FluidSim3D::FluidSim3D(const Vector3s& origin_, scalar width, int ni_, int nj_, 
   dx = width / (scalar) ni;
   
   u.resize(ni+1,nj,nk); temp_u.resize(ni+1,nj,nk); u_weights.resize(ni+1,nj,nk);
-  u_weight_hair.resize(ni+1,nj,nk); u_valid.resize(ni+1,nj,nk); u_hair.resize(ni+1,nj,nk);
+  u_valid.resize(ni+1,nj,nk);
   u_particle.resize(ni+1, nj,nk); u_weight_particle.resize(ni+1,nj,nk);
   u_drag.resize(ni+1, nj,nk); u_weight_total.resize(ni+1, nj, nk);
   u_pressure_grad.resize(ni+1,nj,nk); u_solid.resize(ni+1, nj, nk); u_visc_impulse.resize(ni+1,nj,nk);
   
   v.resize(ni,nj+1,nk); temp_v.resize(ni,nj+1,nk); v_weights.resize(ni,nj+1,nk);
-  v_weight_hair.resize(ni,nj+1,nk); v_valid.resize(ni,nj+1,nk); v_hair.resize(ni,nj+1,nk);
+  v_valid.resize(ni,nj+1,nk);
   v_particle.resize(ni, nj+1, nk); v_weight_particle.resize(ni,nj+1,nk);
   v_drag.resize(ni, nj+1, nk); v_weight_total.resize(ni, nj+1, nk);
   v_pressure_grad.resize(ni, nj+1, nk); v_solid.resize(ni, nj+1, nk); v_visc_impulse.resize(ni,nj+1,nk);
   
   w.resize(ni,nj,nk+1); temp_w.resize(ni,nj,nk+1); w_weights.resize(ni,nj,nk+1);
-  w_weight_hair.resize(ni,nj,nk+1); w_valid.resize(ni,nj,nk+1); w_hair.resize(ni,nj,nk+1);
+  w_valid.resize(ni,nj,nk+1);
   w_particle.resize(ni, nj, nk+1); w_weight_particle.resize(ni,nj,nk+1);
   w_drag.resize(ni, nj, nk+1); w_weight_total.resize(ni, nj, nk+1);
   w_pressure_grad.resize(ni, nj, nk+1); w_solid.resize(ni, nj, nk+1); w_visc_impulse.resize(ni,nj,nk+1);
@@ -150,9 +150,6 @@ FluidSim3D::FluidSim3D(const Vector3s& origin_, scalar width, int ni_, int nj_, 
   u_pressure_grad.set_zero();
   v_pressure_grad.set_zero();
   w_pressure_grad.set_zero();
-  u_hair.set_zero();
-  v_hair.set_zero();
-  w_hair.set_zero();
   u_particle.set_zero();
   v_particle.set_zero();
   w_particle.set_zero();
@@ -161,9 +158,6 @@ FluidSim3D::FluidSim3D(const Vector3s& origin_, scalar width, int ni_, int nj_, 
   v_solid.set_zero();
   w_solid.set_zero();
   
-  u_weight_hair.set_zero();
-  v_weight_hair.set_zero();
-  w_weight_hair.set_zero();
   u_weight_particle.set_zero();
   v_weight_particle.set_zero();
   w_weight_particle.set_zero();
@@ -1477,32 +1471,12 @@ void FluidSim3D::compute_liquid_phi()
 
 void FluidSim3D::combine_velocity_field()
 {
-  // Combine the velocity field only for pressure computation later,
-  // we replace the penalty method in [Bandara & Soga 2015] with a Poisson solver.
-  
-  threadutils::thread_pool::ParallelFor(0, u.nk, [&](int k){
-    for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i) {
-      scalar weight = u_weight_particle(i, j, k);
-      u(i, j, k) = u_particle(i, j, k);
-      u_weight_total(i, j, k) = weight;
-    }
-  });
-  
-  threadutils::thread_pool::ParallelFor(0, v.nk, [&](int k){
-    for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i) {
-      scalar weight = v_weight_particle(i, j, k);
-      v(i, j, k) = v_particle(i, j, k);
-      v_weight_total(i, j, k) = weight;
-    }
-  });
-  
-  threadutils::thread_pool::ParallelFor(0, w.nk, [&](int k){
-    for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i) {
-      scalar weight = w_weight_particle(i, j, k);
-        w(i, j, k) = w_particle(i, j, k);
-      w_weight_total(i, j, k) = weight;
-    }
-  });
+  u = u_particle;
+  u_weight_total = u_weight_particle;
+  v = v_particle;
+  v_weight_total = v_weight_particle;
+  w = w_particle;
+  w_weight_total = w_weight_particle;
 }
 
 void FluidSim3D::project(scalar dt) {
@@ -1580,11 +1554,6 @@ Vector3s FluidSim3D::get_solid_velocity(const Vector3s& position) const {
 //Interpolate drag from the MAC grid.
 Vector3s FluidSim3D::get_particle_drag(const Vector3s& position) const {
   return get_velocity(position, u_drag, v_drag, w_drag);
-}
-
-//Interpolate hair velocity from the MAC grid.
-Vector3s FluidSim3D::get_hair_velocity(const Vector3s& position) const {
-  return get_velocity(position, u_hair, v_hair, w_hair);
 }
 
 //Interpolate particle velocity from the MAC grid.
@@ -1861,10 +1830,6 @@ void FluidSim3D::solve_pressure(scalar dt) {
     write_matlab_array(std::cout, v_solid, "v_solid");
     write_matlab_array(std::cout, w_solid, "w_solid");
     
-    write_matlab_array(std::cout, u_hair, "u_hair");
-    write_matlab_array(std::cout, v_hair, "v_hair");
-    write_matlab_array(std::cout, w_hair, "w_hair");
-    
     write_matlab_array(std::cout, u_particle, "u_particle");
     write_matlab_array(std::cout, v_particle, "v_particle");
     write_matlab_array(std::cout, w_particle, "w_particle");
@@ -1880,10 +1845,6 @@ void FluidSim3D::solve_pressure(scalar dt) {
     write_matlab_array(std::cout, u_weight_particle, "u_weight_particle");
     write_matlab_array(std::cout, v_weight_particle, "v_weight_particle");
     write_matlab_array(std::cout, w_weight_particle, "w_weight_particle");
-    
-    write_matlab_array(std::cout, u_weight_hair, "u_weight_hair");
-    write_matlab_array(std::cout, v_weight_hair, "v_weight_hair");
-    write_matlab_array(std::cout, w_weight_hair, "w_weight_hair");
     
     write_matlab_array(std::cout, u_weight_total, "u_weight_total");
     write_matlab_array(std::cout, v_weight_total, "v_weight_total");
@@ -2258,31 +2219,23 @@ void FluidSim3D::done_update_from_hair()
   
   threadutils::thread_pool::ParallelFor(0, u.nk, [&] (int k){
     for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i) {
-      scalar sum_vel = 0.0;
       scalar sum_drag = 0.0;
-      scalar sum_weight = 0.0;
       scalar sum_linear_weight = 0.0;
       scalar sum_vol = 0.0;
       
       m_sorter->getCellAt(i, j, k, [&] (int idx) {
         const EdgeVelDragIntersection<3>& inter = u_vel_drag[idx];
-        sum_vel += inter.vel_weighted;
         sum_drag += inter.drag_weighted;
-        sum_weight += inter.weight;
         sum_linear_weight += inter.linear_weight;
         sum_vol += inter.vol_weighted;
       });
       
-      if(sum_weight > 0) {
-        u_hair(i, j, k) = sum_vel / sum_weight;
+      if(sum_linear_weight > 0) {
         scalar multiplier2 = mathutils::clamp(m_parent->getDragRadiusMultiplier() * m_parent->getDragRadiusMultiplier(), 0.0, sum_linear_weight * dx * dx * dx / sum_vol);
         u_drag(i, j, k) = sum_drag / (sum_linear_weight * dx * dx * dx * rho_L) * multiplier2;
       } else {
-        u_hair(i, j, k) = 0.0;
         u_drag(i, j, k) = 0.0;
       }
-      
-      u_weight_hair(i, j, k) = sum_vol;
     }
   });
   
@@ -2294,31 +2247,23 @@ void FluidSim3D::done_update_from_hair()
   
   threadutils::thread_pool::ParallelFor(0, v.nk, [&] (int k){
     for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i) {
-      scalar sum_vel = 0.0;
       scalar sum_drag = 0.0;
-      scalar sum_weight = 0.0;
       scalar sum_linear_weight = 0.0;
       scalar sum_vol = 0.0;
       
       m_sorter->getCellAt(i, j, k, [&] (int idx) {
         const EdgeVelDragIntersection<3>& inter = v_vel_drag[idx];
-        sum_vel += inter.vel_weighted;
         sum_drag += inter.drag_weighted;
-        sum_weight += inter.weight;
         sum_linear_weight += inter.linear_weight;
         sum_vol += inter.vol_weighted;
       });
       
-      if(sum_weight > 0) {
-        v_hair(i, j, k) = sum_vel / sum_weight;
+      if(sum_linear_weight > 0) {
         scalar multiplier2 = mathutils::clamp(m_parent->getDragRadiusMultiplier() * m_parent->getDragRadiusMultiplier(), 0.0, sum_linear_weight * dx * dx * dx / sum_vol);
         v_drag(i, j, k) = sum_drag / (sum_linear_weight * dx * dx * dx * rho_L) * multiplier2;
       } else {
-        v_hair(i, j, k) = 0.0;
         v_drag(i, j, k) = 0.0;
       }
-      
-      v_weight_hair(i, j, k) = sum_vol;
     }
   });
   
@@ -2330,31 +2275,23 @@ void FluidSim3D::done_update_from_hair()
   
   threadutils::thread_pool::ParallelFor(0, w.nk, [&] (int k){
     for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i) {
-      scalar sum_vel = 0.0;
       scalar sum_drag = 0.0;
-      scalar sum_weight = 0.0;
       scalar sum_linear_weight = 0.0;
       scalar sum_vol = 0.0;
       
       m_sorter->getCellAt(i, j, k, [&] (int idx) {
         const EdgeVelDragIntersection<3>& inter = w_vel_drag[idx];
-        sum_vel += inter.vel_weighted;
         sum_drag += inter.drag_weighted;
-        sum_weight += inter.weight;
         sum_linear_weight += inter.linear_weight;
         sum_vol += inter.vol_weighted;
       });
       
-      if(sum_weight > 0) {
-        w_hair(i, j, k) = sum_vel / sum_weight;
+      if(sum_linear_weight > 0) {
         scalar multiplier2 = mathutils::clamp(m_parent->getDragRadiusMultiplier() * m_parent->getDragRadiusMultiplier(), 0.0, sum_linear_weight * dx * dx * dx / sum_vol);
         w_drag(i, j, k) = sum_drag / (sum_linear_weight * dx * dx * dx * rho_L) * multiplier2;
       } else {
-        w_hair(i, j, k) = 0.0;
         w_drag(i, j, k) = 0.0;
       }
-      
-      w_weight_hair(i, j, k) = sum_vol;
     }
   });
 }
@@ -2698,34 +2635,6 @@ Vector3s FluidSim3D::computeParticleGridAngularMomentum()
   return sum;
 }
 
-Vector3s FluidSim3D::computeHairGridAngularMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u_hair.nk; ++k) for(int j = 0; j < u_hair.nj; ++j) for(int i = 0; i < u_hair.ni; ++i)
-  {
-    Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-    Vector3s u_vec = Vector3s(u_weight_hair(i,j,k) * u_hair(i,j,k), 0.0, 0.0);
-    sum += pos.cross(u_vec);
-  }
-  
-  for(int k = 0; k < v_hair.nk; ++k) for(int j = 0; j < v_hair.nj; ++j) for(int i = 0; i < v_hair.ni; ++i)
-  {
-    Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
-    Vector3s v_vec = Vector3s(0.0, v_weight_hair(i,j,k) * v_hair(i,j,k), 0.0);
-    sum += pos.cross(v_vec);
-  }
-  
-  for(int k = 0; k < w_hair.nk; ++k) for(int j = 0; j < w_hair.nj; ++j) for(int i = 0; i < w_hair.ni; ++i)
-  {
-    Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
-    Vector3s w_vec = Vector3s(0.0, 0.0, w_weight_hair(i,j,k) * w_hair(i,j,k));
-    sum += pos.cross(w_vec);
-  }
-  
-  return sum;
-}
-
 Vector3s FluidSim3D::computeCombinedGridAngularMomentum()
 {
   Vector3s sum = Vector3s::Zero();
@@ -2748,102 +2657,6 @@ Vector3s FluidSim3D::computeCombinedGridAngularMomentum()
   {
     Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
     Vector3s w_vec = Vector3s(0.0, 0.0, w_weight_total(i,j,k) * w(i,j,k));
-    sum += pos.cross(w_vec);
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeParticleWeightedCombinedGridAngularMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u.nk; ++k) for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i)
-  {
-    Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-    Vector3s u_vec = Vector3s(u_weight_particle(i,j,k) * u(i,j,k), 0.0, 0.0);
-    sum += pos.cross(u_vec);
-  }
-  
-  for(int k = 0; k < v.nk; ++k) for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i)
-  {
-    Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
-    Vector3s v_vec = Vector3s(0.0, v_weight_particle(i,j,k) * v(i,j,k), 0.0);
-    sum += pos.cross(v_vec);
-  }
-  
-  for(int k = 0; k < w.nk; ++k) for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
-  {
-    Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
-    Vector3s w_vec = Vector3s(0.0, 0.0, w_weight_particle(i,j,k) * w(i,j,k));
-    sum += pos.cross(w_vec);
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeHairWeightedCombinedGridAngularMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u.nk; ++k) for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i)
-  {
-    Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-    Vector3s u_vec = Vector3s(u_weight_hair(i,j,k) * u(i,j,k), 0.0, 0.0);
-    sum += pos.cross(u_vec);
-  }
-  
-  for(int k = 0; k < v.nk; ++k) for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i)
-  {
-    Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
-    Vector3s v_vec = Vector3s(0.0, v_weight_hair(i,j,k) * v(i,j,k), 0.0);
-    sum += pos.cross(v_vec);
-  }
-  
-  for(int k = 0; k < w.nk; ++k) for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
-  {
-    Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
-    Vector3s w_vec = Vector3s(0.0, 0.0, w_weight_hair(i,j,k) * w(i,j,k));
-    sum += pos.cross(w_vec);
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeReweightedHairGridAngularMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u_hair.nk; ++k) for(int j = 0; j < u_hair.nj; ++j) for(int i = 1; i < u_hair.ni-1; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i-1,j,k) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i-1,j,k), liquid_phi(i,j,k));
-    
-    Vector3s pos = Vector3s(i*dx, (j+0.5)*dx, (k+0.5)*dx) + origin;
-    Vector3s u_vec = Vector3s(u_weight_hair(i,j,k) * u_hair(i,j,k) * (1.0 - theta), 0.0, 0.0);
-    sum += pos.cross(u_vec);
-  }
-  
-  for(int k = 0; k < v_hair.nk; ++k) for(int j = 1; j < v_hair.nj-1; ++j) for(int i = 0; i < v_hair.ni; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i,j-1,k) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i,j-1,k), liquid_phi(i,j,k));
-    
-    Vector3s pos = Vector3s((i+0.5)*dx, j*dx, (k+0.5)*dx) + origin;
-    Vector3s v_vec = Vector3s(0.0, v_weight_hair(i,j,k) * v_hair(i,j,k) * (1.0 - theta), 0.0);
-    sum += pos.cross(v_vec);
-  }
-  
-  for(int k = 1; k < w_hair.nk-1; ++k) for(int j = 0; j < w_hair.nj; ++j) for(int i = 0; i < w_hair.ni; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i,j,k-1) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i,j,k-1), liquid_phi(i,j,k));
-    
-    Vector3s pos = Vector3s((i+0.5)*dx, (j+0.5)*dx, k*dx) + origin;
-    Vector3s w_vec = Vector3s(0.0, 0.0, w_weight_hair(i,j,k) * w_hair(i,j,k) * (1.0 - theta));
     sum += pos.cross(w_vec);
   }
   
@@ -2911,161 +2724,6 @@ Vector3s FluidSim3D::getMaxBBX() const
   return Vector3s(origin(0) + ni * dx, origin(1) + nj * dx, origin(2) + nk * dx);
 }
 
-Vector3s FluidSim3D::computeHairGridMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u_hair.nk; ++k) for(int j = 0; j < u_hair.nj; ++j) for(int i = 0; i < u_hair.ni; ++i)
-  {
-    sum(0) += u_weight_hair(i, j, k) * u_hair(i, j, k);
-  }
-  
-  for(int k = 0; k < v_hair.nk; ++k) for(int j = 0; j < v_hair.nj; ++j) for(int i = 0; i < v_hair.ni; ++i)
-  {
-    sum(1) += v_weight_hair(i, j, k) * v_hair(i, j, k);
-  }
-  
-  for(int k = 0; k < w_hair.nk; ++k) for(int j = 0; j < w_hair.nj; ++j) for(int i = 0; i < w_hair.ni; ++i)
-  {
-    sum(2) += w_weight_hair(i, j, k) * w_hair(i, j, k);
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeParticleGridMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u_hair.nk; ++k) for(int j = 0; j < u_hair.nj; ++j) for(int i = 0; i < u_hair.ni; ++i)
-  {
-    sum(0) += u_weight_particle(i, j, k) * u_particle(i, j, k);
-  }
-  
-  for(int k = 0; k < v_hair.nk; ++k) for(int j = 0; j < v_hair.nj; ++j) for(int i = 0; i < v_hair.ni; ++i)
-  {
-    sum(1) += v_weight_particle(i, j, k) * v_particle(i, j, k);
-  }
-  
-  for(int k = 0; k < w_hair.nk; ++k) for(int j = 0; j < w_hair.nj; ++j) for(int i = 0; i < w_hair.ni; ++i)
-  {
-    sum(2) += w_weight_particle(i, j, k) * w_particle(i, j, k);
-  }
-  return sum;
-}
-
-Vector3s FluidSim3D::computeReweightedHairGridMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u_hair.nk; ++k) for(int j = 0; j < u_hair.nj; ++j) for(int i = 1; i < u_hair.ni - 1; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i-1,j,k) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i-1,j,k), liquid_phi(i,j,k));
-    
-    sum(0) += u_weight_hair(i, j, k) * u_hair(i, j, k) * (1. - theta);
-  }
-  
-  for(int k = 0; k < v_hair.nk; ++k) for(int j = 1; j < v_hair.nj - 1; ++j) for(int i = 0; i < v_hair.ni; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i,j-1,k) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i,j-1,k), liquid_phi(i,j,k));
-    
-    sum(1) += v_weight_hair(i, j, k) * v_hair(i, j, k) * (1. - theta);
-  }
-  
-  for(int k = 1; k < w_hair.nk - 1; ++k) for(int j = 0; j < w_hair.nj; ++j) for(int i = 0; i < w_hair.ni; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i,j,k-1) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i,j,k-1), liquid_phi(i,j,k));
-    
-    sum(2) += w_weight_hair(i, j, k) * w_hair(i, j, k) * (1. - theta);
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeReweightedParticleGridMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u_particle.nk; ++k) for(int j = 0; j < u_particle.nj; ++j) for(int i = 1; i < u_particle.ni-1; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i-1,j,k) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i-1,j,k), liquid_phi(i,j,k));
-    
-    sum(0) += u_weight_particle(i, j, k) * u_particle(i, j, k) * theta;
-  }
-  
-  for(int k = 0; k < u_particle.nk; ++k) for(int j = 1; j < v_particle.nj-1; ++j) for(int i = 0; i < v_particle.ni; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i,j-1,k) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i,j-1,k), liquid_phi(i,j,k));
-    
-    sum(1) += v_weight_particle(i, j, k) * v_particle(i, j, k) * theta;
-  }
-  
-  for(int k = 1; k < w_particle.nk-1; ++k) for(int j = 0; j < w_particle.nj; ++j) for(int i = 0; i < w_particle.ni; ++i)
-  {
-    scalar theta = 1.0;
-    if(liquid_phi(i,j,k) >= 0 || liquid_phi(i,j,k-1) >= 0)
-      theta = mathutils::fraction_inside(liquid_phi(i,j,k-1), liquid_phi(i,j,k));
-    
-    sum(2) += w_weight_particle(i, j, k) * w_particle(i, j, k) * theta;
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeParticleWeightedCombinedGridMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u.nk; ++k) for(int j = 0; j < u.nj; ++j) for(int i = 1; i < u.ni-1; ++i)
-  {
-    sum(0) += u_weight_particle(i, j, k) * u(i, j, k);
-  }
-  
-  for(int k = 0; k < v.nk; ++k) for(int j = 1; j < v.nj-1; ++j) for(int i = 0; i < v.ni; ++i)
-  {
-    sum(1) += v_weight_particle(i, j, k) * v(i, j, k);
-  }
-  
-  for(int k = 1; k < w.nk-1; ++k) for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
-  {
-    sum(2) += w_weight_particle(i, j, k) * v(i, j, k);
-  }
-  
-  return sum;
-}
-
-Vector3s FluidSim3D::computeHairWeightedCombinedGridMomentum()
-{
-  Vector3s sum = Vector3s::Zero();
-  
-  for(int k = 0; k < u.nk; ++k) for(int j = 0; j < u.nj; ++j) for(int i = 1; i < u.ni-1; ++i)
-  {
-    sum(0) += u_weight_hair(i, j, k) * u(i, j, k);
-  }
-  
-  for(int k = 0; k < v.nk; ++k) for(int j = 1; j < v.nj-1; ++j) for(int i = 0; i < v.ni; ++i)
-  {
-    sum(1) += v_weight_hair(i, j, k) * v(i, j, k);
-  }
-  
-  for(int k = 1; k < w.nk-1; ++k) for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
-  {
-    sum(2) += w_weight_hair(i, j, k) * w(i, j, k);
-  }
-  
-  return sum;
-}
-
 Vector3s FluidSim3D::computeCombinedGridMomentum()
 {
   Vector3s sum = Vector3s::Zero();
@@ -3104,22 +2762,6 @@ scalar FluidSim3D::computeParticleKineticEnergy()
   return 0.5*T;
 }
 
-scalar FluidSim3D::computeHairGridKineticEnergy()
-{
-  scalar sum = 0;
-  
-  for(int k = 0; k < nk; ++k) for(int j = 0; j < nj; ++j) for(int i = 0; i < ni; ++i)
-  {
-    Vector3s pos((i+0.5) * dx, (j+0.5) * dx, (k+0.5) * dx);
-    Vector3s velocity = get_velocity(pos, u_hair, v_hair, w_hair);
-    scalar mass = get_velocity(pos, u_weight_hair, v_weight_hair, w_weight_hair).norm();
-    
-    sum += mass * velocity.squaredNorm();
-  }
-  
-  return sum * 0.5;
-}
-
 scalar FluidSim3D::computeParticleGridKineticEnergy()
 {
   scalar sum = 0;
@@ -3150,28 +2792,6 @@ scalar FluidSim3D::computeCombinedGridKineticEnergy()
   }
   
   return sum * 0.5;
-}
-
-Vector3s FluidSim3D::computeHairGridDrag()
-{
-  Vector3s F = Vector3s::Zero();
-  
-  for(int k = 0; k < u.nk; ++k) for(int j = 0; j < u.nj; ++j) for(int i = 0; i < u.ni; ++i)
-  {
-    F(0) += u_drag(i, j, k) * u_weight_hair(i, j, k);
-  }
-  
-  for(int k = 0; k < v.nk; ++k) for(int j = 0; j < v.nj; ++j) for(int i = 0; i < v.ni; ++i)
-  {
-    F(1) += v_drag(i, j, k) * v_weight_hair(i, j, k);
-  }
-  
-  for(int k = 0; k < w.nk; ++k) for(int j = 0; j < w.nj; ++j) for(int i = 0; i < w.ni; ++i)
-  {
-    F(2) += w_drag(i, j, k) * w_weight_hair(i, j, k);
-  }
-  
-  return F;
 }
 
 void FluidSim3D::add_particle(const VectorXs& pos, const VectorXs& vel, const scalar& radii, ParticleType type)

@@ -175,29 +175,9 @@ public:
   
   virtual Vector3s computeParticleAngularMomentum();
   
-  virtual Vector3s computeHairGridMomentum();
-  
-  virtual Vector3s computeHairGridAngularMomentum();
-  
-  virtual Vector3s computeParticleGridMomentum();
-  
   virtual Vector3s computeParticleGridAngularMomentum();
   
-  virtual Vector3s computeReweightedHairGridMomentum();
-  
-  virtual Vector3s computeReweightedParticleGridMomentum();
-  
-  virtual Vector3s computeReweightedHairGridAngularMomentum();
-  
   virtual Vector3s computeReweightedParticleGridAngularMomentum();
-  
-  virtual Vector3s computeParticleWeightedCombinedGridMomentum();
-  
-  virtual Vector3s computeHairWeightedCombinedGridMomentum();
-  
-  virtual Vector3s computeParticleWeightedCombinedGridAngularMomentum();
-  
-  virtual Vector3s computeHairWeightedCombinedGridAngularMomentum();
   
   virtual Vector3s computeCombinedGridMomentum();
   
@@ -207,15 +187,11 @@ public:
   
   virtual scalar computeParticleKineticEnergy();
   
-  virtual scalar computeHairGridKineticEnergy();
-  
   virtual scalar computeParticleGridKineticEnergy();
   
   virtual scalar computeCombinedGridKineticEnergy();
   
   virtual scalar computeOverallDivergence();
-
-  virtual Vector3s computeHairGridDrag();
 
   virtual void preCompute( const VectorXs& x, const VectorXs& v, const VectorXs& m, const scalar& dt );
   
@@ -261,10 +237,6 @@ protected:
   Array3s u, v, w;
   Array3s temp_u, temp_v, temp_w;
   
-  Array3s u_weight_hair;
-  Array3s v_weight_hair;
-  Array3s w_weight_hair;
-  
   Array3s u_weight_particle;
   Array3s v_weight_particle;
   Array3s w_weight_particle;
@@ -273,7 +245,6 @@ protected:
   Array3s v_weight_total;
   Array3s w_weight_total;
   
-  Array3s u_hair, v_hair, w_hair;
   Array3s u_pressure_grad, v_pressure_grad, w_pressure_grad;
   Array3s u_particle, v_particle, w_particle;
   Array3s u_solid, v_solid, w_solid;
