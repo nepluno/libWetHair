@@ -19,6 +19,7 @@
 #include <iostream>
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 
 #include <png.h>
 
