@@ -1,6 +1,8 @@
 libWetHair
 ================
-libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under Clear BSD License for academic and non-commercial use (other licenses may be obtained by contacting the faculty of the Columbia Computer Graphics Group or a Columbia University licensing officer).
+libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under the Mozilla Public License v. 2.0.
+
+We would like to hear from you if you appreciate this work.
 
 It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our project page for more details: http://libwethair.info ). This code base contains the following parts:
 
@@ -12,7 +14,7 @@ It is the original implementation of paper A Multi-Scale Model for Simulating Li
 
 Dependencies
 --------------------
-libWetHair depends on following libraries (some of them have been included in the code base, marked with asterisk*):
+libWetHair depends on following libraries (some of them have been included in the code base, marked with an asterisk):
 
 - Eigen* (http://eigen.tuxfamily.org/)
 - RapidXML* (http://rapidxml.sourceforge.net)
