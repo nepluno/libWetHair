@@ -9,26 +9,24 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
 #include "sorter.h"
+
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <tbb/tbb.h>
 
 using namespace std;
 
-Sorter::Sorter( int ni_, int nj_, int nk_ )
-: ni(ni_), nj(nj_), nk(nk_)
-{
+Sorter::Sorter(int ni_, int nj_, int nk_) : ni(ni_), nj(nj_), nk(nk_) {
   resize(ni, nj, nk);
 }
 
-Sorter::~Sorter() {
-}
+Sorter::~Sorter() {}
 
-void Sorter::resize( int ni_, int nj_, int nk_ )
-{
+void Sorter::resize(int ni_, int nj_, int nk_) {
   array_sup.resize(ni_ * nj_ * nk_);
-  ni = ni_; nj = nj_; nk = nk_;
+  ni = ni_;
+  nj = nj_;
+  nk = nk_;
 }

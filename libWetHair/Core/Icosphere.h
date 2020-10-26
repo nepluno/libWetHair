@@ -9,28 +9,26 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-
-#ifndef ICOSPHERE_H__
-#define ICOSPHERE_H__
+#ifndef LIBWETHAIR_CORE_ICOSPHERE_H_
+#define LIBWETHAIR_CORE_ICOSPHERE_H_
 
 /* Icosphere generation algorithm.
  * Adapted from Andreas Kahler's C# implementation found here:
  * http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
  */
 
-#include "MathDefs.h"
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
-class IcosphereCreator
-{
-public:
+#include "MathDefs.h"
+
+class IcosphereCreator {
+ public:
   std::vector<Vector3s> vertices;
   std::vector<Vector3i> indices;
   std::unordered_map<uint64, int> middlePointIndexCache;
   int index;
-  
+
   int addVertex(const Vector3s& p);
   int getMiddlePoint(int p1, int p2);
 
@@ -38,4 +36,4 @@ public:
   void Create(int recursionLevel);
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_ICOSPHERE_H_

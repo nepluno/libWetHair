@@ -9,61 +9,49 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
+#ifndef LIBWETHAIR_CORE_DER_FORCES_STRETCHING_FORCE_H_
+#define LIBWETHAIR_CORE_DER_FORCES_STRETCHING_FORCE_H_
 
-#ifndef STRETCHINGFORCE_H_
-#define STRETCHINGFORCE_H_
-
-#include "ViscousOrNotViscous.h"
 #include "../StrandForce.h"
+#include "ViscousOrNotViscous.h"
 
-template<typename ViscousT = NonViscous>
-class StretchingForce
-{
-public:
-    StretchingForce()
-    {}
+template <typename ViscousT = NonViscous>
+class StretchingForce {
+ public:
+  StretchingForce() {}
 
-    virtual ~StretchingForce()
-    {}
+  virtual ~StretchingForce() {}
 
-public:
-    static const IndexType s_first = 0; // The first index on which this force can apply
-    static const IndexType s_last = 1; // The last index (counting from the end)
+ public:
+  static const IndexType s_first =
+      0;  // The first index on which this force can apply
+  static const IndexType s_last = 1;  // The last index (counting from the end)
 
-    typedef Eigen::Matrix<scalar, 6, 1> LocalForceType;
-    typedef Eigen::Matrix<scalar, 6, 6> LocalJacobianType;
-    typedef VecX ForceVectorType;
+  typedef Eigen::Matrix<scalar, 6, 1> LocalForceType;
+  typedef Eigen::Matrix<scalar, 6, 6> LocalJacobianType;
+  typedef VecX ForceVectorType;
 
-    static std::string getName()
-    {
-        return ViscousT::getName() + "stretching";
-    }
+  static std::string getName() { return ViscousT::getName() + "stretching"; }
 
-    static scalar localEnergy( const StrandForce& strand, const IndexType vtx );
+  static scalar localEnergy(const StrandForce& strand, const IndexType vtx);
 
-    static void computeLocal( LocalForceType& localF, const StrandForce& strand, const IndexType vtx );
+  static void computeLocal(LocalForceType& localF, const StrandForce& strand,
+                           const IndexType vtx);
 
-    static void computeLocal( LocalJacobianType& localJ, const StrandForce& strand,
-            const IndexType vtx );
+  static void computeLocal(LocalJacobianType& localJ, const StrandForce& strand,
+                           const IndexType vtx);
 
-    static void addInPosition( ForceVectorType& globalForce, const IndexType vtx,
-            const LocalForceType& localForce );
+  static void addInPosition(ForceVectorType& globalForce, const IndexType vtx,
+                            const LocalForceType& localForce);
 
-    static void accumulateCurrentE( scalar& energy, StrandForce& strand );
-    static void accumulateCurrentF( VecX& force, StrandForce& strand );
+  static void accumulateCurrentE(scalar& energy, StrandForce& strand);
+  static void accumulateCurrentF(VecX& force, StrandForce& strand);
 
-    static void accumulateIntegrationVars( 
-            const unsigned& pos_start, 
-            const unsigned& j_start, 
-            const unsigned& tildek_start, 
-            const unsigned& global_start_dof, 
-            StrandForce& strand, 
-            VectorXs& lambda, 
-            TripletXs& J, 
-            TripletXs& tildeK, 
-            TripletXs& stiffness, 
-            VectorXs& Phi,
-            const int& lambda_start );
+  static void accumulateIntegrationVars(
+      const unsigned& pos_start, const unsigned& j_start,
+      const unsigned& tildek_start, const unsigned& global_start_dof,
+      StrandForce& strand, VectorXs& lambda, TripletXs& J, TripletXs& tildeK,
+      TripletXs& stiffness, VectorXs& Phi, const int& lambda_start);
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_DER_FORCES_STRETCHING_FORCE_H_

@@ -9,25 +9,21 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-
-#ifndef __YImage_h__
-#define __YImage_h__
+#ifndef LIBWETHAIR_APP_YIMAGE_H_
+#define LIBWETHAIR_APP_YIMAGE_H_
 
 // file loading/saving automatically picks up changes to this struct.
 // The possibilities are: ARGB, ABGR, RGBA, BGRA.
 
-struct YPixel
-{
+struct YPixel {
   unsigned char r;
   unsigned char g;
   unsigned char b;
   unsigned char a;
 };
 
-class YImage
-{
-public:
+class YImage {
+ public:
   YImage();
 
   YImage(const YImage&);
@@ -63,11 +59,10 @@ public:
   // average rgb
   void greyscale();
 
-protected:
+ protected:
   int m_width;
   int m_height;
-  YPixel* m_data; // raw image data
+  YPixel* m_data;  // raw image data
 };
 
-#endif /* __YImage_h__ */
-
+#endif  // LIBWETHAIR_APP_YIMAGE_H_

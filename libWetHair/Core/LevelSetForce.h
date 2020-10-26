@@ -9,33 +9,29 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-
-#ifndef __LEVELSET_FORCE_H__
-#define __LEVELSET_FORCE_H__
+#ifndef LIBWETHAIR_CORE_LEVEL_SET_FORCE_H_
+#define LIBWETHAIR_CORE_LEVEL_SET_FORCE_H_
 
 #include <Eigen/Core>
-#include "Force.h"
 #include <iostream>
 #include <stack>
 
+#include "Force.h"
+
 class FluidSim;
 
-template<int DIM>
+template <int DIM>
 class TwoDScene;
 
-template<int DIM>
-class LevelSetForce : public Force
-{
-  struct ParticleLSPair
-  {
+template <int DIM>
+class LevelSetForce : public Force {
+  struct ParticleLSPair {
     scalar dist;
     scalar max_dist;
     bool valid;
   };
-  
-  struct PointLSPair
-  {
+
+  struct PointLSPair {
     int eidx;
     int k_gauss;
     scalar alpha_point;
@@ -45,59 +41,62 @@ class LevelSetForce : public Force
     scalar viscous_phi;
     Vectors<DIM> x0;
   };
-  
-public:
+
+ public:
   const int m_num_quadrature = 1;
-  
-  LevelSetForce( TwoDScene<DIM>* parent,
-               FluidSim* fluidsim, int hidx );
+
+  LevelSetForce(TwoDScene<DIM>* parent, FluidSim* fluidsim, int hidx);
 
   virtual ~LevelSetForce();
 
-  virtual void preCompute( const VectorXs& x, const VectorXs& v, const VectorXs& m, const scalar& dt );
-  
-  virtual void computeIntegrationVars( const VectorXs& x, const VectorXs& v, const VectorXs& m,
-                                      VectorXs& lambda, VectorXs& lambda_v,
-                                      TripletXs& J, TripletXs& Jv, TripletXs& Jxv, TripletXs& tildeK,
-                                      TripletXs& stiffness, TripletXs& damping, VectorXs& Phi, VectorXs& Phiv, const scalar& dt);
-  
-  virtual void postStepScene(const scalar& dt );
-  
+  virtual void preCompute(const VectorXs& x, const VectorXs& v,
+                          const VectorXs& m, const scalar& dt);
+
+  virtual void computeIntegrationVars(const VectorXs& x, const VectorXs& v,
+                                      const VectorXs& m, VectorXs& lambda,
+                                      VectorXs& lambda_v, TripletXs& J,
+                                      TripletXs& Jv, TripletXs& Jxv,
+                                      TripletXs& tildeK, TripletXs& stiffness,
+                                      TripletXs& damping, VectorXs& Phi,
+                                      VectorXs& Phiv, const scalar& dt);
+
+  virtual void postStepScene(const scalar& dt);
+
   virtual int numConstraintPos();
-  
+
   virtual int numConstraintVel();
-  
+
   virtual int numJ();
-  
+
   virtual int numJv();
-  
+
   virtual int numJxv();
-  
+
   virtual int numTildeK();
-  
+
   virtual bool isParallelized();
-  
+
   virtual bool isPrecomputationParallelized();
-  
+
   virtual void storeLambda(const VectorXs& lambda, const VectorXs& lambda_v);
 
   virtual Force* createNewCopy();
-  
+
   virtual const char* name();
-  
-  virtual void getAffectedVars( int pidx, std::unordered_set<int>& vars );
-  
-  virtual int getAffectedHair( const std::vector<int> particle_to_hairs );
-  
-  virtual bool isContained( int pidx );
-  
-private:
+
+  virtual void getAffectedVars(int pidx, std::unordered_set<int>& vars);
+
+  virtual int getAffectedHair(const std::vector<int> particle_to_hairs);
+
+  virtual bool isContained(int pidx);
+
+ private:
   int m_hidx;
   FluidSim* m_fluidsim;
   TwoDScene<DIM>* m_parent;
-  
+
   std::vector<ParticleLSPair> m_particle_ls_pairs;
   std::vector<PointLSPair> m_point_ls_pairs;
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_LEVEL_SET_FORCE_H_

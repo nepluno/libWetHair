@@ -9,9 +9,8 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef LIANG_BARSKY_H__
-#define LIANG_BARSKY_H__
+#ifndef LIBWETHAIR_CORE_LIANG_BARSKY_H_
+#define LIBWETHAIR_CORE_LIANG_BARSKY_H_
 
 /* Liang-Barsky clipping algorithm.
  */
@@ -19,13 +18,15 @@
 #include "MathDefs.h"
 
 namespace liangbarsky {
-  /* clip_line()
-   * modifies parameters in place to clip the line,
-   * returns 0 if line is totally outside clip window
-   * returns 1 if line is not totally outside clip window
-   */
-  int clip_line(const Vector4s& c, Vector2s& q1, Vector2s& q2, scalar& alpha0, scalar& alpha1);
-  int clip_line(const Vector6s& c, Vector3s& q1, Vector3s& q2, scalar& t0, scalar& t1);
-};
+/* clip_line()
+ * modifies parameters in place to clip the line,
+ * returns 0 if line is totally outside clip window
+ * returns 1 if line is not totally outside clip window
+ */
+int clip_line(const Vector4s& c, Vector2s& q1, Vector2s& q2, scalar& alpha0,
+              scalar& alpha1);
+int clip_line(const Vector6s& c, Vector3s& q1, Vector3s& q2, scalar& t0,
+              scalar& t1);
+};  // namespace liangbarsky
 
-#endif
+#endif  // LIBWETHAIR_CORE_LIANG_BARSKY_H_

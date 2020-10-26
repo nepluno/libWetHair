@@ -9,9 +9,8 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef __DRAG_DAMPING_FORCE_H__
-#define __DRAG_DAMPING_FORCE_H__
+#ifndef LIBWETHAIR_CORE_DRAG_DAMPING_FORCE_H_
+#define LIBWETHAIR_CORE_DRAG_DAMPING_FORCE_H_
 
 #include <Eigen/Core>
 #include <iostream>
@@ -19,52 +18,53 @@
 #include "Force.h"
 #include "MathDefs.h"
 
-template<int DIM>
+template <int DIM>
 class TwoDScene;
 
-template<int DIM>
-class DragDampingForce : public Force
-{
-public:
-
-  DragDampingForce( const TwoDScene<DIM>& scene, const scalar& b, int hidx );
+template <int DIM>
+class DragDampingForce : public Force {
+ public:
+  DragDampingForce(const TwoDScene<DIM>& scene, const scalar& b, int hidx);
 
   virtual ~DragDampingForce();
-    
-  virtual void computeIntegrationVars( const VectorXs& x, const VectorXs& v, const VectorXs& m,
-                                      VectorXs& lambda, VectorXs& lambda_v,
-                                      TripletXs& J, TripletXs& Jv, TripletXs& Jxv, TripletXs& tildeK,
-                                      TripletXs& stiffness, TripletXs& damping, VectorXs& Phi, VectorXs& Phiv, const scalar& dt);
-  
-  virtual int numConstraintPos();
-  
-  virtual int numConstraintVel();
-  
-  virtual int numJ();
-  
-  virtual int numJv();
-  
-  virtual int numJxv();
-  
-  virtual int numTildeK();
-  
-  virtual bool isParallelized();
-  
-  virtual bool isPrecomputationParallelized();
-  
-  virtual void storeLambda(const VectorXs& lambda, const VectorXs& lambda_v);
-  
-  virtual Force* createNewCopy();
-  
-  virtual void getAffectedVars( int pidx, std::unordered_set<int>& vars );
-  
-  virtual int getAffectedHair( const std::vector<int> particle_to_hairs );
 
-  virtual bool isContained( int pidx );
-  
+  virtual void computeIntegrationVars(const VectorXs& x, const VectorXs& v,
+                                      const VectorXs& m, VectorXs& lambda,
+                                      VectorXs& lambda_v, TripletXs& J,
+                                      TripletXs& Jv, TripletXs& Jxv,
+                                      TripletXs& tildeK, TripletXs& stiffness,
+                                      TripletXs& damping, VectorXs& Phi,
+                                      VectorXs& Phiv, const scalar& dt);
+
+  virtual int numConstraintPos();
+
+  virtual int numConstraintVel();
+
+  virtual int numJ();
+
+  virtual int numJv();
+
+  virtual int numJxv();
+
+  virtual int numTildeK();
+
+  virtual bool isParallelized();
+
+  virtual bool isPrecomputationParallelized();
+
+  virtual void storeLambda(const VectorXs& lambda, const VectorXs& lambda_v);
+
+  virtual Force* createNewCopy();
+
+  virtual void getAffectedVars(int pidx, std::unordered_set<int>& vars);
+
+  virtual int getAffectedHair(const std::vector<int> particle_to_hairs);
+
+  virtual bool isContained(int pidx);
+
   virtual const char* name();
-  
-private:
+
+ private:
   scalar m_b;
   int m_dofs;
   int m_hidx;
@@ -72,4 +72,4 @@ private:
   const TwoDScene<DIM>& m_scene;
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_DRAG_DAMPING_FORCE_H_

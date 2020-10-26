@@ -9,40 +9,41 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef __COMPLIANT_IMPLICIT_EULER__
-#define __COMPLIANT_IMPLICIT_EULER__
+#ifndef LIBWETHAIR_CORE_COMPLIANT_IMPLICIT_EULER_H_
+#define LIBWETHAIR_CORE_COMPLIANT_IMPLICIT_EULER_H_
 
 #include <Eigen/Dense>
 #include <iostream>
 
-#include "SceneStepper.h"
 #include "MathUtilities.h"
+#include "SceneStepper.h"
 
-template<int DIM>
+template <int DIM>
 class TwoDScene;
 
-template<int DIM>
-class CompliantImplicitEuler : public SceneStepper<DIM>
-{
-public:
-  CompliantImplicitEuler(TwoDScene<DIM>* scene, int max_iters, scalar criterion, bool autoUpdateNextInit = true);
-  
+template <int DIM>
+class CompliantImplicitEuler : public SceneStepper<DIM> {
+ public:
+  CompliantImplicitEuler(TwoDScene<DIM>* scene, int max_iters, scalar criterion,
+                         bool autoUpdateNextInit = true);
+
   virtual ~CompliantImplicitEuler();
-  
-  virtual bool stepScene( TwoDScene<DIM>& scene, scalar dt, bool updatePreCompute = true );
-  
+
+  virtual bool stepScene(TwoDScene<DIM>& scene, scalar dt,
+                         bool updatePreCompute = true);
+
   virtual std::string getName() const;
-private:
-  void zeroFixedDoFs( const TwoDScene<DIM>& scene, VectorXs& vec );
+
+ private:
+  void zeroFixedDoFs(const TwoDScene<DIM>& scene, VectorXs& vec);
   void updateNumConstraints(const VectorXs& dx, const VectorXs& dv, scalar dt);
-  
+
   bool m_bAutoUpdateNextInit;
   int m_max_iters;
   scalar m_criterion;
-  
+
   TwoDScene<DIM>* m_scene;
-  
+
   TripletXs m_Kext_nz;
   TripletXs m_A_nz;
   TripletXs m_J_nz;
@@ -52,7 +53,7 @@ private:
   TripletXs m_M_nz;
   TripletXs m_invC_nz;
   TripletXs m_invCv_nz;
-  
+
   SparseXs m_Kext;
   SparseXs m_A;
   SparseXs m_J;
@@ -64,7 +65,7 @@ private:
   SparseXs m_M;
   SparseXs m_invC;
   SparseXs m_invCv;
-  
+
   VectorXs m_lambda;
   VectorXs m_lambda_v;
   VectorXs m_gradU;
@@ -72,12 +73,12 @@ private:
   VectorXs m_Phi_v;
   VectorXs m_b;
   VectorXs m_vplus;
-  
+
   Vector6i m_interhair_idx;
   Vector6i m_interhair_num;
 
-  Eigen::SimplicialLDLT< SparseXs > m_solver;
-  Eigen::ConjugateGradient< SparseXs > m_iterative_solver;
+  Eigen::SimplicialLDLT<SparseXs> m_solver;
+  Eigen::ConjugateGradient<SparseXs> m_iterative_solver;
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_COMPLIANT_IMPLICIT_EULER_H_

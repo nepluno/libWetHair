@@ -8,10 +8,8 @@
 // Copyright 2008 Christopher Batty, Robert Bridson
 //
 
-
-
-#ifndef VOLUME_FRACTIONS_H
-#define VOLUME_FRACTIONS_H
+#ifndef LIBWETHAIR_CORE_VOLUME_FRACTIONS_H_
+#define LIBWETHAIR_CORE_VOLUME_FRACTIONS_H_
 
 // Given a triangle with level set values, use linear interpolation to
 // estimate the fraction of the triangle occupied by the phi<0 part
@@ -30,13 +28,10 @@ double volume_fraction(double phi0, double phi1, double phi2, double phi3);
 
 // Given a parallelepiped (e.g. cube) with level set values, estimate
 // fraction occupied by the phi<0 part
-float volume_fraction(float phi000, float phi100,
-                      float phi010, float phi110,
-                      float phi001, float phi101,
-                      float phi011, float phi111);
-double volume_fraction(double phi000, double phi100,
-                       double phi010, double phi110,
-                       double phi001, double phi101,
+float volume_fraction(float phi000, float phi100, float phi010, float phi110,
+                      float phi001, float phi101, float phi011, float phi111);
+double volume_fraction(double phi000, double phi100, double phi010,
+                       double phi110, double phi001, double phi101,
                        double phi011, double phi111);
 
 #endif

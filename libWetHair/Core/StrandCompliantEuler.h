@@ -9,80 +9,82 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef __STRAND_COMPLIANT_EULER__
-#define __STRAND_COMPLIANT_EULER__
+#ifndef LIBWETHAIR_CORE_STRAND_COMPLIANT_EULER_
+#define LIBWETHAIR_CORE_STRAND_COMPLIANT_EULER_
 
 #include <iostream>
 //#include <ceres/ceres.h>
 
-#include "SceneStepper.h"
 #include "MathUtilities.h"
+#include "SceneStepper.h"
 
-template<int DIM>
+template <int DIM>
 class StrandCompliantManager;
 
-template<int DIM>
-class StrandCompliantEuler
-{
-public:
+template <int DIM>
+class StrandCompliantEuler {
+ public:
   StrandCompliantEuler(StrandCompliantManager<DIM>* parent, int hidx);
-  
+
   virtual ~StrandCompliantEuler();
-  
-  virtual bool stepScene( TwoDScene<DIM> & scene, scalar dt );
-  
-  virtual bool stepScene( TwoDScene<DIM> & scene, scalar dt, VectorXs& r, const VectorXs& b );
-  
-  virtual bool PreconditionScene( TwoDScene<DIM> & scene, scalar dt, VectorXs& r, const VectorXs& b );
-  
-  virtual void preIterate( TwoDScene<DIM>& scene, scalar dt );
-  
-  virtual void computeRHS( TwoDScene<DIM> & scene, scalar dt, VectorXs& b );
-  
-  virtual void computeRHSIncremental( TwoDScene<DIM> & scene, scalar dt, VectorXs& b, const VectorXs& vplus );
-  
-  virtual void computeAp( const VectorXs& p, VectorXs& b );
-  
-  virtual void updateLambda( TwoDScene<DIM>& scene, const VectorXs& dx, const VectorXs& dv, scalar dt );
-  
-  virtual void updateNextV( TwoDScene<DIM>& scene, const VectorXs& vplus );
-private:
+
+  virtual bool stepScene(TwoDScene<DIM>& scene, scalar dt);
+
+  virtual bool stepScene(TwoDScene<DIM>& scene, scalar dt, VectorXs& r,
+                         const VectorXs& b);
+
+  virtual bool PreconditionScene(TwoDScene<DIM>& scene, scalar dt, VectorXs& r,
+                                 const VectorXs& b);
+
+  virtual void preIterate(TwoDScene<DIM>& scene, scalar dt);
+
+  virtual void computeRHS(TwoDScene<DIM>& scene, scalar dt, VectorXs& b);
+
+  virtual void computeRHSIncremental(TwoDScene<DIM>& scene, scalar dt,
+                                     VectorXs& b, const VectorXs& vplus);
+
+  virtual void computeAp(const VectorXs& p, VectorXs& b);
+
+  virtual void updateLambda(TwoDScene<DIM>& scene, const VectorXs& dx,
+                            const VectorXs& dv, scalar dt);
+
+  virtual void updateNextV(TwoDScene<DIM>& scene, const VectorXs& vplus);
+
+ private:
   TripletXs m_A_nz;
   TripletXs m_J_nz;
   TripletXs m_Jv_nz;
   TripletXs m_Jxv_nz;
   TripletXs m_invC_nz;
   TripletXs m_invCv_nz;
-  
+
   TripletXs m_J_inter_nz;
   TripletXs m_Jv_inter_nz;
   TripletXs m_invC_inter_nz;
   TripletXs m_invCv_inter_nz;
-  
+
   SparseXs m_A;
   SparseXs m_J;
   SparseXs m_Jv;
   SparseXs m_Jxv;
   SparseXs m_invC;
   SparseXs m_invCv;
-  
+
   SparseXs m_J_inter;
   SparseXs m_Jv_inter;
   SparseXs m_invC_inter;
   SparseXs m_invCv_inter;
-  
+
   VectorXs m_A_inv_diag;
-  
+
   Eigen::SimplicialLDLT<SparseXs> m_solver;
-  
+
   int m_hidx;
 
-  
   StrandCompliantManager<DIM>* m_parent;
-  
+
   int m_start_global_dof;
   int m_num_global_dof;
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_STRAND_COMPLIANT_EULER_

@@ -9,9 +9,8 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef VISCOUS_OR_NOT_VISCOUS_H_
-#define VISCOUS_OR_NOT_VISCOUS_H_
+#ifndef LIBWETHAIR_CORE_DER_FORCES_VISCOUS_OR_NOT_VISCOUS_H_
+#define LIBWETHAIR_CORE_DER_FORCES_VISCOUS_OR_NOT_VISCOUS_H_
 
 #include "../StrandForce.h"
 #include "../StrandParameters.h"
@@ -21,110 +20,87 @@
 // stiffness and "rest shape" (the actual rest-shape for non-viscous or the
 // shape at the beginning of time step for viscous).
 
-class NonViscous
-{
-protected:
-    NonViscous()
-    {}
+class NonViscous {
+ protected:
+  NonViscous() {}
 
-    virtual ~NonViscous()
-    {}
+  virtual ~NonViscous() {}
 
-public:
-    static std::string getName()
-    {
-        return "";
-    }
+ public:
+  static std::string getName() { return ""; }
 
-    static scalar bendingCoefficient( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->bendingCoefficient( vtx, strand.getNumVertices() );
-    }
+  static scalar bendingCoefficient(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->bendingCoefficient(vtx,
+                                                     strand.getNumVertices());
+  }
 
-    static Mat2 bendingMatrix( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->bendingMatrix( vtx, strand.getNumVertices() );
-    }
+  static Mat2 bendingMatrix(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->bendingMatrix(vtx, strand.getNumVertices());
+  }
 
-    static const Vec2 kappaBar( const StrandForce& strand, int vtx )
-    {
-        return strand.m_restKappas[vtx];
-    }
+  static const Vec2 kappaBar(const StrandForce& strand, int vtx) {
+    return strand.m_restKappas[vtx];
+  }
 
-    static scalar kt( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->getKt( vtx, strand.getNumVertices() );
-    }
+  static scalar kt(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->getKt(vtx, strand.getNumVertices());
+  }
 
-    static scalar thetaBar( const StrandForce& strand, int vtx )
-    {
-        return strand.m_restTwists[vtx];
-    }
+  static scalar thetaBar(const StrandForce& strand, int vtx) {
+    return strand.m_restTwists[vtx];
+  }
 
-    static scalar ks( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->getKs( vtx, strand.getNumVertices() );
-    }
+  static scalar ks(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->getKs(vtx, strand.getNumVertices());
+  }
 
-    static scalar ellBar( const StrandForce& strand, int vtx )
-    {
-        return strand.m_restLengths[vtx];
-    }
+  static scalar ellBar(const StrandForce& strand, int vtx) {
+    return strand.m_restLengths[vtx];
+  }
 
-    class NonDissipativeForce{};
+  class NonDissipativeForce {};
 };
 
-class Viscous
-{
-protected:
-    Viscous()
-    {}
+class Viscous {
+ protected:
+  Viscous() {}
 
-    virtual ~Viscous()
-    {}
+  virtual ~Viscous() {}
 
-public:
-    static std::string getName()
-    {
-        return "viscous ";
-    }
+ public:
+  static std::string getName() { return "viscous "; }
 
-    static scalar bendingCoefficient( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->viscousBendingCoefficient( vtx, strand.getNumVertices() );
-    }
+  static scalar bendingCoefficient(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->viscousBendingCoefficient(
+        vtx, strand.getNumVertices());
+  }
 
-    static Mat2 bendingMatrix( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->viscousBendingMatrix( vtx, strand.getNumVertices() );
-    }
+  static Mat2 bendingMatrix(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->viscousBendingMatrix(vtx,
+                                                       strand.getNumVertices());
+  }
 
-    static const Vec2 kappaBar( const StrandForce& strand, int vtx )
-    {
-        return strand.m_startState->m_kappas[vtx];
-    }
+  static const Vec2 kappaBar(const StrandForce& strand, int vtx) {
+    return strand.m_startState->m_kappas[vtx];
+  }
 
-    static scalar kt( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->getViscousKt( vtx, strand.getNumVertices() );
-    }
+  static scalar kt(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->getViscousKt(vtx, strand.getNumVertices());
+  }
 
-    static scalar thetaBar( const StrandForce& strand, int vtx )
-    {
-        return strand.m_startState->m_twists[vtx];
-    }
+  static scalar thetaBar(const StrandForce& strand, int vtx) {
+    return strand.m_startState->m_twists[vtx];
+  }
 
-    static scalar ks( const StrandForce& strand, int vtx )
-    {
-        return strand.m_strandParams->getViscousKs( vtx, strand.getNumVertices() );
-    }
+  static scalar ks(const StrandForce& strand, int vtx) {
+    return strand.m_strandParams->getViscousKs(vtx, strand.getNumVertices());
+  }
 
-    static scalar ellBar( const StrandForce& strand, int vtx )
-    {
-        return strand.m_startState->m_lengths[vtx];
-    }
+  static scalar ellBar(const StrandForce& strand, int vtx) {
+    return strand.m_startState->m_lengths[vtx];
+  }
 
-    class DissipativeForce{};
+  class DissipativeForce {};
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_DER_FORCES_VISCOUS_OR_NOT_VISCOUS_H_

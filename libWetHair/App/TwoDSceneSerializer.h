@@ -9,48 +9,61 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-
-#ifndef __TWO_D_SCENE_SERIALIZER_H__
-#define __TWO_D_SCENE_SERIALIZER_H__
+#ifndef LIBWETHAIR_APP_TWO_D_SCENE_SERIALIZER_H_
+#define LIBWETHAIR_APP_TWO_D_SCENE_SERIALIZER_H_
 
 #include <fstream>
 #include <iostream>
 
 #include "StringUtilities.h"
 
-template<int DIM>
+template <int DIM>
 class TwoDScene;
 
-template<int DIM>
+template <int DIM>
 class SceneStepper;
 
-template<int DIM>
+template <int DIM>
 class TwoDSceneRenderer;
 
-template<int DIM>
-class TwoDSceneSerializer
-{
-public:
-  void serializeFluidReadable( TwoDScene<DIM>& scene, std::vector< std::ostringstream >& outputstream ) const;
-  
-  void serializeHairReadable( TwoDScene<DIM>& scene, std::ostream& outputstream ) const;
-  
-  void serializeShallowFlowReadable( const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene, std::ostream& outputstream ) const;
-  
-  void serializeBoundariesReadable( const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene, std::ostream& os_boundary_single, std::ostream& os_boundary_double);
-  
-  void serializePolygonalCohesionReadable( const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene, std::ostream& os_pe, std::ostream& os_poe, std::ostream& os_ppp ) const;
-  
-  bool deSerializeFluidReadable( TwoDScene<DIM>& scene, const std::vector< std::string > &filename_fluids );
+template <int DIM>
+class TwoDSceneSerializer {
+ public:
+  void serializeFluidReadable(
+      TwoDScene<DIM>& scene,
+      std::vector<std::ostringstream>& outputstream) const;
 
-  bool deSerializeHairReadable( TwoDScene<DIM>& scene, const std::string &filename_hairs );
+  void serializeHairReadable(TwoDScene<DIM>& scene,
+                             std::ostream& outputstream) const;
 
-  bool deSerializeShallowFlowReadable( const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene, const std::string &filename_flows );
-  
-  void serializeScene( TwoDScene<DIM>& scene, SceneStepper<DIM>* stepper, std::ostream& outputstream ) const;
+  void serializeShallowFlowReadable(const TwoDSceneRenderer<DIM>* renderer,
+                                    TwoDScene<DIM>& scene,
+                                    std::ostream& outputstream) const;
 
-  void loadScene( TwoDScene<DIM>& scene, SceneStepper<DIM>* stepper, std::istream& inputstream ) const;
+  void serializeBoundariesReadable(const TwoDSceneRenderer<DIM>* renderer,
+                                   TwoDScene<DIM>& scene,
+                                   std::ostream& os_boundary_single,
+                                   std::ostream& os_boundary_double);
+
+  void serializePolygonalCohesionReadable(
+      const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene,
+      std::ostream& os_pe, std::ostream& os_poe, std::ostream& os_ppp) const;
+
+  bool deSerializeFluidReadable(
+      TwoDScene<DIM>& scene, const std::vector<std::string>& filename_fluids);
+
+  bool deSerializeHairReadable(TwoDScene<DIM>& scene,
+                               const std::string& filename_hairs);
+
+  bool deSerializeShallowFlowReadable(const TwoDSceneRenderer<DIM>* renderer,
+                                      TwoDScene<DIM>& scene,
+                                      const std::string& filename_flows);
+
+  void serializeScene(TwoDScene<DIM>& scene, SceneStepper<DIM>* stepper,
+                      std::ostream& outputstream) const;
+
+  void loadScene(TwoDScene<DIM>& scene, SceneStepper<DIM>* stepper,
+                 std::istream& inputstream) const;
 };
 
-#endif
+#endif  // LIBWETHAIR_APP_TWO_D_SCENE_SERIALIZER_H_

@@ -9,51 +9,50 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef __SCENE_STEPPER__
-#define __SCENE_STEPPER__
-
-#include "TwoDScene.h"
+#ifndef LIBWETHAIR_CORE_SCENE_STEPPER_
+#define LIBWETHAIR_CORE_SCENE_STEPPER_
 
 #include "MathDefs.h"
+#include "TwoDScene.h"
 
-template<int DIM>
-class SceneStepper
-{
-protected:
+template <int DIM>
+class SceneStepper {
+ protected:
   std::vector<scalar> m_timing_statistics;
-  
+
   VectorXs m_old_v;
   VectorXs m_a;
   VectorXs m_next_x;
-public:
+
+ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  
+
   virtual ~SceneStepper();
-  
-  virtual bool stepScene( TwoDScene<DIM> & scene, scalar dt, bool updatePreCompute = true ) = 0;
-  
-  virtual void setNextX( const VectorXs& nextx );
-  
+
+  virtual bool stepScene(TwoDScene<DIM>& scene, scalar dt,
+                         bool updatePreCompute = true) = 0;
+
+  virtual void setNextX(const VectorXs& nextx);
+
   virtual const VectorXs& getNextX() const;
-  
-  virtual void accept( TwoDScene<DIM> & scene, scalar dt );
-  
+
+  virtual void accept(TwoDScene<DIM>& scene, scalar dt);
+
   virtual std::string getName() const = 0;
-  
+
   virtual const VectorXs& getAcceleration() const;
-  
-  virtual void PostStepScene( TwoDScene<DIM> & scene, scalar dt );
-  
+
+  virtual void PostStepScene(TwoDScene<DIM>& scene, scalar dt);
+
   virtual const std::vector<scalar>& getTimingStatistics() const;
-  
+
   virtual void write(std::vector<scalar>&) const;
-  
+
   virtual void read(const scalar* data);
-  
+
   virtual size_t size();
-  
-  virtual void init( TwoDScene<DIM> & scene );
+
+  virtual void init(TwoDScene<DIM>& scene);
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_SCENE_STEPPER_

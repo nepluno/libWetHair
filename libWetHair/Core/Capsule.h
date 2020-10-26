@@ -9,27 +9,26 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef CAPSULE_H__
-#define CAPSULE_H__
+#ifndef LIBWETHAIR_CORE_CAPSULE_H_
+#define LIBWETHAIR_CORE_CAPSULE_H_
 
 /* Capsule generation algorithm.
  * Adapted from Paul Bourke's C implementation found here:
  * http://paulbourke.net/geometry/capsule/
  */
 
-#include "MathDefs.h"
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
-class CapsuleCreator
-{
-public:
+#include "MathDefs.h"
+
+class CapsuleCreator {
+ public:
   std::vector<Vector3s> vertices;
   std::vector<Vector3i> indices;
-  
+
   CapsuleCreator();
   void Create(int N, const scalar& radius, const scalar& halfheight);
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_CAPSULE_H_

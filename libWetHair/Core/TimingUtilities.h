@@ -9,19 +9,17 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef __TIMING_UTILS_H__
-#define __TIMING_UTILS_H__
+#ifndef LIBWETHAIR_CORE_TIMING_UTILITIES_H_
+#define LIBWETHAIR_CORE_TIMING_UTILITIES_H_
 
 #include <time.h>
+
 #include <iostream>
 
-namespace timingutils 
-{
+namespace timingutils {
 
 double seconds();
 
 }
 
-#endif
-
+#endif  // LIBWETHAIR_CORE_TIMING_UTILITIES_H_

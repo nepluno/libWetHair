@@ -9,20 +9,22 @@
 // Changxi Zheng, and Eitan Grinspun
 //
 
-
-#ifndef __MATH_DEFS_H__
-#define __MATH_DEFS_H__
+#ifndef LIBWETHAIR_CORE_MATH_DEFS_H_
+#define LIBWETHAIR_CORE_MATH_DEFS_H_
 
 #ifdef WIN32
 #define _USE_MATH_DEFINES
 #endif
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
+#include <Eigen/SparseQR>
+#include <Eigen/StdVector>
 #include <cmath>
 
-#include <Eigen/Core>
-#include <Eigen/StdVector>
-#include <Eigen/Sparse>
-#include <Eigen/Dense>
-#include <Eigen/SparseQR>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 typedef double scalar;
 typedef unsigned long long uint64;
@@ -30,13 +32,11 @@ typedef unsigned long long uint64;
 struct int_scalar {
   int i;
   scalar v;
-  
-  inline bool operator() (const int_scalar& struct1, const int_scalar& struct2)
-  {
+
+  inline bool operator()(const int_scalar& struct1, const int_scalar& struct2) {
     return (struct1.v < struct2.v);
   }
 };
-
 
 typedef Eigen::Matrix<scalar, 2, 1> Vector2s;
 typedef Eigen::Matrix<float, 2, 1> Vector2f;
@@ -494,9 +494,9 @@ typedef Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> MatrixXi;
 typedef Eigen::SparseMatrix<scalar, Eigen::ColMajor> SparseXs;
 typedef Eigen::SparseMatrix<scalar, Eigen::RowMajor> SparseRXs;
 typedef Eigen::Triplet<scalar> Triplets;
-typedef std::vector< Triplets > TripletXs;
+typedef std::vector<Triplets> TripletXs;
 typedef Eigen::Triplet<int> Tripleti;
-typedef std::vector< Tripleti > TripletXi;
+typedef std::vector<Tripleti> TripletXi;
 
 template <unsigned N>
 using Vectors = Eigen::Matrix<scalar, N, 1>;
@@ -533,39 +533,33 @@ using Blocki = Eigen::Block<int, N, N>;
 
 template <unsigned N>
 using Blockf = Eigen::Block<float, N, N>;
-//typedef Matrix<int, 1, 2> RowVector2i;
+// typedef Matrix<int, 1, 2> RowVector2i;
 
-template<int DIM>
+template <int DIM>
 struct int_Vectors {
   int i;
   Vectors<DIM> v;
   scalar d;
-  
-  int_Vectors(int i_, const Vectors<DIM>& v_) :
-  i(i_), v(v_), d(v_.norm())
-  {}
-  
-  inline bool operator() (const int_Vectors& struct1, const int_Vectors& struct2)
-  {
+
+  int_Vectors(int i_, const Vectors<DIM>& v_) : i(i_), v(v_), d(v_.norm()) {}
+
+  inline bool operator()(const int_Vectors& struct1,
+                         const int_Vectors& struct2) {
     return (struct1.d < struct2.d);
   }
 };
 
-template<int DIM>
+template <int DIM>
 struct int_Vectors_scalar {
   int i;
   Vectors<DIM> v;
   scalar d;
   scalar eta;
-  
-  int_Vectors_scalar(int i_, const Vectors<DIM>& v_, const scalar& eta_) :
-  i(i_), v(v_), d(v_.norm()), eta(eta_)
-  {}
-  
-  bool operator<(const int_Vectors_scalar& b) const
-  {
-    return d < b.d;
-  }
+
+  int_Vectors_scalar(int i_, const Vectors<DIM>& v_, const scalar& eta_)
+      : i(i_), v(v_), d(v_.norm()), eta(eta_) {}
+
+  bool operator<(const int_Vectors_scalar& b) const { return d < b.d; }
 };
 
-#endif
+#endif  // LIBWETHAIR_CORE_MATH_DEFS_H_
