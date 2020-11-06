@@ -54,9 +54,7 @@ void StretchingForce<ViscousT>::computeLocal(
 
   Mat3 M;
   if (useApprox) {
-    M = ks *
-        (std::max(0.0, 1.0 / restLength - 1.0 / length) * Mat3::Identity() +
-         1.0 / restLength * (edge * edge.transpose()));
+    M = ks * (1.0 / restLength * (edge * edge.transpose()));
   } else {
     M = ks * ((1.0 / restLength - 1.0 / length) * Mat3::Identity() +
               1.0 / restLength * (edge * edge.transpose()));
