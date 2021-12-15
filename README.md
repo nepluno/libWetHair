@@ -1,6 +1,6 @@
 libWetHair
 ================
-libWetHair is an open source project for the physical simulation of liquid and wet hairs. It is cross-platform (Mac OS X, Linux, Windows, and more), and licensed under the Mozilla Public License v. 2.0.
+libWetHair is an open source project for the physical simulation of liquid and wet hairs. It has been compiled and tested on Mac OS X (with both Intel and Apple M1 chips), Ubuntu Linux, Windows, and licensed under the Mozilla Public License v. 2.0.
 
 We would like to hear from you if you appreciate this work.
 
@@ -21,17 +21,21 @@ libWetHair depends on following libraries (some of them have been included in th
 - tclap* (http://tclap.sourceforge.net)
 - AntTweakBar (http://anttweakbar.sourceforge.net/doc/)
 - Intel TBB (https://www.threadingbuildingblocks.org)
-- GLUT (https://www.opengl.org/resources/libraries/glut/)
+- FreeGLUT (http://freeglut.sourceforge.net/)
 - GLEW (http://glew.sourceforge.net)
 - libPNG (https://libpng.sourceforge.io/)
+- zlib (https://www.zlib.net/)
 
-On Mac OS X or Linux-based systems, most of the dependencies are either included, or can be easily installed with Homebrew (https://brew.sh) or the APT package handling utility. For Intel TBB, you may download and install from the link provided above.
+On Mac OS X or Linux-based systems, most of the dependencies are either included, or can be easily installed with Homebrew (https://brew.sh) or the APT package handling utility. For example, with Homebrew on Mac OS X, these external dependencies can be installed through
+```
+brew install anttweakbar tbb freeglut libpng zlib glew
+```
 
 On Windows you may need manually download and install some of them.
 
 Compilation
 -----------------
-libWetHair has been tested with Clang (under Mac OS X), GCC 4.8+ (under Linux), and Microsoft Visual Studio (under Windows 10).
+libWetHair has been tested with AppleClang (under Mac OS X), GCC 4.8+ (under Linux), and Microsoft Visual Studio (under Windows 10).
 
 To compile libWetHair, you'll need CMake on Mac OS X or Linux, or CMake-GUI (https://cmake.org) on Windows.
 

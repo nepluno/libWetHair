@@ -35,13 +35,13 @@ else (TBB_FOUND)
 endif (TBB_FOUND)
 
 # Locate GLUT
-find_package (GLUT REQUIRED glut)
-if (GLUT_FOUND)
-  include_directories (${GLUT_INCLUDE_DIR})
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${GLUT_glut_LIBRARY})
-else (GLUT_FOUND)
-  message (SEND_ERROR "Unable to locate GLUT")
-endif (GLUT_FOUND)
+find_package (FREEGLUT REQUIRED)
+if (FREEGLUT_FOUND)
+  include_directories (${FREEGLUT_INCLUDE_DIRS})
+  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${FREEGLUT_LIBRARIES})
+else (FREEGLUT_FOUND)
+  message (SEND_ERROR "Unable to locate FREEGLUT")
+endif (FREEGLUT_FOUND)
 
 # RapidXML library is required
 find_package (RapidXML REQUIRED)

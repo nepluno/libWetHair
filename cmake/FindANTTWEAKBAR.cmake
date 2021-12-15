@@ -23,6 +23,13 @@ IF (WIN32)
 		${PROJECT_SOURCE_DIR}/../../include/AntTweakBar
 		${PROJECT_SOURCE_DIR}/../include/AntTweakBar
 		${PROJECT_SOURCE_DIR}/include/AntTweakBar
+    ${PROJECT_SOURCE_DIR}/../../include
+    ${PROJECT_SOURCE_DIR}/../include
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/include
+    ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/include
+    ${PROJECT_SOURCE_DIR}/include/AntTweakBar/include
+    ${PROJECT_SOURCE_DIR}/thirdparty/include/AntTweakBar
 		$ENV{ANT_TWEAK_BAR_ROOT}/include
 		DOC "The directory where AntTweakBar.h resides")
 
@@ -32,6 +39,9 @@ IF (WIN32)
 		${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/lib
 		${PROJECT_SOURCE_DIR}/../include/AntTweakBar/lib
 		${PROJECT_SOURCE_DIR}/include/AntTweakBar/lib
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/lib
+    ${PROJECT_SOURCE_DIR}/thirdparty/lib
                 $ENV{ANT_TWEAK_BAR_ROOT}/lib
                 DOC "The AntTweakBar library")
 ELSE (WIN32)
@@ -41,9 +51,16 @@ FIND_PATH(ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
       ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/include
       ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/include
       ${PROJECT_SOURCE_DIR}/include/AntTweakBar/include
+      ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar
+      ${PROJECT_SOURCE_DIR}/../include/AntTweakBar
+      ${PROJECT_SOURCE_DIR}/include/AntTweakBar
+      ${PROJECT_SOURCE_DIR}/../../include
+      ${PROJECT_SOURCE_DIR}/../include
+      ${PROJECT_SOURCE_DIR}/include
       /usr/local/include
       /usr/X11/include
       /usr/include
+      /opt/homebrew/include
       NO_DEFAULT_PATH)
 
 FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar
@@ -52,6 +69,9 @@ FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar
     ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/lib
     ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/lib
 		${PROJECT_SOURCE_DIR}/include/AntTweakBar/lib
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/lib
+    /opt/homebrew/lib
     /usr/local
     /usr/X11
     /usr
