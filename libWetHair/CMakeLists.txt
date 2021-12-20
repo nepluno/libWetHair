@@ -35,7 +35,7 @@ else (TBB_FOUND)
 endif (TBB_FOUND)
 
 # Locate GLUT
-find_package (FREEGLUT REQUIRED)
+find_package (FreeGLUT REQUIRED)
 if (FREEGLUT_FOUND)
   include_directories (${FREEGLUT_INCLUDE_DIRS})
   set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${FREEGLUT_LIBRARIES})
