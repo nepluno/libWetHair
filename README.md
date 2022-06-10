@@ -4,7 +4,7 @@ libWetHair is an open source project for the physical simulation of liquid and w
 
 We would like to hear from you if you appreciate this work.
 
-It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our project page for more details: http://libwethair.info ). This code base contains the following parts:
+It is the original implementation of paper A Multi-Scale Model for Simulating Liquid-Hair Interactions (refer to our [project page](http://www.cs.columbia.edu/cg/liquidhair/) for more details). This code base contains the following parts:
 
  - A liquid simulator implementing the affine-particle-in-cell method.
  - A hair simulator implementing the elastic rods model.
