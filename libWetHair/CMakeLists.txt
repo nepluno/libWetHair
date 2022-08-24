@@ -20,7 +20,7 @@ endif (OPENGL_FOUND)
 
 find_package(GLEW REQUIRED)
 if (GLEW_FOUND)
-  include_directories(${GLEW_INCLUDE_DIRS})
+  include_directories(${GLEW_INCLUDE_DIR})
   set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${GLEW_LIBRARIES})
 else (GLEW_FOUND)
   message (SEND_ERROR "Unable to locate GLEW")
