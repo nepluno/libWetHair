@@ -1,5 +1,5 @@
-# Cmake 2.6.0 is missing a few macros that FindEigen3.cmake uses
-cmake_minimum_required (VERSION 2.6.2)
+# Require a fairly modern cmake version
+cmake_minimum_required (VERSION 3.14.0)
 
 project (libWetHair)
 
