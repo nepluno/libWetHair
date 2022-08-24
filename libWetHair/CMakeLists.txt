@@ -32,13 +32,7 @@ endif()
 find_package (TBB REQUIRED CONFIG)
 
 # Locate GLUT
-find_package (FreeGLUT REQUIRED)
-if (FREEGLUT_FOUND)
-  include_directories (${FREEGLUT_INCLUDE_DIRS})
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${FREEGLUT_LIBRARIES})
-else (FREEGLUT_FOUND)
-  message (SEND_ERROR "Unable to locate FREEGLUT")
-endif (FREEGLUT_FOUND)
+find_package (FreeGLUT REQUIRED CONFIG)
 
 # RapidXML library is required
 find_package (RapidXML REQUIRED)
@@ -78,6 +72,7 @@ find_package(Threads REQUIRED)
 add_executable (libWetHair ${Headers} ${Templates} ${Sources})
 target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
   Eigen3::Eigen
+  FreeGLUT::freeglut
   TBB::tbb
   Threads::Threads)
 
