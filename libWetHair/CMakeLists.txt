@@ -75,16 +75,10 @@ if (PNG_FOUND)
   set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${PNG_LIBRARIES})
 endif (PNG_FOUND)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-if(THREADS_HAVE_PTHREAD_ARG)
-  set_property(TARGET libWetHair PROPERTY COMPILE_OPTIONS "-pthread")
-  set_property(TARGET libWetHair PROPERTY INTERFACE_COMPILE_OPTIONS "-pthread")
-endif()
-if(CMAKE_THREAD_LIBS_INIT)
-  set(LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-endif()
 
 add_executable (libWetHair ${Headers} ${Templates} ${Sources})
-target_link_libraries (libWetHair ${LIBWETHAIR_LIBRARIES} "-lpthread" )
+target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES} Threads::Threads)
 
 install(TARGETS libWetHair)

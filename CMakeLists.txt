@@ -49,8 +49,6 @@ macro (append_files files ext)
   endforeach (dir)
 endmacro (append_files)
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-
 # Eigen3 library is required
 find_package (Eigen3 REQUIRED)
 if (EIGEN3_FOUND)
