@@ -52,6 +52,7 @@ ELSE (WIN32)
   ELSE (APPLE)
 
     FIND_PATH( GLEW_INCLUDE_DIR GL/glew.h
+      ${GLEW_ROOT}/include
       /usr/include/GL
       /usr/openwin/share/include
       /usr/openwin/include
@@ -62,6 +63,7 @@ ELSE (WIN32)
     )
 
     FIND_LIBRARY( GLEW_GLEW_LIBRARY GLEW
+      ${GLEW_ROOT}/lib
       /usr/openwin/lib
       /usr/X11R6/lib
     )

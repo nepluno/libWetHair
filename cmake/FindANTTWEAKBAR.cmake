@@ -48,6 +48,7 @@ ELSE (WIN32)
 
 FIND_PATH(ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
       PATHS
+      ${ANTTWEAKBAR_ROOT}/include
       ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/include
       ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/include
       ${PROJECT_SOURCE_DIR}/include/AntTweakBar/include
@@ -65,6 +66,7 @@ FIND_PATH(ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
 
 FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar
   PATHS
+    ${ANTTWEAKBAR_ROOT}/lib
     ${PROJECT_SOURCE_DIR}/bin/${BITS_FOLDER}
     ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/lib
     ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/lib

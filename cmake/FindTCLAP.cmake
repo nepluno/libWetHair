@@ -12,6 +12,7 @@ endif (TCLAP_INCLUDE_DIR)
 # find the headers
 find_path (TCLAP_INCLUDE_PATH tclap/CmdLine.h
   PATHS
+  ${TCLAP_ROOT}/include
   ${CMAKE_SOURCE_DIR}/include
   ${CMAKE_INSTALL_PREFIX}/include
   )

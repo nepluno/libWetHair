@@ -9,6 +9,7 @@
 
 find_path(RAPIDXML_INCLUDE_DIR NAMES rapidxml.hpp
     PATHS
+    ${RAPIDXML_ROOT}/include
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_INSTALL_PREFIX}/include
     PATH_SUFFIXES rapidxml

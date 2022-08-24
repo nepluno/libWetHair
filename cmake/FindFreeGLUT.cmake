@@ -16,7 +16,8 @@
 
 # Look for the library.
 FIND_PATH(FREEGLUT_INCLUDE_DIR NAMES GL/freeglut.h
-    PATHS
+    HINTS
+    ${FREEGLUT_ROOT}/include
     /opt/homebrew/include
     /usr/include
     ${CMAKE_SOURCE_DIR}/thirdparty/include)
@@ -27,7 +28,8 @@ if (WIN32)
 		${CMAKE_SOURCE_DIR}/thirdparty/lib)
 else ()
 	FIND_LIBRARY(FREEGLUT_LIBRARY NAMES glut
-		PATHS
+		HINTS
+               ${FREEGLUT_ROOT}/lib
 		/opt/homebrew/lib
 		/usr/lib)
 endif ()
