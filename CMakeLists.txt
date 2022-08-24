@@ -58,4 +58,5 @@ endif (EIGEN3_FOUND)
 include(GNUInstallDirs)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory (libWetHair)
-execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/libWetHair/assets )
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/libWetHair)
