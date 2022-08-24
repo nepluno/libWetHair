@@ -3,6 +3,10 @@ cmake_minimum_required (VERSION 3.14.0)
 
 project (libWetHair)
 
+set(CMAKE_CXX_STANDARD          11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS        OFF)
+
 if (NOT CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 endif (NOT CMAKE_INSTALL_PREFIX)
@@ -45,7 +49,7 @@ macro (append_files files ext)
   endforeach (dir)
 endmacro (append_files)
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 # Eigen3 library is required
 find_package (Eigen3 REQUIRED)
