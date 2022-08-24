@@ -9,6 +9,9 @@ include_directories (Core)
 #find_package (TCLAP REQUIRED)
 #include_directories (${TCLAP_INCLUDE_DIR})
 
+# Eigen3 library is required
+find_package (Eigen3 REQUIRED CONFIG)
+
 # Locate OpenGL
 find_package (OpenGL REQUIRED)
 if (OPENGL_FOUND)
@@ -74,6 +77,7 @@ find_package(Threads REQUIRED)
 
 add_executable (libWetHair ${Headers} ${Templates} ${Sources})
 target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
+  Eigen3::Eigen
   TBB::tbb
   Threads::Threads)
 

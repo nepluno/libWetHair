@@ -49,14 +49,6 @@ macro (append_files files ext)
   endforeach (dir)
 endmacro (append_files)
 
-# Eigen3 library is required
-find_package (Eigen3 REQUIRED)
-if (EIGEN3_FOUND)
-  include_directories (${EIGEN3_INCLUDE_DIR})
-else (EIGEN3_FOUND)
-  message (SEND_ERROR "Unable to locate Eigen3")
-endif (EIGEN3_FOUND)
-
 include(GNUInstallDirs)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory (libWetHair)
