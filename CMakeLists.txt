@@ -3,7 +3,9 @@ cmake_minimum_required (VERSION 2.6.2)
 
 project (libWetHair)
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
+if (NOT CMAKE_INSTALL_PREFIX)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
+endif (NOT CMAKE_INSTALL_PREFIX)
 
 # Initialize the build type (Release, Debug, etc)
 if (NOT CMAKE_BUILD_TYPE)
