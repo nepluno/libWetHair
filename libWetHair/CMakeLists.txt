@@ -26,13 +26,7 @@ else (GLEW_FOUND)
   message (SEND_ERROR "Unable to locate GLEW")
 endif()
 
-find_package (TBB REQUIRED)
-if (TBB_FOUND)
-  include_directories (${TBB_INCLUDE_DIRS})
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${TBB_LIBRARIES})
-else (TBB_FOUND)
-  message (SEND_ERROR "Unable to locate TBB")
-endif (TBB_FOUND)
+find_package (TBB REQUIRED CONFIG)
 
 # Locate GLUT
 find_package (FreeGLUT REQUIRED)
@@ -79,6 +73,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 add_executable (libWetHair ${Headers} ${Templates} ${Sources})
-target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES} Threads::Threads)
+target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
+  TBB::tbb
+  Threads::Threads)
 
 install(TARGETS libWetHair)
