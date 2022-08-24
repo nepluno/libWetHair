@@ -87,4 +87,4 @@ endif()
 add_executable (libWetHair ${Headers} ${Templates} ${Sources})
 target_link_libraries (libWetHair ${LIBWETHAIR_LIBRARIES} "-lpthread" )
 
-INSTALL_TARGETS(/bin libWetHair)
+install(TARGETS libWetHair)
