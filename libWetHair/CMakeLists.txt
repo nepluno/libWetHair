@@ -48,11 +48,6 @@ else (ANTTWEAKBAR_FOUND)
 endif (ANTTWEAKBAR_FOUND)  
 
 find_package (PNG REQUIRED)
-if (PNG_FOUND)
-  add_definitions (${PNG_DEFINITIONS})
-  include_directories (${PNG_INCLUDE_DIR})
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${PNG_LIBRARIES})
-endif (PNG_FOUND)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -62,6 +57,7 @@ target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
   Eigen3::Eigen
   FreeGLUT::freeglut
   GLEW::glew
+  PNG::PNG
   TBB::tbb
   TCLAP::tclap
   Threads::Threads)
