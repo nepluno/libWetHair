@@ -20,9 +20,6 @@ endif (NOT CMAKE_BUILD_TYPE)
 
 add_definitions (-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
 
-# Add warnings to the compiler flags
-#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused -std=c++11 -Wfatal-errors")
-
 if (CMAKE_BUILD_TYPE MATCHES Debug)
   add_definitions (-DDEBUG)
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
