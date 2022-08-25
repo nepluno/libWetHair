@@ -23,11 +23,6 @@ find_package (FreeGLUT REQUIRED CONFIG)
 
 # RapidXML library is required
 find_package (RapidXML REQUIRED)
-if (RAPIDXML_FOUND)
-  include_directories (${RAPIDXML_INCLUDE_DIR})
-else (RAPIDXML_FOUND)
-  message (SEND_ERROR "Unable to locate RapidXML")
-endif (RAPIDXML_FOUND)
 
 # TCLAP library is required
 find_package (TCLAP REQUIRED)
@@ -48,6 +43,7 @@ target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
   GLEW::glew
   OpenGL::GLU
   PNG::PNG
+  RapidXML::RapidXML
   TBB::tbb
   TCLAP::tclap
   Threads::Threads)

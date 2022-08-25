@@ -18,3 +18,6 @@ find_path(RAPIDXML_INCLUDE_DIR NAMES rapidxml.hpp
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(RapidXML DEFAULT_MSG RAPIDXML_INCLUDE_DIR)
 mark_as_advanced(RAPIDXML_INCLUDE_DIR)
+
+add_library(RapidXML::RapidXML INTERFACE IMPORTED)
+target_include_directories(RapidXML::RapidXML INTERFACE "${RAPIDXML_INCLUDE_DIR}")
