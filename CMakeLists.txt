@@ -42,7 +42,6 @@ macro (append_files files ext)
 endmacro (append_files)
 
 include(GNUInstallDirs)
-include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory (libWetHair)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ${CMAKE_INSTALL_DATADIR}/libWetHair)
