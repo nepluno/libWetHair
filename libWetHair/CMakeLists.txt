@@ -21,14 +21,7 @@ else (OPENGL_FOUND)
   message (SEND_ERROR "Unable to locate OpenGL")
 endif (OPENGL_FOUND)
 
-find_package(GLEW REQUIRED)
-if (GLEW_FOUND)
-  include_directories(${GLEW_INCLUDE_DIR})
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${GLEW_LIBRARIES})
-else (GLEW_FOUND)
-  message (SEND_ERROR "Unable to locate GLEW")
-endif()
-
+find_package (GLEW REQUIRED)
 find_package (TBB REQUIRED CONFIG)
 
 # Locate GLUT
@@ -73,6 +66,7 @@ add_executable (libWetHair ${Headers} ${Templates} ${Sources})
 target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
   Eigen3::Eigen
   FreeGLUT::freeglut
+  GLEW::glew
   TBB::tbb
   Threads::Threads)
 

@@ -1,4 +1,5 @@
 # Copyright (c) 2009 Boudewijn Rempt <boud@valdyas.org>
+# Copyright (c) 2022 Fredrik Salomonsson <fredriks@d2.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -50,55 +51,46 @@ ELSE (WIN32)
       /opt/homebrew/opt/glew/lib
     )
   ELSE (APPLE)
-
-    FIND_PATH( GLEW_INCLUDE_DIR GL/glew.h
-      ${GLEW_ROOT}/include
-      /usr/include/GL
-      /usr/openwin/share/include
-      /usr/openwin/include
-      /usr/X11R6/include
-      /usr/include/X11
-      /opt/graphics/OpenGL/include
-      /opt/graphics/OpenGL/contrib/libglew
-    )
-
-    FIND_LIBRARY( GLEW_GLEW_LIBRARY GLEW
-      ${GLEW_ROOT}/lib
-      /usr/openwin/lib
-      /usr/X11R6/lib
-    )
-
+    FIND_PACKAGE(PkgConfig REQUIRED)
+    PKG_CHECK_MODULES(GLEW REQUIRED IMPORTED_TARGET glew)
+    ADD_LIBRARY(GLEW::glew ALIAS PkgConfig::GLEW)
   ENDIF (APPLE)
 
 ENDIF (WIN32)
 
-SET( GLEW_FOUND "NO" )
-IF(GLEW_INCLUDE_DIR)
-  IF(GLEW_GLEW_LIBRARY)
-    # Is -lXi and -lXmu required on all platforms that have it?
-    # If not, we need some way to figure out what platform we are on.
-    SET( GLEW_LIBRARIES
-      ${GLEW_GLEW_LIBRARY}
-      ${GLEW_cocoa_LIBRARY}
-    )
-    SET( GLEW_FOUND "YES" )
+IF(NOT TARGET GLEW::glew)
+  SET( GLEW_FOUND "NO" )
+  IF(GLEW_INCLUDE_DIR)
+    IF(GLEW_GLEW_LIBRARY)
+      # Is -lXi and -lXmu required on all platforms that have it?
+      # If not, we need some way to figure out what platform we are on.
+      SET( GLEW_LIBRARIES
+        ${GLEW_GLEW_LIBRARY}
+        ${GLEW_cocoa_LIBRARY}
+        )
+      SET( GLEW_FOUND "YES" )
 
-#The following deprecated settings are for backwards compatibility with CMake1.4
-    SET (GLEW_LIBRARY ${GLEW_LIBRARIES})
-    SET (GLEW_INCLUDE_PATH ${GLEW_INCLUDE_DIR})
+      #The following deprecated settings are for backwards compatibility with CMake1.4
+      SET (GLEW_LIBRARY ${GLEW_LIBRARIES})
+      SET (GLEW_INCLUDE_PATH ${GLEW_INCLUDE_DIR})
 
-  ENDIF(GLEW_GLEW_LIBRARY)
-ENDIF(GLEW_INCLUDE_DIR)
+    ENDIF(GLEW_GLEW_LIBRARY)
+  ENDIF(GLEW_INCLUDE_DIR)
 
-IF(GLEW_FOUND)
-  IF(NOT GLEW_FIND_QUIETLY)
-    MESSAGE(STATUS "Found Glew: ${GLEW_LIBRARIES}")
-  ENDIF(NOT GLEW_FIND_QUIETLY)
-ELSE(GLEW_FOUND)
-  IF(GLEW_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find Glew")
-  ENDIF(GLEW_FIND_REQUIRED)
-ENDIF(GLEW_FOUND)
+  IF(GLEW_FOUND)
+    IF(NOT GLEW_FIND_QUIETLY)
+      MESSAGE(STATUS "Found Glew: ${GLEW_LIBRARIES}")
+    ENDIF(NOT GLEW_FIND_QUIETLY)
+  ELSE(GLEW_FOUND)
+    IF(GLEW_FIND_REQUIRED)
+      MESSAGE(FATAL_ERROR "Could not find Glew")
+    ENDIF(GLEW_FIND_REQUIRED)
+  ENDIF(GLEW_FOUND)
+
+  ADD_LIBRARY(GLEW::glew INTERFACE IMPORTED)
+  TARGET_INCLUDE_DIRECTORIES(GLEW::glew INTERFACE "${GLEW_INCLUDE_DIR}")
+  TARGET_LINK_LIBRARIES(GLEW::glew INTERFACE "${GLEW_LIBRARIES}")
+ENDIF(NOT TARGET GLEW::glew)
 
 MARK_AS_ADVANCED(
   GLEW_INCLUDE_DIR
