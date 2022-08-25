@@ -7,103 +7,100 @@
 # ANT_TWEAK_BAR_LIBRARY
 #
 
-  IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    SET( BITS "64" )
-    SET( BITS_FOLDER "x64")
-  ELSE( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    SET( BITS "" )
-    SET( BITS_FOLDER "x86")
-  ENDIF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+  SET( BITS "64" )
+  SET( BITS_FOLDER "x64")
+ELSE( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+  SET( BITS "" )
+  SET( BITS_FOLDER "x86")
+ENDIF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 IF (WIN32)
 
+  FIND_PATH( ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
+    PATHS
+    ${ANT_TWEAK_BAR_ROOT}
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}/../..
+    ${PROJECT_SOURCE_DIR}/thirdparty
+    $ENV{ANT_TWEAK_BAR_ROOT}
+    PATH_SUFFIXES
+    include
+    include/AntTweakBar
+    include/AntTweakBar/include
+    DOC "The directory where AntTweakBar.h resides")
 
-	FIND_PATH( ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
-      PATHS
-		${PROJECT_SOURCE_DIR}/../../include/AntTweakBar
-		${PROJECT_SOURCE_DIR}/../include/AntTweakBar
-		${PROJECT_SOURCE_DIR}/include/AntTweakBar
-    ${PROJECT_SOURCE_DIR}/../../include
-    ${PROJECT_SOURCE_DIR}/../include
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/include
-    ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/include
-    ${PROJECT_SOURCE_DIR}/include/AntTweakBar/include
-    ${PROJECT_SOURCE_DIR}/thirdparty/include/AntTweakBar
-		$ENV{ANT_TWEAK_BAR_ROOT}/include
-		DOC "The directory where AntTweakBar.h resides")
-
-    FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar${BITS}
-        PATHS
+  FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar${BITS}
+    PATHS
+    ${ANT_TWEAK_BAR_ROOT}
     ${PROJECT_SOURCE_DIR}/bin/${BITS_FOLDER}
-		${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/lib
-		${PROJECT_SOURCE_DIR}/../include/AntTweakBar/lib
-		${PROJECT_SOURCE_DIR}/include/AntTweakBar/lib
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/lib
-    ${PROJECT_SOURCE_DIR}/thirdparty/lib
-                $ENV{ANT_TWEAK_BAR_ROOT}/lib
-                DOC "The AntTweakBar library")
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}/../..
+    ${PROJECT_SOURCE_DIR}/thirdparty
+    $ENV{ANT_TWEAK_BAR_ROOT}
+    PATH_SUFFIXES
+    lib
+    include
+    include/AntTweakBar/lib
+    DOC "The AntTweakBar library")
+
 ELSE (WIN32)
 
-FIND_PATH(ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
-      PATHS
-      ${ANT_TWEAK_BAR_ROOT}/include
-      $ENV{ANT_TWEAK_BAR_ROOT}/include
-      ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/include
-      ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/include
-      ${PROJECT_SOURCE_DIR}/include/AntTweakBar/include
-      ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar
-      ${PROJECT_SOURCE_DIR}/../include/AntTweakBar
-      ${PROJECT_SOURCE_DIR}/include/AntTweakBar
-      ${PROJECT_SOURCE_DIR}/../../include
-      ${PROJECT_SOURCE_DIR}/../include
-      ${PROJECT_SOURCE_DIR}/include
-      /usr/local/include
-      /usr/X11/include
-      /usr/include
-      /opt/homebrew/include
-      NO_DEFAULT_PATH)
-
-FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar
-  PATHS
-    ${ANT_TWEAK_BAR_ROOT}/lib
-    $ENV{ANT_TWEAK_BAR_ROOT}/lib
-    ${PROJECT_SOURCE_DIR}/bin/${BITS_FOLDER}
-    ${PROJECT_SOURCE_DIR}/../../include/AntTweakBar/lib
-    ${PROJECT_SOURCE_DIR}/../include/AntTweakBar/lib
-		${PROJECT_SOURCE_DIR}/include/AntTweakBar/lib
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/lib
-    /opt/homebrew/lib
+  FIND_PATH(ANT_TWEAK_BAR_INCLUDE_DIR AntTweakBar.h
+    PATHS
+    ${ANT_TWEAK_BAR_ROOT}
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}/../..
     /usr/local
     /usr/X11
     /usr
-  PATH_SUFFIXES
-    a
-    lib64
+    /opt/homebrew
+    $ENV{ANT_TWEAK_BAR_ROOT}
+    PATH_SUFFIXES
+    include
+    include/AntTweakBar
+    include/AntTweakBar/include
+    NO_DEFAULT_PATH)
+
+  FIND_LIBRARY( ANT_TWEAK_BAR_LIBRARY AntTweakBar
+    PATHS
+    ${ANT_TWEAK_BAR_ROOT}
+    ${PROJECT_SOURCE_DIR}/bin/${BITS_FOLDER}
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}/../..
+    ${PROJECT_SOURCE_DIR}/include
+    /opt/homebrew
+    /usr/local
+    /usr/X11
+    /usr
+    $ENV{ANT_TWEAK_BAR_ROOT}
+    PATH_SUFFIXES
     lib
+    lib64
+    include/AntTweakBar/lib
     dylib
-    NO_DEFAULT_PATH
-)
+    a
+    NO_DEFAULT_PATH)
 
 ENDIF (WIN32)
 
-
 SET(ANTTWEAKBAR_FOUND "NO")
 IF (ANT_TWEAK_BAR_INCLUDE_DIR AND ANT_TWEAK_BAR_LIBRARY)
-	SET(ANTTWEAKBAR_FOUND "YES")
+  SET(ANTTWEAKBAR_FOUND "YES")
 ENDIF (ANT_TWEAK_BAR_INCLUDE_DIR AND ANT_TWEAK_BAR_LIBRARY)
 
 if(ANT_TWEAK_BAR_INCLUDE_DIR AND ANT_TWEAK_BAR_LIBRARY)
-	message(STATUS "Found ANTTWEAKBAR: ${ANT_TWEAK_BAR_INCLUDE_DIR}")
-	ADD_LIBRARY(ANTTWEAKBAR::AntTweakBar INTERFACE IMPORTED)
-	TARGET_INCLUDE_DIRECTORIES(ANTTWEAKBAR::AntTweakBar INTERFACE "${ANT_TWEAK_BAR_INCLUDE_DIR}")
-	TARGET_LINK_LIBRARIES(ANTTWEAKBAR::AntTweakBar INTERFACE "${ANT_TWEAK_BAR_LIBRARY}")
+  message(STATUS "Found ANTTWEAKBAR: ${ANT_TWEAK_BAR_INCLUDE_DIR}")
+  ADD_LIBRARY(ANTTWEAKBAR::AntTweakBar INTERFACE IMPORTED)
+  TARGET_INCLUDE_DIRECTORIES(ANTTWEAKBAR::AntTweakBar INTERFACE "${ANT_TWEAK_BAR_INCLUDE_DIR}")
+  TARGET_LINK_LIBRARIES(ANTTWEAKBAR::AntTweakBar INTERFACE "${ANT_TWEAK_BAR_LIBRARY}")
 
 else(ANT_TWEAK_BAR_INCLUDE_DIR AND ANT_TWEAK_BAR_LIBRARY)
-	if (NOT ANTTWEAKBAR_FIND_QUIETLY)
-		message(FATAL_ERROR "could NOT find ANTTWEAKBAR")
-	endif (NOT ANTTWEAKBAR_FIND_QUIETLY)
-
+  if (NOT ANTTWEAKBAR_FIND_QUIETLY)
+    message(FATAL_ERROR "could NOT find ANTTWEAKBAR")
+  endif (NOT ANTTWEAKBAR_FIND_QUIETLY)
 endif(ANT_TWEAK_BAR_INCLUDE_DIR AND ANT_TWEAK_BAR_LIBRARY)
