@@ -14,12 +14,6 @@ find_package (Eigen3 REQUIRED CONFIG)
 
 # Locate OpenGL
 find_package (OpenGL REQUIRED)
-if (OPENGL_FOUND)
-  include_directories (${OPENGL_INCLUDE_DIR})
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${OPENGL_LIBRARIES})
-else (OPENGL_FOUND)
-  message (SEND_ERROR "Unable to locate OpenGL")
-endif (OPENGL_FOUND)
 
 find_package (GLEW REQUIRED)
 find_package (TBB REQUIRED CONFIG)
@@ -52,6 +46,7 @@ target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
   Eigen3::Eigen
   FreeGLUT::freeglut
   GLEW::glew
+  OpenGL::GLU
   PNG::PNG
   TBB::tbb
   TCLAP::tclap
