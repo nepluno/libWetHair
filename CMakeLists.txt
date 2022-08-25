@@ -27,11 +27,6 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   add_definitions (-DDEBUG)
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
-if (CMAKE_BUILD_TYPE MATCHES Release)
-  add_definitions (-DNDEBUG)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-endif (CMAKE_BUILD_TYPE MATCHES Release)
-
 # Add directory with macros
 list (APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
