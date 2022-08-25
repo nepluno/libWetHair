@@ -37,11 +37,6 @@ endif (RAPIDXML_FOUND)
 
 # TCLAP library is required
 find_package (TCLAP REQUIRED)
-if (TCLAP_FOUND)
-  include_directories (${TCLAP_INCLUDE_PATH})
-else (TCLAP_FOUND)
-  message (SEND_ERROR "Unable to locate TCLAP")
-endif (TCLAP_FOUND)
 
 # Locate AntTweakBar
 find_package (ANTTWEAKBAR REQUIRED)
@@ -68,6 +63,7 @@ target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
   FreeGLUT::freeglut
   GLEW::glew
   TBB::tbb
+  TCLAP::tclap
   Threads::Threads)
 
 install(TARGETS libWetHair)
