@@ -33,7 +33,7 @@ if (CMAKE_BUILD_TYPE MATCHES Release)
 endif (CMAKE_BUILD_TYPE MATCHES Release)
 
 # Add directory with macros
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+list (APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # don't build in the source directory
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
