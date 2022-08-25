@@ -40,12 +40,6 @@ find_package (TCLAP REQUIRED)
 
 # Locate AntTweakBar
 find_package (ANTTWEAKBAR REQUIRED)
-if (ANTTWEAKBAR_FOUND)
-  include_directories( ${ANT_TWEAK_BAR_INCLUDE_DIR} )
-  set (LIBWETHAIR_LIBRARIES ${LIBWETHAIR_LIBRARIES} ${ANT_TWEAK_BAR_LIBRARY})  
-else (ANTTWEAKBAR_FOUND)
-  message (SEND_ERROR "Unable to locate ANTTWEAKBAR")
-endif (ANTTWEAKBAR_FOUND)  
 
 find_package (PNG REQUIRED)
 
@@ -54,6 +48,7 @@ find_package(Threads REQUIRED)
 
 add_executable (libWetHair ${Headers} ${Templates} ${Sources})
 target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
+  ANTTWEAKBAR::AntTweakBar
   Eigen3::Eigen
   FreeGLUT::freeglut
   GLEW::glew
