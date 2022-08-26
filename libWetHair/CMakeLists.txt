@@ -1,9 +1,5 @@
 # libWetHair Executable
 
-append_files (Headers "h" . App Core Core/DER Core/DER/Forces Core/DER/Dependencies Core/pcgsolver)
-append_files (Sources "cpp" . App Core Core/DER Core/DER/Forces Core/DER/Dependencies Core/pcgsolver)
-append_files (Sources "c" . App Core Core/DER Core/DER/Forces Core/DER/Dependencies Core/pcgsolver)
-
 # Find dependencies
 find_package (ANTTWEAKBAR REQUIRED)
 find_package (Eigen3 REQUIRED CONFIG)
@@ -17,9 +13,64 @@ find_package (TCLAP REQUIRED)
 set (THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads REQUIRED)
 
-add_executable (libWetHair ${Headers} ${Templates} ${Sources})
+add_executable (libWetHair
+  "App/Camera.cpp"
+  "App/ParticleSimulation.cpp"
+  "App/RenderingUtilities.cpp"
+  "App/StringUtilities.cpp"
+  "App/TwoDSceneRenderer.cpp"
+  "App/TwoDSceneSerializer.cpp"
+  "App/TwoDSceneXMLParser.cpp"
+  "App/TwoDimensionalDisplayController.cpp"
+  "App/YImage.cpp"
+  "App/main.cpp"
+  "App/openglutils.cpp"
+
+  "Core/DER/Dependencies/DegreesOfFreedom.cpp"
+  "Core/DER/Dependencies/ElasticStrandUtils.cpp"
+  "Core/DER/Dependencies/Kappas.cpp"
+  "Core/DER/Dependencies/MaterialFrames.cpp"
+  "Core/DER/Dependencies/ReferenceFrames.cpp"
+  "Core/DER/Dependencies/Twists.cpp"
+  "Core/DER/Forces/BendingForce.cpp"
+  "Core/DER/Forces/StretchingForce.cpp"
+  "Core/DER/Forces/TwistingForce.cpp"
+  "Core/DER/StrandForce.cpp"
+  "Core/CTCD.cpp"
+  "Core/Capsule.cpp"
+  "Core/CohesionTableGen.cpp"
+  "Core/CompliantImplicitEuler.cpp"
+  "Core/CylindricalShallowFlow.cpp"
+  "Core/DragDampingForce.cpp"
+  "Core/FluidDragForce.cpp"
+  "Core/Force.cpp"
+  "Core/GeometricLevelGen.cpp"
+  "Core/HairFlow.cpp"
+  "Core/Icosphere.cpp"
+  "Core/LevelSetForce.cpp"
+  "Core/LinearBendingForce.cpp"
+  "Core/LinearSpringForce.cpp"
+  "Core/MathUtilities.cpp"
+  "Core/PolygonalCohesion.cpp"
+  "Core/SceneStepper.cpp"
+  "Core/SimpleGravityForce.cpp"
+  "Core/SpringForce.cpp"
+  "Core/StrandCompliantEuler.cpp"
+  "Core/StrandCompliantManager.cpp"
+  "Core/TimingUtilities.cpp"
+  "Core/TwoDScene.cpp"
+  "Core/WetHairCore.cpp"
+  "Core/fluidsim.cpp"
+  "Core/fluidsim2D.cpp"
+  "Core/fluidsim3D.cpp"
+  "Core/liangbarsky.cpp"
+  "Core/sorter.cpp"
+  "Core/viscosity3d.cpp"
+  "Core/volume_fractions.cpp"
+  )
+
 target_include_directories(libWetHair PRIVATE "Core")
-target_link_libraries(libWetHair PRIVATE ${LIBWETHAIR_LIBRARIES}
+target_link_libraries(libWetHair PRIVATE
   ANTTWEAKBAR::AntTweakBar
   Eigen3::Eigen
   FreeGLUT::freeglut

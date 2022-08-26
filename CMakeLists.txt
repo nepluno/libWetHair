@@ -33,14 +33,6 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   message (FATAL_ERROR "Remove the created \"CMakeCache.txt\" file and the \"CMakeFiles\" directory, then create a build directory and call \"${CMAKE_COMMAND} <path to the sources>\".")
 endif ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
-# Finds all files with a given extension
-macro (append_files files ext)
-  foreach (dir ${ARGN})
-    file (GLOB _files "${dir}/*.${ext}")
-    list (APPEND ${files} ${_files})
-  endforeach (dir)
-endmacro (append_files)
-
 include(GNUInstallDirs)
 add_subdirectory (libWetHair)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
