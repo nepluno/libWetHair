@@ -90,10 +90,23 @@ target_link_libraries(libWetHair PRIVATE
   RapidXML::RapidXML
   TCLAP::tclap)
 
-install(TARGETS libWetHair WetHairCore)
+install(TARGETS libWetHair)
+
+install(TARGETS WetHairCore
+  EXPORT WetHairCore)
+
+install(EXPORT WetHairCore
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libWetHair"
+  NAMESPACE libWetHair::
+  FILE libWetHair_WetHairCore.cmake
+  COMPONENT WetHairCore)
+
+install(FILES libWetHairConfig.cmake
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libWetHair")
 
 # Install headers
 install(DIRECTORY Core/
   DESTINATION include/libWetHair
   FILES_MATCHING
   PATTERN *.h)
+
