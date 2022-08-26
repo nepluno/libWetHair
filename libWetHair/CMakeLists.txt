@@ -13,19 +13,7 @@ find_package (TCLAP REQUIRED)
 set (THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads REQUIRED)
 
-add_executable (libWetHair
-  "App/Camera.cpp"
-  "App/ParticleSimulation.cpp"
-  "App/RenderingUtilities.cpp"
-  "App/StringUtilities.cpp"
-  "App/TwoDSceneRenderer.cpp"
-  "App/TwoDSceneSerializer.cpp"
-  "App/TwoDSceneXMLParser.cpp"
-  "App/TwoDimensionalDisplayController.cpp"
-  "App/YImage.cpp"
-  "App/main.cpp"
-  "App/openglutils.cpp"
-
+add_library (WetHairCore
   "Core/DER/Dependencies/DegreesOfFreedom.cpp"
   "Core/DER/Dependencies/ElasticStrandUtils.cpp"
   "Core/DER/Dependencies/Kappas.cpp"
@@ -66,11 +54,33 @@ add_executable (libWetHair
   "Core/liangbarsky.cpp"
   "Core/sorter.cpp"
   "Core/viscosity3d.cpp"
-  "Core/volume_fractions.cpp"
-  )
+  "Core/volume_fractions.cpp")
+add_library(libWetHair::WetHairCore ALIAS WetHairCore)
+
+target_link_libraries(WetHairCore
+  PUBLIC
+  Eigen3::Eigen
+  TBB::tbb
+  PRIVATE
+  Threads::Threads
+)
+
+add_executable (libWetHair
+  "App/Camera.cpp"
+  "App/ParticleSimulation.cpp"
+  "App/RenderingUtilities.cpp"
+  "App/StringUtilities.cpp"
+  "App/TwoDSceneRenderer.cpp"
+  "App/TwoDSceneSerializer.cpp"
+  "App/TwoDSceneXMLParser.cpp"
+  "App/TwoDimensionalDisplayController.cpp"
+  "App/YImage.cpp"
+  "App/main.cpp"
+  "App/openglutils.cpp")
 
 target_include_directories(libWetHair PRIVATE "Core")
 target_link_libraries(libWetHair PRIVATE
+  libWetHair::WetHairCore
   ANTTWEAKBAR::AntTweakBar
   Eigen3::Eigen
   FreeGLUT::freeglut
@@ -78,8 +88,12 @@ target_link_libraries(libWetHair PRIVATE
   OpenGL::GLU
   PNG::PNG
   RapidXML::RapidXML
-  TBB::tbb
-  TCLAP::tclap
-  Threads::Threads)
+  TCLAP::tclap)
 
-install(TARGETS libWetHair)
+install(TARGETS libWetHair WetHairCore)
+
+# Install headers
+install(DIRECTORY Core/
+  DESTINATION include/libWetHair
+  FILES_MATCHING
+  PATTERN *.h)
