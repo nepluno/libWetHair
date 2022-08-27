@@ -62,8 +62,11 @@ target_link_libraries(WetHairCore
   Eigen3::Eigen
   TBB::tbb
   PRIVATE
-  Threads::Threads
-)
+  Threads::Threads)
+
+target_include_directories(WetHairCore INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Core>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libWetHair>)
 
 add_executable (libWetHair
   "App/Camera.cpp"
@@ -78,7 +81,6 @@ add_executable (libWetHair
   "App/main.cpp"
   "App/openglutils.cpp")
 
-target_include_directories(libWetHair PRIVATE "Core")
 target_link_libraries(libWetHair PRIVATE
   libWetHair::WetHairCore
   ANTTWEAKBAR::AntTweakBar
