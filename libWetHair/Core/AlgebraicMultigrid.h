@@ -30,10 +30,8 @@ Multigrid Cycles.
 */
 //#define AMG_VERBOSE
 
-using namespace std;
-using namespace BLAS;
 template <class T>
-void RBGS(const FixedSparseMatrix<T> &A, const vector<T> &b, vector<T> &x,
+void RBGS(const robertbridson::FixedSparseMatrix<T> &A, const std::vector<T> &b, std::vector<T> &x,
           int ni, int nj, int nk, int iternum) {
   for (int iter = 0; iter < iternum; iter++) {
     size_t num = ni * nj * nk;
@@ -95,29 +93,29 @@ void RBGS(const FixedSparseMatrix<T> &A, const vector<T> &b, vector<T> &x,
 }
 
 template <class T>
-void restriction(const FixedSparseMatrix<T> &R, const FixedSparseMatrix<T> &A,
-                 const vector<T> &x, const vector<T> &b_curr,
-                 vector<T> &b_next) {
+void restriction(const robertbridson::FixedSparseMatrix<T> &R, const robertbridson::FixedSparseMatrix<T> &A,
+                 const std::vector<T> &x, const std::vector<T> &b_curr,
+                 std::vector<T> &b_next) {
   b_next.assign(b_next.size(), 0);
-  vector<T> r = b_curr;
+  std::vector<T> r = b_curr;
   multiply_and_subtract(A, x, r);
   multiply(R, r, b_next);
   r.resize(0);
 }
 template <class T>
-void prolongatoin(const FixedSparseMatrix<T> &P, const vector<T> &x_curr,
-                  vector<T> &x_next) {
-  static vector<T> xx;
+void prolongatoin(const robertbridson::FixedSparseMatrix<T> &P, const std::vector<T> &x_curr,
+                  std::vector<T> &x_next) {
+  static std::vector<T> xx;
   xx.resize(x_next.size());
   xx.assign(xx.size(), 0);
   multiply(P, x_curr, xx);  // xx = P*x_curr;
-  add_scaled(1.0, xx, x_next);
+  robertbridson::BLAS::add_scaled(1.0, xx, x_next);
   xx.resize(0);
 }
 
 template <class T>
-void RBGS_with_pattern(const FixedSparseMatrix<T> &A, const vector<T> &b,
-                       vector<T> &x, vector<bool> &pattern, int iternum) {
+void RBGS_with_pattern(const robertbridson::FixedSparseMatrix<T> &A, const std::vector<T> &b,
+                       std::vector<T> &x, std::vector<bool> &pattern, int iternum) {
   for (int iter = 0; iter < iternum; iter++) {
     size_t num = x.size();
 
@@ -178,14 +176,14 @@ void RBGS_with_pattern(const FixedSparseMatrix<T> &A, const vector<T> &b,
 }
 
 template <class T>
-void amgVCycleCompressed(vector<std::shared_ptr<FixedSparseMatrix<T>>> &A_L,
-                         vector<FixedSparseMatrix<T>> &R_L,
-                         vector<FixedSparseMatrix<T>> &P_L,
-                         vector<vector<bool>> &p_L, vector<T> &x,
-                         const vector<T> &b) {
+void amgVCycleCompressed(std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>> &A_L,
+                         std::vector<robertbridson::FixedSparseMatrix<T>> &R_L,
+                         std::vector<robertbridson::FixedSparseMatrix<T>> &P_L,
+                         std::vector<std::vector<bool>> &p_L, std::vector<T> &x,
+                         const std::vector<T> &b) {
   int total_level = A_L.size();
-  vector<vector<T>> x_L;
-  vector<vector<T>> b_L;
+  std::vector<std::vector<T>> x_L;
+  std::vector<std::vector<T>> b_L;
   x_L.resize(total_level);
   b_L.resize(total_level);
   b_L[0] = b;
@@ -233,11 +231,11 @@ void amgVCycleCompressed(vector<std::shared_ptr<FixedSparseMatrix<T>>> &A_L,
   }
 }
 template <class T>
-void amgPrecondCompressed(vector<std::shared_ptr<FixedSparseMatrix<T>>> &A_L,
-                          vector<FixedSparseMatrix<T>> &R_L,
-                          vector<FixedSparseMatrix<T>> &P_L,
-                          vector<vector<bool>> &p_L, vector<T> &x,
-                          const vector<T> &b) {
+void amgPrecondCompressed(std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>> &A_L,
+                          std::vector<robertbridson::FixedSparseMatrix<T>> &R_L,
+                          std::vector<robertbridson::FixedSparseMatrix<T>> &P_L,
+                          std::vector<std::vector<bool>> &p_L, std::vector<T> &x,
+                          const std::vector<T> &b) {
   // printf("preconditioning begin\n");
   x.resize(b.size());
   x.assign(x.size(), 0);
@@ -246,18 +244,18 @@ void amgPrecondCompressed(vector<std::shared_ptr<FixedSparseMatrix<T>>> &A_L,
 }
 
 template <class T>
-bool AMGPCGSolveSparse(const SparseMatrix<T> &matrix, const std::vector<T> &rhs,
-                       std::vector<T> &result, vector<Vector3i> &Dof_ijk,
+bool AMGPCGSolveSparse(const robertbridson::SparseMatrix<T> &matrix, const std::vector<T> &rhs,
+                       std::vector<T> &result, std::vector<Vector3i> &Dof_ijk,
                        T tolerance_factor, int max_iterations, T &residual_out,
                        int &iterations_out, int ni, int nj, int nk) {
-  static std::shared_ptr<FixedSparseMatrix<T>> fixed_matrix =
-      std::make_shared<FixedSparseMatrix<T>>();
+  static std::shared_ptr<robertbridson::FixedSparseMatrix<T>> fixed_matrix =
+      std::make_shared<robertbridson::FixedSparseMatrix<T>>();
   fixed_matrix->construct_from_matrix(matrix);
-  static vector<std::shared_ptr<FixedSparseMatrix<T>>> A_L;
-  static vector<FixedSparseMatrix<T>> R_L;
-  static vector<FixedSparseMatrix<T>> P_L;
-  static vector<vector<bool>> p_L;
-  vector<T> m, z, s, r;
+  static std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>> A_L;
+  static std::vector<robertbridson::FixedSparseMatrix<T>> R_L;
+  static std::vector<robertbridson::FixedSparseMatrix<T>> P_L;
+  static std::vector<std::vector<bool>> p_L;
+  std::vector<T> m, z, s, r;
   int total_level;
   levelGen<T> amg_levelGen;
 #ifdef AMG_VERBOSE
@@ -273,9 +271,9 @@ bool AMGPCGSolveSparse(const SparseMatrix<T> &matrix, const std::vector<T> &rhs,
     z.resize(n);
     r.resize(n);
   }
-  zero(result);
+  mathutils::zero(result);
   r = rhs;
-  residual_out = BLAS::abs_max(r);
+  residual_out = robertbridson::BLAS::abs_max(r);
   if (residual_out == 0) {
     iterations_out = 0;
 
@@ -297,7 +295,7 @@ bool AMGPCGSolveSparse(const SparseMatrix<T> &matrix, const std::vector<T> &rhs,
 #ifdef AMG_VERBOSE
   std::cout << "[AMG: first precond done]" << std::endl;
 #endif
-  double rho = BLAS::dot(z, r);
+  double rho = robertbridson::BLAS::dot(z, r);
   if (rho == 0 || rho != rho) {
     for (int i = 0; i < total_level; i++) {
       A_L[i]->clear();
@@ -318,11 +316,11 @@ bool AMGPCGSolveSparse(const SparseMatrix<T> &matrix, const std::vector<T> &rhs,
   for (iteration = 0; iteration < max_iterations; ++iteration) {
     multiply(*fixed_matrix, s, z);
     // printf("multiply done\n");
-    double alpha = rho / BLAS::dot(s, z);
+    double alpha = rho / robertbridson::BLAS::dot(s, z);
     // printf("%d,%d,%d,%d\n",s.size(),z.size(),r.size(),result.size());
-    BLAS::add_scaled(alpha, s, result);
-    BLAS::add_scaled(-alpha, z, r);
-    residual_out = BLAS::abs_max(r);
+    robertbridson::BLAS::add_scaled(alpha, s, result);
+    robertbridson::BLAS::add_scaled(-alpha, z, r);
+    residual_out = robertbridson::BLAS::abs_max(r);
 
     if (residual_out <= tol) {
       iterations_out = iteration + 1;
@@ -344,9 +342,9 @@ bool AMGPCGSolveSparse(const SparseMatrix<T> &matrix, const std::vector<T> &rhs,
 #ifdef AMG_VERBOSE
     std::cout << "[AMG: second precond done]" << std::endl;
 #endif
-    double rho_new = BLAS::dot(z, r);
+    double rho_new = robertbridson::BLAS::dot(z, r);
     double beta = rho_new / rho;
-    BLAS::add_scaled(beta, s, z);
+    robertbridson::BLAS::add_scaled(beta, s, z);
     s.swap(z);  // s=beta*s+z
     rho = rho_new;
   }

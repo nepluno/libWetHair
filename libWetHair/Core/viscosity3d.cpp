@@ -165,7 +165,7 @@ void advance_viscosity_implicit_weighted(
   rhs.assign(rhs.size(), 0);
   matrix.zero();
 
-  scalar factor = dt * sqr(over_dx);
+  scalar factor = dt * mathutils::sqr(over_dx);
 
   threadutils::thread_pool::ParallelFor(u_base_idx, v_base_idx, [&](int index) {
     const int i = dof_ijk[index](0);

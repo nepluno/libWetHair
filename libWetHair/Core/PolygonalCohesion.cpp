@@ -1984,18 +1984,18 @@ void PolygonalCohesion<DIM>::computeInterHairVelocity(const scalar& dt) {
 template <int DIM>
 void PolygonalCohesion<DIM>::computeInterHairRHS(const scalar& dt) {
   for (int i = 0; i < m_cur_hhrr_v_global.cols(); ++i) {
-    computeJTPhi(m_ce_inter_buffer, m_cur_hhrr_v_global.col(i),
-                 m_gradF_interhair_T);
-    computeJTPhi_coeff(m_ce_inter_short_buffer, m_u_interhair,
-                       m_ce_inter_buffer, m_dir_f_interhair_T);
-    computeJTPhi_coeff(m_rhs_offset_v_global, -dt, m_ce_inter_short_buffer,
-                       m_W_fv_interhair_T, i);
+    mathutils::computeJTPhi(m_ce_inter_buffer, m_cur_hhrr_v_global.col(i),
+                            m_gradF_interhair_T);
+    mathutils::computeJTPhi_coeff(m_ce_inter_short_buffer, m_u_interhair,
+                                  m_ce_inter_buffer, m_dir_f_interhair_T);
+    mathutils::computeJTPhi_coeff(m_rhs_offset_v_global, -dt, m_ce_inter_short_buffer,
+                                  m_W_fv_interhair_T, i);
 
-    computeJTPhi_coeff(m_ce_inter_buffer, m_G_f_interhair, m_u_interhair,
-                       m_dir_f_interhair);
-    computeJTPhi_coeff(m_cv_buffer, m_iG_v_global, m_ce_inter_buffer,
-                       m_gradF_interhair);
-    accumulate_cwiseProduct(m_cv_buffer, m_cur_hhrr_v_global.col(i));
+    mathutils::computeJTPhi_coeff(m_ce_inter_buffer, m_G_f_interhair, m_u_interhair,
+                                  m_dir_f_interhair);
+    mathutils::computeJTPhi_coeff(m_cv_buffer, m_iG_v_global, m_ce_inter_buffer,
+                                  m_gradF_interhair);
+    mathutils::accumulate_cwiseProduct(m_cv_buffer, m_cur_hhrr_v_global.col(i));
     m_rhs_offset_v_global.col(i) += m_cv_buffer * dt;
   }
 }

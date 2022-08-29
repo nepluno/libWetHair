@@ -15,19 +15,17 @@
 #include "MathUtilities.h"
 #include "array2.h"
 
-using namespace mathutils;
-
 template <class S, class T>
 T interpolate_value(const Eigen::Matrix<S, 2, 1>& point,
                     const Array2<T, Array1<T> >& grid) {
   int i, j;
   S fx, fy;
 
-  get_barycentric(point[0], i, fx, 0, grid.ni);
-  get_barycentric(point[1], j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
 
-  return bilerp(grid(i, j), grid(i + 1, j), grid(i, j + 1), grid(i + 1, j + 1),
-                fx, fy);
+  return mathutils::bilerp(grid(i, j), grid(i + 1, j), grid(i, j + 1), grid(i + 1, j + 1),
+                           fx, fy);
 }
 
 template <class S, class T>
@@ -36,11 +34,11 @@ T interpolate_value(const Eigen::Matrix<S, 2, 1>& point,
   int i, j;
   S fx, fy;
 
-  get_barycentric(point[0], i, fx, 0, ni);
-  get_barycentric(point[1], j, fy, 0, nj);
+  mathutils::get_barycentric(point[0], i, fx, 0, ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, nj);
 
-  return bilerp(grid[j * ni + i], grid[j * ni + i + 1], grid[(j + 1) * ni + i],
-                grid[(j + 1) * ni + (i + 1)], fx, fy);
+  return mathutils::bilerp(grid[j * ni + i], grid[j * ni + i + 1], grid[(j + 1) * ni + i],
+                           grid[(j + 1) * ni + (i + 1)], fx, fy);
 }
 
 template <class T>
@@ -49,11 +47,11 @@ Eigen::Matrix<T, 2, 1> affine_interpolate_value(
   int i, j;
   T fx, fy;
 
-  get_barycentric(point[0], i, fx, 0, grid.ni);
-  get_barycentric(point[1], j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
 
-  return grad_bilerp(grid(i, j), grid(i + 1, j), grid(i, j + 1),
-                     grid(i + 1, j + 1), fx, fy);
+  return mathutils::grad_bilerp(grid(i, j), grid(i + 1, j), grid(i, j + 1),
+                                grid(i + 1, j + 1), fx, fy);
 }
 
 template <class S, class T>
@@ -62,8 +60,8 @@ T interpolate_gradient(Eigen::Matrix<T, 2, 1>& gradient,
                        const Array2<T, Array1<T> >& grid) {
   int i, j;
   S fx, fy;
-  get_barycentric(point[0], i, fx, 0, grid.ni);
-  get_barycentric(point[1], j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
 
   T v00 = grid(i, j);
   T v01 = grid(i, j + 1);
@@ -76,11 +74,11 @@ T interpolate_gradient(Eigen::Matrix<T, 2, 1>& gradient,
   T ddx0 = (v10 - v00);
   T ddx1 = (v11 - v01);
 
-  gradient[0] = lerp(ddx0, ddx1, fy);
-  gradient[1] = lerp(ddy0, ddy1, fx);
+  gradient[0] = mathutils::lerp(ddx0, ddx1, fy);
+  gradient[1] = mathutils::lerp(ddy0, ddy1, fx);
 
   // may as well return value too
-  return bilerp(v00, v10, v01, v11, fx, fy);
+  return mathutils::bilerp(v00, v10, v01, v11, fx, fy);
 }
 
 template <typename S, typename T>
@@ -89,8 +87,8 @@ void interpolate_gradient(Eigen::Matrix<S, 2, 1>& gradient,
                           const Array2<T, Array1<T> >& grid, S cellSize) {
   int i, j;
   S fx, fy;
-  get_barycentric(point(0), i, fx, 0, grid.ni);
-  get_barycentric(point(1), j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point(0), i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point(1), j, fy, 0, grid.nj);
 
   S v00 = (S)grid(i, j);
   S v01 = (S)grid(i, j + 1);
@@ -114,8 +112,8 @@ void interpolate_gradient(Eigen::Matrix<S, 2, 1>& gradient,
                           S cellSize) {
   int i, j;
   S fx, fy;
-  get_barycentric(point(0), i, fx, 0, ni);
-  get_barycentric(point(1), j, fy, 0, nj);
+  mathutils::get_barycentric(point(0), i, fx, 0, ni);
+  mathutils::get_barycentric(point(1), j, fy, 0, nj);
 
   S v00 = (S)grid[j * ni + i];
   S v01 = (S)grid[(j + 1) * ni + i];

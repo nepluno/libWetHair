@@ -13,14 +13,15 @@
 //#define AMG_VERBOSE
 
 template <class T>
-void levelGen<T>::generateRP(const FixedSparseMatrix<T> &A,
-                             FixedSparseMatrix<T> &R, FixedSparseMatrix<T> &P,
+void levelGen<T>::generateRP(const robertbridson::FixedSparseMatrix<T> &A,
+                             robertbridson::FixedSparseMatrix<T> &R,
+                             robertbridson::FixedSparseMatrix<T> &P,
                              int ni, int nj, int nk) {
   int nni = ceil((float)ni / 2.0);
   int nnj = ceil((float)nj / 2.0);
   int nnk = ceil((float)nk / 2.0);
-  SparseMatrix<T> r;
-  SparseMatrix<T> p;
+  robertbridson::SparseMatrix<T> r;
+  robertbridson::SparseMatrix<T> p;
   p.resize(ni * nj * nk);
   p.zero();
   r.resize(nni * nnj * nnk);

@@ -21,14 +21,14 @@ T interpolate_value(const Eigen::Matrix<S, 3, 1>& point,
   int i, j, k;
   S fi, fj, fk;
 
-  get_barycentric(point[0], i, fi, 0, grid.ni);
-  get_barycentric(point[1], j, fj, 0, grid.nj);
-  get_barycentric(point[2], k, fk, 0, grid.nk);
+  mathutils::get_barycentric(point[0], i, fi, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fj, 0, grid.nj);
+  mathutils::get_barycentric(point[2], k, fk, 0, grid.nk);
 
-  return trilerp(grid(i, j, k), grid(i + 1, j, k), grid(i, j + 1, k),
-                 grid(i + 1, j + 1, k), grid(i, j, k + 1),
-                 grid(i + 1, j, k + 1), grid(i, j + 1, k + 1),
-                 grid(i + 1, j + 1, k + 1), fi, fj, fk);
+  return mathutils::trilerp(grid(i, j, k), grid(i + 1, j, k), grid(i, j + 1, k),
+                            grid(i + 1, j + 1, k), grid(i, j, k + 1),
+                            grid(i + 1, j, k + 1), grid(i, j + 1, k + 1),
+                            grid(i + 1, j + 1, k + 1), fi, fj, fk);
 }
 
 template <class S, class T>
@@ -46,18 +46,18 @@ T interpolate_value(const Eigen::Matrix<S, 3, 1>& point,
   int i, j, k;
   S fi, fj, fk;
 
-  get_barycentric(point[0], i, fi, 0, ni);
-  get_barycentric(point[1], j, fj, 0, nj);
-  get_barycentric(point[2], k, fk, 0, nk);
+  mathutils::get_barycentric(point[0], i, fi, 0, ni);
+  mathutils::get_barycentric(point[1], j, fj, 0, nj);
+  mathutils::get_barycentric(point[2], k, fk, 0, nk);
 
-  return trilerp(grid[k * ni * nj + j * ni + i],
-                 grid[k * ni * nj + j * ni + i + 1],
-                 grid[k * ni * nj + (j + 1) * ni + i],
-                 grid[k * ni * nj + (j + 1) * ni + i + 1],
-                 grid[(k + 1) * ni * nj + j * ni + i],
-                 grid[(k + 1) * ni * nj + j * ni + i + 1],
-                 grid[(k + 1) * ni * nj + (j + 1) * ni + i],
-                 grid[(k + 1) * ni * nj + (j + 1) * ni + i + 1], fi, fj, fk);
+  return mathutils::trilerp(grid[k * ni * nj + j * ni + i],
+                            grid[k * ni * nj + j * ni + i + 1],
+                            grid[k * ni * nj + (j + 1) * ni + i],
+                            grid[k * ni * nj + (j + 1) * ni + i + 1],
+                            grid[(k + 1) * ni * nj + j * ni + i],
+                            grid[(k + 1) * ni * nj + j * ni + i + 1],
+                            grid[(k + 1) * ni * nj + (j + 1) * ni + i],
+                            grid[(k + 1) * ni * nj + (j + 1) * ni + i + 1], fi, fj, fk);
 }
 
 template <class T>
@@ -66,14 +66,14 @@ Eigen::Matrix<T, 3, 1> affine_interpolate_value(
   int i, j, k;
   T fx, fy, fz;
 
-  get_barycentric(point[0], i, fx, 0, grid.ni);
-  get_barycentric(point[1], j, fy, 0, grid.nj);
-  get_barycentric(point[2], k, fz, 0, grid.nk);
+  mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point[2], k, fz, 0, grid.nk);
 
-  return grad_trilerp(grid(i, j, k), grid(i + 1, j, k), grid(i, j + 1, k),
-                      grid(i + 1, j + 1, k), grid(i, j, k + 1),
-                      grid(i + 1, j, k + 1), grid(i, j + 1, k + 1),
-                      grid(i + 1, j + 1, k + 1), fx, fy, fz);
+  return mathutils::grad_trilerp(grid(i, j, k), grid(i + 1, j, k), grid(i, j + 1, k),
+                                 grid(i + 1, j + 1, k), grid(i, j, k + 1),
+                                 grid(i + 1, j, k + 1), grid(i, j + 1, k + 1),
+                                 grid(i + 1, j + 1, k + 1), fx, fy, fz);
 }
 
 template <class S, class T>
@@ -83,9 +83,9 @@ T interpolate_gradient(Eigen::Matrix<T, 3, 1>& gradient,
   int i, j, k;
   S fx, fy, fz;
 
-  get_barycentric(point[0], i, fx, 0, grid.ni);
-  get_barycentric(point[1], j, fy, 0, grid.nj);
-  get_barycentric(point[2], k, fz, 0, grid.nk);
+  mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point[2], k, fz, 0, grid.nk);
 
   T v000 = grid(i, j, k);
   T v001 = grid(i, j, k + 1);
@@ -100,26 +100,26 @@ T interpolate_gradient(Eigen::Matrix<T, 3, 1>& gradient,
   T ddx10 = (v110 - v010);
   T ddx01 = (v101 - v001);
   T ddx11 = (v111 - v011);
-  T dv_dx = bilerp(ddx00, ddx10, ddx01, ddx11, fy, fz);
+  T dv_dx = mathutils::bilerp(ddx00, ddx10, ddx01, ddx11, fy, fz);
 
   T ddy00 = (v010 - v000);
   T ddy10 = (v110 - v100);
   T ddy01 = (v011 - v001);
   T ddy11 = (v111 - v101);
-  T dv_dy = bilerp(ddy00, ddy10, ddy01, ddy11, fx, fz);
+  T dv_dy = mathutils::bilerp(ddy00, ddy10, ddy01, ddy11, fx, fz);
 
   T ddz00 = (v001 - v000);
   T ddz10 = (v101 - v100);
   T ddz01 = (v011 - v010);
   T ddz11 = (v111 - v110);
-  T dv_dz = bilerp(ddz00, ddz10, ddz01, ddz11, fx, fy);
+  T dv_dz = mathutils::bilerp(ddz00, ddz10, ddz01, ddz11, fx, fy);
 
   gradient[0] = dv_dx;
   gradient[1] = dv_dy;
   gradient[2] = dv_dz;
 
   // return value for good measure.
-  return trilerp(v000, v100, v010, v110, v001, v101, v011, v111, fx, fy, fz);
+  return mathutils::trilerp(v000, v100, v010, v110, v001, v101, v011, v111, fx, fy, fz);
 }
 
 template <class S, class T>
@@ -129,9 +129,9 @@ void interpolate_gradient(Eigen::Matrix<T, 3, 1>& gradient,
   int i, j, k;
   S fx, fy, fz;
 
-  get_barycentric(point[0], i, fx, 0, grid.ni);
-  get_barycentric(point[1], j, fy, 0, grid.nj);
-  get_barycentric(point[2], k, fz, 0, grid.nk);
+  mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
+  mathutils::get_barycentric(point[2], k, fz, 0, grid.nk);
 
   T v000 = grid(i, j, k);
   T v001 = grid(i, j, k + 1);
@@ -173,9 +173,9 @@ void interpolate_gradient(Eigen::Matrix<T, 3, 1>& gradient,
   int i, j, k;
   S fx, fy, fz;
 
-  get_barycentric(point[0], i, fx, 0, ni);
-  get_barycentric(point[1], j, fy, 0, nj);
-  get_barycentric(point[2], k, fz, 0, nk);
+  mathutils::get_barycentric(point[0], i, fx, 0, ni);
+  mathutils::get_barycentric(point[1], j, fy, 0, nj);
+  mathutils::get_barycentric(point[2], k, fz, 0, nk);
 
   T v000 = grid[k * (ni * nj) + j * ni + i];
   T v001 = grid[(k + 1) * (ni * nj) + j * ni + i];

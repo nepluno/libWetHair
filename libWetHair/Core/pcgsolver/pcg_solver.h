@@ -23,8 +23,6 @@
 #include "blas_wrapper.h"
 #include "sparse_matrix.h"
 
-using namespace mathutils;
-
 //============================================================================
 // A simple compressed sparse column data structure (with separate diagonal)
 // for lower triangular matrices
@@ -104,11 +102,10 @@ void factor_modified_incomplete_cholesky0(const SparseMatrix<T> &matrix,
   // first copy lower triangle of matrix into factor (Note: assuming A is
   // symmetric of course!)
   factor.resize(matrix.n);
-  zero(
-      factor.invdiag);  // important: eliminate old values from previous solves!
+  mathutils::zero(factor.invdiag);  // important: eliminate old values from previous solves!
   factor.value.resize(0);
   factor.rowindex.resize(0);
-  zero(factor.adiag);
+  mathutils::zero(factor.adiag);
   for (unsigned int i = 0; i < matrix.n; ++i) {
     factor.colstart[i] = (unsigned int)factor.rowindex.size();
     for (unsigned int j = 0; j < matrix.index[i].size(); ++j) {
@@ -268,7 +265,7 @@ struct PCGSolver {
       z.resize(n);
       r.resize(n);
     }
-    zero(result);
+    mathutils::zero(result);
     r = rhs;
     residual_out = BLAS::abs_max(r);
     if (residual_out < 1e-30) {

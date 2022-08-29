@@ -19,8 +19,6 @@
 
 #include "../MathUtilities.h"
 
-using namespace mathutils;
-
 //============================================================================
 // Dynamic compressed sparse row matrix.
 namespace robertbridson {
@@ -76,8 +74,8 @@ struct SparseMatrix {
         value[i][k] = new_value;
         return;
       } else if (index[i][k] > j) {
-        insert(index[i], k, j);
-        insert(value[i], k, new_value);
+        mathutils::insert(index[i], k, j);
+        mathutils::insert(value[i], k, new_value);
         return;
       }
     }
@@ -92,8 +90,8 @@ struct SparseMatrix {
         value[i][k] += increment_value;
         return;
       } else if (index[i][k] > j) {
-        insert(index[i], k, j);
-        insert(value[i], k, increment_value);
+        mathutils::insert(index[i], k, j);
+        mathutils::insert(value[i], k, increment_value);
         return;
       }
     }
@@ -109,8 +107,8 @@ struct SparseMatrix {
       if (index[i][k] < indices[j]) {
         ++k;
       } else if (index[i][k] > indices[j]) {
-        insert(index[i], k, indices[j]);
-        insert(value[i], k, values[j]);
+        mathutils::insert(index[i], k, indices[j]);
+        mathutils::insert(value[i], k, values[j]);
         ++j;
       } else {
         value[i][k] += values[j];
@@ -131,8 +129,8 @@ struct SparseMatrix {
       unsigned int j = index[i][a];  //
       for (unsigned int b = 0; b < index[j].size(); ++b) {
         if (index[j][b] == i) {
-          erase(index[j], b);
-          erase(value[j], b);
+          mathutils::erase(index[j], b);
+          mathutils::erase(value[j], b);
           break;
         }
       }
