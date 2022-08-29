@@ -27,9 +27,10 @@ extern bool g_rendering_enabled;
 template <int DIM>
 class ParticleSimulation : public ExecutableSimulation {
  public:
-  ParticleSimulation(TwoDScene<DIM>* scene, SceneStepper<DIM>* scene_stepper,
+  ParticleSimulation(libwethair::TwoDScene<DIM>* scene,
+                     libwethair::SceneStepper<DIM>* scene_stepper,
                      TwoDSceneRenderer<DIM>* scene_renderer,
-                     const std::vector<Script>& scripts);
+                     const std::vector<libwethair::Script>& scripts);
   ~ParticleSimulation();
 
   virtual void stepSystem();
@@ -40,7 +41,7 @@ class ParticleSimulation : public ExecutableSimulation {
   virtual void renderSceneOpenGL();
   virtual void renderSceneDifferencesOpenGL();
   virtual void updateOpenGLRendererState();
-  virtual void computeCameraCenter(renderingutils::Viewport& view);
+  virtual void computeCameraCenter(libwethair::renderingutils::Viewport& view);
   /////////////////////////////////////////////////////////////////////////////
   // Serialization Functions
 
@@ -81,9 +82,9 @@ class ParticleSimulation : public ExecutableSimulation {
   virtual void setWindowWidth(int w);
   virtual void setWindowHeight(int h);
 
-  virtual const scalar& getDt() const;
-  virtual const scalar& getCurrentTime() const;
-  virtual scalar getCurrentFrame() const;
+  virtual const libwethair::scalar& getDt() const;
+  virtual const libwethair::scalar& getCurrentTime() const;
+  virtual libwethair::scalar getCurrentFrame() const;
 
   virtual TwoDimensionalDisplayController<DIM>* getDC();
 
@@ -93,22 +94,22 @@ class ParticleSimulation : public ExecutableSimulation {
   virtual void setScaleFactor(double scale);
 
   virtual void setCamera(const Camera& cam);
-  virtual void setView(const renderingutils::Viewport& view);
+  virtual void setView(const libwethair::renderingutils::Viewport& view);
 
-  virtual bool stepScript(const scalar& dt);
+  virtual bool stepScript(const libwethair::scalar& dt);
 
   virtual std::string getSolverName();
 
-  virtual const std::vector<scalar>& getTimingStatistics() const;
-  virtual const std::vector<scalar>& getStepperTimingStatistics() const;
+  virtual const std::vector<libwethair::scalar>& getTimingStatistics() const;
+  virtual const std::vector<libwethair::scalar>& getStepperTimingStatistics() const;
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
  private:
-  WetHairCore<DIM>* m_wet_hair_core;
+  libwethair::WetHairCore<DIM>* m_wet_hair_core;
 
-  TwoDScene<DIM>* m_scene;
+  libwethair::TwoDScene<DIM>* m_scene;
 
-  SceneStepper<DIM>* m_scene_stepper;
+  libwethair::SceneStepper<DIM>* m_scene_stepper;
 
   TwoDSceneRenderer<DIM>* m_scene_renderer;
 
@@ -116,7 +117,7 @@ class ParticleSimulation : public ExecutableSimulation {
 
   TwoDSceneSerializer<DIM> m_scene_serializer;
 
-  std::vector<Script> m_scripts;
+  std::vector<libwethair::Script> m_scripts;
 };
 
 #endif  // LIBWETHAIR_APP_PARTICLE_SIMULATION_H_

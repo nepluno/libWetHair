@@ -26,6 +26,8 @@
 //============================================================================
 // A simple compressed sparse column data structure (with separate diagonal)
 // for lower triangular matrices
+
+namespace libwethair {
 namespace robertbridson {
 template <class T>
 struct SparseColumnLowerFactor {
@@ -327,6 +329,8 @@ struct PCGSolver {
     solve_lower_transpose_in_place(ic_factor, result);
   }
 };
+
 }  // namespace robertbridson
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_PCG_SOLVER_PCG_SOLVER_H_

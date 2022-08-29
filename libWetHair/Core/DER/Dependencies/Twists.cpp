@@ -13,6 +13,8 @@
 
 #include "ElasticStrandUtils.h"
 
+namespace libwethair {
+
 void Twists::compute() {
   m_value.resize(m_size);
   const std::vector<scalar>& refTwists = m_refTwists.get();
@@ -113,3 +115,5 @@ void HessTwists::compute() {
 
   setDependentsDirty();
 }
+
+}  // namespace libwethair

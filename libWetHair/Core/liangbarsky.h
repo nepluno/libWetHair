@@ -17,6 +17,7 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
 namespace liangbarsky {
 /* clip_line()
  * modifies parameters in place to clip the line,
@@ -27,6 +28,7 @@ int clip_line(const Vector4s& c, Vector2s& q1, Vector2s& q2, scalar& alpha0,
               scalar& alpha1);
 int clip_line(const Vector6s& c, Vector3s& q1, Vector3s& q2, scalar& t0,
               scalar& t1);
-};  // namespace liangbarsky
+}  // namespace liangbarsky
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_LIANG_BARSKY_H_

@@ -28,6 +28,8 @@
 #define TWIST
 #define BEND
 
+namespace libwethair {
+
 StrandForce::StrandForce(TwoDScene<3>* scene,
                          const std::vector<int>& consecutiveStrandVertices,
                          const int& parameterIndex, int globalIndex)
@@ -523,3 +525,5 @@ bool StrandForce::isContained(int pidx) {
 }
 
 const char* StrandForce::name() { return "Strand Material Forces"; }
+
+}  // namespace libwethair

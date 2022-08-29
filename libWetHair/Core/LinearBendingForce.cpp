@@ -13,6 +13,7 @@
 
 #include "TwoDScene.h"
 
+namespace libwethair {
 template <>
 LinearBendingForce<2>::LinearBendingForce(
     TwoDScene<2>* parent, int idx1, int idx2, int idx3, const scalar& alpha,
@@ -253,3 +254,5 @@ void LinearBendingForce<DIM>::storeLambda(const VectorXs& lambda,
 // explicit instantiations at bottom
 template class LinearBendingForce<2>;
 template class LinearBendingForce<3>;
+
+}  // namespace libwethair

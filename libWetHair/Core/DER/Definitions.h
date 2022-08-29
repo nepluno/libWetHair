@@ -41,6 +41,8 @@ template <typename _scalar, int _Options, typename _Index>
 class SparseMatrix;
 }
 
+namespace libwethair {
+
 typedef double scalar;       ///< the scalar type
 typedef uint16_t IndexType;  ///< large unsigned int for IDs
 
@@ -107,6 +109,8 @@ template <typename NormableT>
 EIGEN_STRONG_INLINE bool isApproxUnit(const NormableT& x) {
   return isSmall(x.squaredNorm() - 1);
 }
+
+}  // namespace libwethair
 
 namespace std {
 template <typename Derived>

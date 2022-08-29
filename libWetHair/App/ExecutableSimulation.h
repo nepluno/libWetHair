@@ -43,7 +43,7 @@ class ExecutableSimulation {
 
   virtual void updateOpenGLRendererState() = 0;
 
-  virtual void computeCameraCenter(renderingutils::Viewport& view) = 0;
+  virtual void computeCameraCenter(libwethair::renderingutils::Viewport& view) = 0;
 
   /////////////////////////////////////////////////////////////////////////////
   // Serialization Functions
@@ -82,9 +82,9 @@ class ExecutableSimulation {
 
   virtual void motion(int x, int y) = 0;
 
-  virtual const scalar& getDt() const = 0;
-  virtual const scalar& getCurrentTime() const = 0;
-  virtual scalar getCurrentFrame() const = 0;
+  virtual const libwethair::scalar& getDt() const = 0;
+  virtual const libwethair::scalar& getCurrentTime() const = 0;
+  virtual libwethair::scalar getCurrentFrame() const = 0;
 
   virtual int getWindowWidth() const = 0;
   virtual int getWindowHeight() const = 0;
@@ -97,11 +97,11 @@ class ExecutableSimulation {
   virtual void setScaleFactor(double scale) = 0;
 
   virtual void setCamera(const Camera& cam) = 0;
-  virtual void setView(const renderingutils::Viewport& view) = 0;
+  virtual void setView(const libwethair::renderingutils::Viewport& view) = 0;
 
-  virtual const std::vector<scalar>& getStepperTimingStatistics() const = 0;
+  virtual const std::vector<libwethair::scalar>& getStepperTimingStatistics() const = 0;
 
-  virtual const std::vector<scalar>& getTimingStatistics() const = 0;
+  virtual const std::vector<libwethair::scalar>& getTimingStatistics() const = 0;
 };
 
 #endif  // LIBWETHAIR_APP_EXECUTABLE_SIMULATION_H_

@@ -11,6 +11,8 @@
 
 #include "SceneStepper.h"
 
+namespace libwethair {
+
 template <int DIM>
 SceneStepper<DIM>::~SceneStepper() {}
 
@@ -78,3 +80,5 @@ size_t SceneStepper<DIM>::size() {
 // explicit instantiations at bottom
 template class SceneStepper<2>;
 template class SceneStepper<3>;
+
+}  // namespace libwethair

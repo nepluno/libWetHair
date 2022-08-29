@@ -15,6 +15,8 @@
 #include "fluidsim2D.h"
 #include "fluidsim3D.h"
 
+namespace libwethair {
+
 inline scalar circle_phi(const Vector2s& position, const Vector2s& centre,
                          scalar radius) {
   return ((position - centre).norm() - radius);
@@ -544,3 +546,5 @@ template struct EdgeVelDragIntersection<3>;
 
 template struct EdgePhiIntersection<2>;
 template struct EdgePhiIntersection<3>;
+
+}  // namespace libwethair

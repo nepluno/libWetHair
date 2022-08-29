@@ -14,6 +14,8 @@
 
 #include "ViscousOrNotViscous.h"
 
+namespace libwethair {
+
 class StrandForce;
 struct StrandParameters;
 
@@ -54,5 +56,7 @@ class BendingForce {
       StrandForce& strand, VectorXs& lambda, TripletXs& J, TripletXs& tildeK,
       TripletXs& stiffness, VectorXs& Phi, const int& lambda_start);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_BENDINGFORCE_H_

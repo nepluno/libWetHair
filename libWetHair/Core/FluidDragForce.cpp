@@ -20,6 +20,8 @@
 #include "fluidsim2D.h"
 #include "fluidsim3D.h"
 
+namespace libwethair {
+
 template <int DIM>
 FluidDragForce<DIM>::FluidDragForce(const TwoDScene<DIM>& scene, int hidx)
     : Force(), m_hidx(hidx), m_scene(scene) {
@@ -304,3 +306,5 @@ bool FluidDragForce<DIM>::isContained(int colidx) {
 // explicit instantiations at bottom
 template class FluidDragForce<2>;
 template class FluidDragForce<3>;
+
+}  // namespace libwethair

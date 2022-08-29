@@ -14,6 +14,8 @@
 #include "../Dependencies/ElasticStrandUtils.h"
 #include "ViscousOrNotViscous.h"
 
+namespace libwethair {
+
 template <typename ViscousT>
 scalar BendingForce<ViscousT>::localEnergy(const StrandForce& strand,
                                            const IndexType vtx) {
@@ -155,3 +157,5 @@ void BendingForce<ViscousT>::accumulateIntegrationVars(
 
 template class BendingForce<NonViscous>;
 template class BendingForce<Viscous>;
+
+}  // namespace libwethair

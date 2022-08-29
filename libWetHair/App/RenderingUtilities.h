@@ -36,6 +36,7 @@
 #include "MathUtilities.h"
 #include "StringUtilities.h"
 
+namespace libwethair {
 namespace renderingutils {
 class Color {
  public:
@@ -52,11 +53,13 @@ class Color {
   double b;
 };
 }  // namespace renderingutils
+}  // namespace libwethair
 
 extern int getDCWindowWidth();
 extern int getDCWindowHeight();
-extern renderingutils::Color& getDCBackgroundColor();
+extern libwethair::renderingutils::Color& getDCBackgroundColor();
 
+namespace libwethair {
 namespace renderingutils {
 // False => error
 bool checkGLErrors();
@@ -133,5 +136,6 @@ struct Viewport {
 };
 
 }  // namespace renderingutils
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_APP_RENDERING_UTILITIES_H_

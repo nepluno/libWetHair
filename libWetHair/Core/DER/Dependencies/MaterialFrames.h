@@ -14,6 +14,8 @@
 
 #include "ReferenceFrames.h"
 
+namespace libwethair {
+
 /**
  * Unit: no dimension
  */
@@ -41,5 +43,7 @@ class MaterialFrames : public DependencyNode<Vec3Array> {
   ReferenceFrames1& m_referenceFrames1;
   ReferenceFrames2& m_referenceFrames2;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_MATERIAL_FRAMES_H_

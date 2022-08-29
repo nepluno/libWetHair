@@ -18,6 +18,8 @@
 
 #include "Force.h"
 
+namespace libwethair {
+
 class FluidSim;
 
 template <int DIM>
@@ -98,5 +100,7 @@ class LevelSetForce : public Force {
   std::vector<ParticleLSPair> m_particle_ls_pairs;
   std::vector<PointLSPair> m_point_ls_pairs;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_LEVEL_SET_FORCE_H_

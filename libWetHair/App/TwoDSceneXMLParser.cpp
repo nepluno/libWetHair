@@ -14,6 +14,8 @@
 #include "DER/Dependencies/ElasticStrandUtils.h"
 #include "ThreadUtils.h"
 
+using namespace libwethair;
+
 void TwoDSceneXMLParser::loadExecutableSimulation(
     const std::string& file_name, const char* memory_str,
     const std::string& init_filename, bool simulate_comparison,

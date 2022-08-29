@@ -27,6 +27,8 @@
 #include "Dependencies/Twists.h"
 #include "StrandParameters.h"
 
+namespace libwethair {
+
 struct StrandState {
   StrandState(const VecX& initDofs, BendingMatrixBase& bendingMatrixBase);
 
@@ -189,5 +191,7 @@ class StrandForce : public Force {
   template <typename ViscousT>
   friend class TwistingForce;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_STRAND_COMPLIANT_MANAGER_

@@ -15,6 +15,8 @@
 #include "MathUtilities.h"
 #include "StrandCompliantManager.h"
 
+namespace libwethair {
+
 template <int DIM>
 StrandCompliantEuler<DIM>::StrandCompliantEuler(
     StrandCompliantManager<DIM>* parent, int hidx)
@@ -317,3 +319,5 @@ void StrandCompliantEuler<DIM>::preIterate(TwoDScene<DIM>& scene, scalar dt) {
 // explicit instantiations at bottom
 template class StrandCompliantEuler<2>;
 template class StrandCompliantEuler<3>;
+
+}  // namespace libwethair

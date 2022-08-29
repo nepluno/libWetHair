@@ -17,6 +17,7 @@
 #include "fluidsim2D.h"
 #include "fluidsim3D.h"
 
+namespace libwethair {
 const static char* simplegravityname = "simplegravity";
 
 template <int DIM>
@@ -246,3 +247,5 @@ bool SimpleGravityForce<DIM>::isExternal() {
 // explicit instantiations at bottom
 template class SimpleGravityForce<2>;
 template class SimpleGravityForce<3>;
+
+}  // namespace libwethair

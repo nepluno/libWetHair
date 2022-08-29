@@ -21,7 +21,7 @@
 #include <vector>
 
 #include "MathDefs.h"
-
+namespace libwethair {
 class CapsuleCreator {
  public:
   std::vector<Vector3s> vertices;
@@ -30,5 +30,7 @@ class CapsuleCreator {
   CapsuleCreator();
   void Create(int N, const scalar& radius, const scalar& halfheight);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_CAPSULE_H_

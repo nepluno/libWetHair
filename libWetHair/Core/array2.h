@@ -18,6 +18,8 @@
 
 #include "array1.h"
 
+namespace libwethair {
+
 template <class T, class ArrayT = std::vector<T> >
 struct Array2 {
   // STL-friendly typedefs
@@ -288,5 +290,7 @@ typedef Array2<unsigned int, WrapArray1<unsigned int> > WrapArray2ui;
 typedef Array2<unsigned short, WrapArray1<unsigned short> > WrapArray2us;
 typedef Array2<char, WrapArray1<char> > WrapArray2c;
 typedef Array2<unsigned char, WrapArray1<unsigned char> > WrapArray2uc;
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_ARRAY2_H_

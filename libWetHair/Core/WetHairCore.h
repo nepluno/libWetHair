@@ -15,6 +15,8 @@
 #include "SceneStepper.h"
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 class WetHairCore {
  public:
@@ -49,5 +51,7 @@ class WetHairCore {
 
   scalar m_current_time;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_WET_HAIR_CORE_H_

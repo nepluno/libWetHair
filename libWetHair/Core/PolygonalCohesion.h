@@ -27,6 +27,8 @@
 #include "MathDefs.h"
 #include "sorter.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -439,5 +441,7 @@ class PolygonalCohesion : public Force {
   void accumulateEFJPairwise(const VectorXs& x, const VectorXs& v,
                              VectorXs& gradE, MatrixXs& hessE, MatrixXs& hessV);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_POLYGONAL_COHESION_H_

@@ -17,6 +17,8 @@
 
 // TODO: Save space by creating dx, dv, rhs, A only once.
 
+namespace libwethair {
+
 template <int DIM>
 CompliantImplicitEuler<DIM>::CompliantImplicitEuler(TwoDScene<DIM>* scene,
                                                     int max_iters,
@@ -269,3 +271,5 @@ void CompliantImplicitEuler<DIM>::zeroFixedDoFs(const TwoDScene<DIM>& scene,
 // explicit instantiations at bottom
 template class CompliantImplicitEuler<2>;
 template class CompliantImplicitEuler<3>;
+
+}  // namespace libwethair

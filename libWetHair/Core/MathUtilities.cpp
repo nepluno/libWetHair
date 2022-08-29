@@ -11,6 +11,7 @@
 
 #include "MathUtilities.h"
 
+namespace libwethair {
 namespace mathutils {
 
 bool approxSymmetric(const MatrixXs& A, const scalar& eps) {
@@ -25,3 +26,5 @@ bool approxSymmetric(const MatrixXs& A, const scalar& eps) {
 // explicit instantiations at bottom
 template struct int_Vectors<2>;
 template struct int_Vectors<3>;
+
+}  // namespace libwethair

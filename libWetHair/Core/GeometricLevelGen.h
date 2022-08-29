@@ -23,6 +23,8 @@
 #include "pcgsolver/blas_wrapper.h"
 #include "pcgsolver/sparse_matrix.h"
 
+namespace libwethair {
+
 template <class T>
 struct levelGen {
   void generateRP(const robertbridson::FixedSparseMatrix<T> &A,
@@ -250,5 +252,7 @@ struct levelGen {
 #endif
   }
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_GEOMETRIC_LEVEL_GEN_H_

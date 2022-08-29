@@ -13,6 +13,7 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
 namespace liangbarsky {
 int clip_line(const Vector4s& c, Vector2s& q1, Vector2s& q2, scalar& t0,
               scalar& t1) {
@@ -126,3 +127,4 @@ int clip_line(const Vector6s& c, Vector3s& q1, Vector3s& q2, scalar& t0,
   return true;  // (clipped) line is drawn
 }
 }  // namespace liangbarsky
+}  // namespace libwethair

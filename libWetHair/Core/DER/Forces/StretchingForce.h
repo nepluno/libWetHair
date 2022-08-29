@@ -15,6 +15,8 @@
 #include "../StrandForce.h"
 #include "ViscousOrNotViscous.h"
 
+namespace libwethair {
+
 template <typename ViscousT = NonViscous>
 class StretchingForce {
  public:
@@ -53,5 +55,7 @@ class StretchingForce {
       StrandForce& strand, VectorXs& lambda, TripletXs& J, TripletXs& tildeK,
       TripletXs& stiffness, VectorXs& Phi, const int& lambda_start);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_FORCES_STRETCHING_FORCE_H_

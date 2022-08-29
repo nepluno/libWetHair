@@ -18,6 +18,8 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
+
 class Sorter {
  public:
   Sorter(int ni_, int nj_, int nk_);
@@ -96,5 +98,7 @@ class Sorter {
   int nj;
   int nk;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_SORTER_H_

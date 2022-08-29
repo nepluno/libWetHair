@@ -19,6 +19,8 @@
 #include "SceneStepper.h"
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 class StrandCompliantEuler;
 
@@ -143,5 +145,7 @@ class StrandCompliantManager : public SceneStepper<DIM> {
 
   friend class StrandCompliantEuler<DIM>;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_STRAND_COMPLIANT_MANAGER_

@@ -30,6 +30,8 @@ Multigrid Cycles.
 */
 //#define AMG_VERBOSE
 
+namespace libwethair {
+
 template <class T>
 void RBGS(const robertbridson::FixedSparseMatrix<T> &A, const std::vector<T> &b, std::vector<T> &x,
           int ni, int nj, int nk, int iternum) {
@@ -359,4 +361,5 @@ bool AMGPCGSolveSparse(const robertbridson::SparseMatrix<T> &matrix, const std::
   return false;
 }
 
+}  // namespace libwethair
 #endif  // LIBWETHAIR_CORE_ALGEBRAICMULTIGRID_H_

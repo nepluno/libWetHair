@@ -22,6 +22,8 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
+
 class IcosphereCreator {
  public:
   std::vector<Vector3s> vertices;
@@ -35,5 +37,7 @@ class IcosphereCreator {
   IcosphereCreator();
   void Create(int recursionLevel);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_ICOSPHERE_H_

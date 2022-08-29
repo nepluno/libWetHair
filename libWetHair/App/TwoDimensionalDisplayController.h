@@ -72,8 +72,8 @@ class TwoDimensionalDisplayController {
 
   void setWindowWidth(int w);
   void setWindowHeight(int h);
-  void initCamera(const renderingutils::Viewport& view);
-  void getEye(Vector3s& eye) const;
+  void initCamera(const libwethair::renderingutils::Viewport& view);
+  void getEye(libwethair::Vector3s& eye) const;
 
   const Camera& getCamera() const;
 

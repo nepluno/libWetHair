@@ -13,6 +13,8 @@
 
 #include "../../TimingUtilities.h"
 
+namespace libwethair {
+
 Vec3 parallelTransport(const Vec3& u, const Vec3& t0, const Vec3& t1) {
   // Compute rotation axis (if any)
   Vec3 b = t0.cross(t1);
@@ -130,3 +132,5 @@ void updateCurlyHair(const double& dL, std::vector<Vec3>& vertices,
     xa = xb;  // next...
   }
 }
+
+}  // namespace libwethair

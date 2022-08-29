@@ -18,6 +18,8 @@
 #include "Force.h"
 #include "MathDefs.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -78,5 +80,7 @@ class FluidDragForce : public Force {
 
   const TwoDScene<DIM>& m_scene;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_FLUID_DRAG_FORCE_H_

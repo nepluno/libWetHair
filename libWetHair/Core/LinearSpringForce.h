@@ -17,6 +17,8 @@
 
 #include "Force.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -80,5 +82,7 @@ class LinearSpringForce : public Force {
 
   TwoDScene<DIM>* m_scene;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_LINEAR_SPRING_FORCE_H_

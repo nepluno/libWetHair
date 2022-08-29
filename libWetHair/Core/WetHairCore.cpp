@@ -17,6 +17,8 @@
 #include "fluidsim2D.h"
 #include "fluidsim3D.h"
 
+namespace libwethair {
+
 template <int DIM>
 WetHairCore<DIM>::WetHairCore(TwoDScene<DIM>* scene,
                               SceneStepper<DIM>* scene_stepper,
@@ -421,3 +423,5 @@ TwoDScene<DIM>* WetHairCore<DIM>::getScene() const {
 // explicit instantiations at bottom
 template class WetHairCore<2>;
 template class WetHairCore<3>;
+
+}  // namespace libwethair

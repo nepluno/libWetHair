@@ -41,6 +41,8 @@
 #include "TwoDimensionalDisplayController.h"
 #include "YImage.h"
 
+using namespace libwethair;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Contains the actual simulation, renderer, parser, and serializer
 ExecutableSimulation* g_executable_simulation;
@@ -845,7 +847,8 @@ std::ostream& libwethair_header(std::ostream& stream) {
 }
 
 int main(int argc, char** argv) {
-  srand('SIGG' ^ 'RAPH');
+  // srand('SIGG' ^ 'RAPH');
+  srand('S' ^ 'R');
 
   Eigen::initParallel();
   Eigen::setNbThreads(std::thread::hardware_concurrency());

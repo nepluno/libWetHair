@@ -14,6 +14,8 @@
 
 #include "ReferenceFrames.h"
 
+namespace libwethair {
+
 /**
  * Unit: no dimension
  */
@@ -104,5 +106,7 @@ class HessTwists : public DependencyNode<Mat11Array> {
   Lengths& m_lengths;
   CurvatureBinormals& m_curvatureBinormals;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_TWISTS_H_

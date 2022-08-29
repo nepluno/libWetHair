@@ -12,6 +12,8 @@
 
 #include "MathUtilities.h"
 
+namespace libwethair {
+
 // Assumes phi0<0 and phi1>=0, phi2>=0, or vice versa.
 // In particular, phi0 must not equal either of phi1 or phi2.
 template <class T>
@@ -161,3 +163,5 @@ double volume_fraction(double phi000, double phi100, double phi010,
           2 * volume_fraction(phi100, phi111, phi001, phi010)) /
          12;
 }
+
+}  // namespace libwethair

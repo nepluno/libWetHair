@@ -31,6 +31,7 @@
 
 //#define USE_MERGE_PARTICLES
 
+namespace libwethair {
 using namespace mathutils;
 
 const static int MAX_BRIDGE_PER_EDGE = 64;
@@ -3304,3 +3305,5 @@ void extrapolate(Array3s& grid, Array3s& old_grid, const Array3s& grid_weight,
     *pgrid_source = *pgrid_target;
   }
 }
+
+}  // namespace libwethair

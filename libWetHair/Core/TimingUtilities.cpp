@@ -55,6 +55,8 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 #else
 #include <sys/time.h>
 #endif
+
+namespace libwethair {
 namespace timingutils {
 
 double seconds() {
@@ -65,3 +67,4 @@ double seconds() {
 }
 
 }  // namespace timingutils
+}  // namespace libwethair

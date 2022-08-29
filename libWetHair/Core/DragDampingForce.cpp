@@ -16,6 +16,8 @@
 #include "HairFlow.h"
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 DragDampingForce<DIM>::DragDampingForce(const TwoDScene<DIM>& scene,
                                         const scalar& b, int hidx)
@@ -148,3 +150,5 @@ bool DragDampingForce<DIM>::isContained(int colidx) {
 // explicit instantiations at bottom
 template class DragDampingForce<2>;
 template class DragDampingForce<3>;
+
+}  // namespace libwethair

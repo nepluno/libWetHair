@@ -13,6 +13,8 @@
 
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 LinearSpringForce<DIM>::LinearSpringForce(TwoDScene<DIM>* parent,
                                           const std::pair<int, int>& endpoints,
@@ -182,3 +184,5 @@ void LinearSpringForce<DIM>::storeLambda(const VectorXs& lambda,
 // explicit instantiations at bottom
 template class LinearSpringForce<2>;
 template class LinearSpringForce<3>;
+
+}  // namespace libwethair

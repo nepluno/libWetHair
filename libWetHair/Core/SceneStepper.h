@@ -15,6 +15,8 @@
 #include "MathDefs.h"
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 class SceneStepper {
  protected:
@@ -54,5 +56,7 @@ class SceneStepper {
 
   virtual void init(TwoDScene<DIM>& scene);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_SCENE_STEPPER_

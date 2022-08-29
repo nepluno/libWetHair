@@ -20,6 +20,7 @@
 #include "pcgsolver/pcg_solver.h"
 #include "pcgsolver/sparse_matrix.h"
 
+namespace libwethair {
 using namespace robertbridson;
 
 Array3c u_state;  //(nx+1,ny,nz,0);
@@ -638,3 +639,4 @@ void advance_viscosity_implicit_weighted(
     }
   });
 }
+}  // namespace libwethair

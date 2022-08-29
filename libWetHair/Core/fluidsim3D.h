@@ -21,6 +21,8 @@
 
 #include <vector>
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -285,5 +287,7 @@ class FluidSim3D : public FluidSim {
 
   int ryoichi_correction_counter;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_FLUIDSIM3D_H_

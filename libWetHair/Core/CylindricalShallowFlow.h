@@ -23,6 +23,7 @@
 #include "MathDefs.h"
 #include "MathUtilities.h"
 
+namespace libwethair {
 namespace mathutils {
 namespace shallowflow {
 
@@ -599,5 +600,7 @@ class CylindricalShallowFlow : public HairFlow<DIM> {
   scalar m_sum_area_e;
   scalar m_pool_liquid;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_CYLINDRICAL_SHALLOW_FLOW_H_

@@ -22,6 +22,8 @@
 #include "MathDefs.h"
 #include "MathUtilities.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -292,5 +294,7 @@ class HairFlow {
 
   int m_flow_index;
 };
+
+}  // namespace libwethair
 
 #endif

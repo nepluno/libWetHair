@@ -21,6 +21,8 @@
 
 #include <vector>
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -287,5 +289,7 @@ class FluidSim2D : public FluidSim {
 
   std::vector<int> m_hair_particle_affected;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_FLUIDSIM2D_H_

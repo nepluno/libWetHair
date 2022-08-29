@@ -11,6 +11,7 @@
 
 #include "RenderingUtilities.h"
 
+namespace libwethair {
 namespace renderingutils {
 
 bool checkGLErrors() {
@@ -43,3 +44,4 @@ Color::Color(double r, double g, double b) : r(r), g(g), b(b) {
 Vector3s Color::toVector() const { return Vector3s(r, g, b); }
 
 }  // namespace renderingutils
+}  // namespace libwethair

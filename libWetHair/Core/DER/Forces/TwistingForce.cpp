@@ -13,6 +13,8 @@
 
 #include "ViscousOrNotViscous.h"
 
+namespace libwethair {
+
 template <typename ViscousT>
 scalar TwistingForce<ViscousT>::localEnergy(const StrandForce& strand,
                                             const IndexType vtx) {
@@ -130,3 +132,5 @@ void TwistingForce<ViscousT>::accumulateIntegrationVars(
 
 template class TwistingForce<NonViscous>;
 template class TwistingForce<Viscous>;
+
+}  // namespace libwethair

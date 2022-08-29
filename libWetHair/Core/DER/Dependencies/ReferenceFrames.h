@@ -14,6 +14,8 @@
 
 #include "DegreesOfFreedom.h"
 
+namespace libwethair {
+
 /**
  * \brief This class maintains the first reference frame vectors, orthogonal to
  * the edges.
@@ -116,5 +118,7 @@ class ReferenceTwists : public DependencyNode<std::vector<scalar> > {
   Tangents& m_tangents;
   ReferenceFrames1& m_referenceFrames1;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_REFERENCE_FRAMES_H_

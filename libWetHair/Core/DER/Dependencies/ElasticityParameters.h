@@ -15,6 +15,8 @@
 #include "DependencyNode.h"
 #define PI_4 0.785398163397448309616
 
+namespace libwethair {
+
 /**
  * Unit: cm
  */
@@ -189,5 +191,7 @@ class ElasticKt : public DependencyNode<scalar> {
   PhysicalRadius& m_physicalRadius;
   ShearModulus& m_shearModulus;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_ELASTICPARAMETERS_H_

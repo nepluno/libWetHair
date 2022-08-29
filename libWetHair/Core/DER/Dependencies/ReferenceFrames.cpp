@@ -13,6 +13,8 @@
 
 #include "ElasticStrandUtils.h"
 
+namespace libwethair {
+
 void ReferenceFrames1::storeInitialFrames(const Vec3& initRefFrame1) {
   m_value.resize(m_size);
   const Vec3Array& tangents = m_tangents.get();
@@ -125,3 +127,5 @@ void ReferenceTwists::compute() {
 
   setDependentsDirty();
 }
+
+}  // namespace libwethair

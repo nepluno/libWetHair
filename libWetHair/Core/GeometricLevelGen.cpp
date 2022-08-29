@@ -11,6 +11,7 @@
 #include "GeometricLevelGen.h"
 
 //#define AMG_VERBOSE
+namespace libwethair {
 
 template <class T>
 void levelGen<T>::generateRP(const robertbridson::FixedSparseMatrix<T> &A,
@@ -54,3 +55,5 @@ void levelGen<T>::generateRP(const robertbridson::FixedSparseMatrix<T> &A,
 }
 
 template struct levelGen<double>;
+
+}  // namespace libwethair

@@ -19,6 +19,7 @@
 #include "fluidsim2D.h"
 #include "fluidsim3D.h"
 
+namespace libwethair {
 const static char* g_szLevelSetForceName = "Levelset Force";
 
 template <int DIM>
@@ -709,3 +710,5 @@ int LevelSetForce<DIM>::numConstraintVel() {
 // explicit instantiations at bottom
 template class LevelSetForce<2>;
 template class LevelSetForce<3>;
+
+}  // namespace libwethair

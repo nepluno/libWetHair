@@ -15,7 +15,7 @@
 #include <Eigen/Core>
 
 #include "MathDefs.h"
-
+namespace libwethair {
 class CohesionTable {
   // const parameters
   scalar m_sigma;
@@ -124,5 +124,7 @@ class CohesionTable {
   scalar interpolate_d2Edd2_planar(const scalar& A, const scalar& d0) const;
   scalar interpolate_alpha_planar(const scalar& A, const scalar& d0) const;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_COHESION_TABLE_GEN_H_

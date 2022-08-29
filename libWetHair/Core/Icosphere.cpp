@@ -11,6 +11,8 @@
 
 #include "Icosphere.h"
 
+namespace libwethair {
+
 IcosphereCreator::IcosphereCreator() { index = 0; }
 
 int IcosphereCreator::addVertex(const Vector3s& p) {
@@ -100,3 +102,5 @@ void IcosphereCreator::Create(int recursionLevel) {
     indices = indices2;
   }
 }
+
+}  // namespace libwethair

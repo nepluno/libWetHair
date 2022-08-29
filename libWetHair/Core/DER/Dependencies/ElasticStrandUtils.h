@@ -22,6 +22,8 @@
 
 #include "../Definitions.h"
 
+namespace libwethair {
+
 /**
  * \brief Tests if a matrix is symmetric
  */
@@ -269,5 +271,7 @@ inline scalar clamp2Pi(scalar angle) {
 
   return theta;
 }
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_ELASTICSTRANDUTILS_H_

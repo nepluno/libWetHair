@@ -15,6 +15,8 @@
 #include <Eigen/Core>
 #include <vector>
 
+namespace libwethair {
+
 struct TimeInterval {
   TimeInterval(double tl, double tu) : l(tl), u(tu) {
     if (l > u) std::swap(l, u);
@@ -155,5 +157,7 @@ class CTCD {
                           const Eigen::Vector3d &v30,
                           std::vector<TimeInterval> &result);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_CTCD_H_

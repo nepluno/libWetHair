@@ -15,6 +15,8 @@
 #endif
 #include <cmath>
 
+namespace libwethair {
+
 CapsuleCreator::CapsuleCreator() {}
 
 void CapsuleCreator::Create(int N, const scalar& radius,
@@ -65,3 +67,5 @@ void CapsuleCreator::Create(int N, const scalar& radius,
     }
   }
 }
+
+}  // namespace libwethair

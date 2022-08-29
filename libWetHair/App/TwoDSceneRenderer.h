@@ -50,21 +50,21 @@ class TwoDSceneRenderer {
   };
 
   // TODO: Gut this method
-  TwoDSceneRenderer(const TwoDScene<DIM>& scene,
-                    const std::vector<renderingutils::Color>& particle_colors,
-                    const std::vector<renderingutils::Color>& edge_colors);
+  TwoDSceneRenderer(const libwethair::TwoDScene<DIM>& scene,
+                    const std::vector<libwethair::renderingutils::Color>& particle_colors,
+                    const std::vector<libwethair::renderingutils::Color>& edge_colors);
 
   TwoDSceneRenderer();
 
-  void initializeOpenGLRenderer(const TwoDScene<DIM>& scene);
-  void updateOpenGLRenderer(const TwoDScene<DIM>& scene, bool updateDevice);
-  void renderParticleSimulation(const TwoDScene<DIM>& scene) const;
+  void initializeOpenGLRenderer(const libwethair::TwoDScene<DIM>& scene);
+  void updateOpenGLRenderer(const libwethair::TwoDScene<DIM>& scene, bool updateDevice);
+  void renderParticleSimulation(const libwethair::TwoDScene<DIM>& scene) const;
 
-  void renderVolumeGraph(const TwoDScene<DIM>& scene) const;
+  void renderVolumeGraph(const libwethair::TwoDScene<DIM>& scene) const;
 
   // Returns a reference to the vector containing particle colors
-  std::vector<renderingutils::Color>& getParticleColors();
-  const std::vector<renderingutils::Color>& getParticleColors() const;
+  std::vector<libwethair::renderingutils::Color>& getParticleColors();
+  const std::vector<libwethair::renderingutils::Color>& getParticleColors() const;
 
   void selectNextParticleVisMode();
 
@@ -82,36 +82,36 @@ class TwoDSceneRenderer {
 
   void initializeCircleRenderer(int num_points);
   void initializeSemiCircleRenderer(int num_points);
-  void initializeCylinderRenderer(int num_points, const TwoDScene<DIM>& scene);
-  void initializeBoundaryRenderer(const TwoDScene<DIM>& scene);
+  void initializeCylinderRenderer(int num_points, const libwethair::TwoDScene<DIM>& scene);
+  void initializeBoundaryRenderer(const libwethair::TwoDScene<DIM>& scene);
 
-  void renderSolidCircle(const Vectors<DIM>& center, double radius) const;
+  void renderSolidCircle(const libwethair::Vectors<DIM>& center, double radius) const;
 
   void writeTransformedHairFlow(std::ostream& o,
-                                const TwoDScene<DIM>& scene) const;
+                                const libwethair::TwoDScene<DIM>& scene) const;
 
   void writeBoundaries(std::ostream& os_single, std::ostream& os_double) const;
 
-  int renderDebuggingInfo(const HairFlow<DIM>& flow) const;
+  int renderDebuggingInfo(const libwethair::HairFlow<DIM>& flow) const;
 
-  void renderAnalyticalShape(const TwoDScene<DIM>& scene, int layer) const;
+  void renderAnalyticalShape(const libwethair::TwoDScene<DIM>& scene, int layer) const;
 
   const TwoDimensionalDisplayController<DIM>* m_dc;
 
   // TODO: Move this out of here and into some subclass
   // Particle System rendering state
-  std::vector<renderingutils::Color> m_particle_colors;
-  std::vector<renderingutils::Color> m_edge_colors;
+  std::vector<libwethair::renderingutils::Color> m_particle_colors;
+  std::vector<libwethair::renderingutils::Color> m_edge_colors;
 
   // Precomputed points for a circle
   std::vector<std::pair<double, double> > m_circle_points;
   std::vector<std::pair<double, double> > m_semi_circle_points;
 
-  IcosphereCreator m_icosphere;
-  std::vector<CapsuleCreator> m_capsules;
-  std::vector<RoundCornerBox> m_roundcornerboxes;
+  libwethair::IcosphereCreator m_icosphere;
+  std::vector<libwethair::CapsuleCreator> m_capsules;
+  std::vector<libwethair::RoundCornerBox> m_roundcornerboxes;
 
-  std::vector<Vector3s> m_cylinder_points;
+  std::vector<libwethair::Vector3s> m_cylinder_points;
   std::vector<int> m_cylinder_elements;
 
   bool m_draw_grid;
@@ -130,7 +130,7 @@ class TwoDSceneRenderer {
   GLuint m_vertex_hair_flow;
   GLuint m_vertex_fluids;
 
-  const TwoDScene<DIM>* m_scene;
+  const libwethair::TwoDScene<DIM>* m_scene;
 };
 
 #endif  // LIBWETHAIR_APP_TWO_D_SCENE_RENDERER_H_

@@ -22,6 +22,8 @@
 #include "Force.h"
 #include "HairFlow.h"
 
+namespace libwethair {
+
 template <int DIM>
 class PolygonalCohesion;
 
@@ -725,5 +727,7 @@ class TwoDScene {
 
   WetHairParameter m_parameters;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_TWO_D_SCENE_H_

@@ -18,6 +18,8 @@
 #include "Dependencies/BendingProducts.h"
 #include "Dependencies/ElasticStrandUtils.h"
 
+namespace libwethair {
+
 struct StrandEquilibriumParameters {
   StrandEquilibriumParameters(const std::vector<Vec3>& vertices,
                               scalar curl_radius, scalar curl_density,
@@ -200,5 +202,7 @@ struct StrandParameters {
   bool m_variableRadiusHair;
   scalar m_straightHairs;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_STRAND_PARAMETERS_H_

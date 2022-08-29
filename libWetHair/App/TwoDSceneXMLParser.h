@@ -54,12 +54,19 @@
 class TwoDSceneXMLParser {
  public:
   void loadExecutableSimulation(
-      const std::string& file_name, const char* memory_str,
-      const std::string& init_filename, bool simulate_comparison,
-      bool rendering_enabled, ExecutableSimulation** execsim,
-      renderingutils::Viewport& view, Camera& cam, scalar& max_time,
-      scalar& steps_per_sec_cap, renderingutils::Color& bgcolor,
-      std::string& description, std::string& scenetag, bool& cam_inited,
+      const std::string& file_name,
+      const char* memory_str,
+      const std::string& init_filename,
+      bool simulate_comparison,
+      bool rendering_enabled,
+      ExecutableSimulation** execsim,
+      libwethair::renderingutils::Viewport& view, Camera& cam,
+      libwethair::scalar& max_time,
+      libwethair::scalar& steps_per_sec_cap,
+      libwethair::renderingutils::Color& bgcolor,
+      std::string& description,
+      std::string& scenetag,
+      bool& cam_inited,
       bool& view_inited);
 
   // TODO: NEED AN EIGEN_ALIGNED_THING_HERE ?
@@ -67,15 +74,15 @@ class TwoDSceneXMLParser {
   template <int DIM>
   void loadParticleSimulation(bool simulate_comparison, bool rendering_enabled,
                               ExecutableSimulation** execsim,
-                              renderingutils::Viewport& view,
-                              renderingutils::Color& bgcolor,
+                              libwethair::renderingutils::Viewport& view,
+                              libwethair::renderingutils::Color& bgcolor,
                               rapidxml::xml_node<>* node,
                               const std::string& init_filename);
 
   void loadDERSimulation(bool simulate_comparison, bool rendering_enabled,
                          ExecutableSimulation** execsim,
-                         renderingutils::Viewport& view,
-                         renderingutils::Color& bgcolor,
+                         libwethair::renderingutils::Viewport& view,
+                         libwethair::renderingutils::Color& bgcolor,
                          rapidxml::xml_node<>* node,
                          const std::string& init_filename);
 
@@ -93,62 +100,62 @@ class TwoDSceneXMLParser {
 
   template <int DIM>
   void loadLiquidParameter(rapidxml::xml_node<>* node,
-                           TwoDScene<DIM>& twoscene);
+                           libwethair::TwoDScene<DIM>& twoscene);
 
   template <int DIM>
-  void loadFluidSim(rapidxml::xml_node<>* node, TwoDScene<DIM>& twoscene);
+  void loadFluidSim(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& twoscene);
 
   template <int DIM>
   void loadLinearBendingForces(rapidxml::xml_node<>* node,
-                               TwoDScene<DIM>& twodscene);
+                               libwethair::TwoDScene<DIM>& twodscene);
 
   template <int DIM>
-  void loadParticleEdges(rapidxml::xml_node<>* node, TwoDScene<DIM>& twodscene);
+  void loadParticleEdges(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& twodscene);
 
-  void loadStrandParticleEdges(rapidxml::xml_node<>* node, TwoDScene<3>& scene);
+  void loadStrandParticleEdges(rapidxml::xml_node<>* node, libwethair::TwoDScene<3>& scene);
 
   template <int DIM>
-  void loadFlow(rapidxml::xml_node<>* node, TwoDScene<DIM>& twodscene);
+  void loadFlow(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& twodscene);
 
   void loadSceneTag(rapidxml::xml_node<>* node, std::string& scenetag);
 
   template <int DIM>
-  void loadSpringForces(rapidxml::xml_node<>* node, TwoDScene<DIM>& twodscene);
+  void loadSpringForces(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& twodscene);
 
-  void loadScripts(rapidxml::xml_node<>* node, std::vector<Script>& scripts);
+  void loadScripts(rapidxml::xml_node<>* node, std::vector<libwethair::Script>& scripts);
 
   template <int DIM>
   void loadLinearSpringForces(rapidxml::xml_node<>* node,
-                              TwoDScene<DIM>& twodscene);
+                              libwethair::TwoDScene<DIM>& twodscene);
 
   template <int DIM>
   void loadDragDampingForces(rapidxml::xml_node<>* node,
-                             TwoDScene<DIM>& twodscene);
+                             libwethair::TwoDScene<DIM>& twodscene);
 
   template <int DIM>
-  void loadIntegrator(rapidxml::xml_node<>* node, TwoDScene<DIM>& twodscene,
-                      SceneStepper<DIM>** scenestepper);
+  void loadIntegrator(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& twodscene,
+                      libwethair::SceneStepper<DIM>** scenestepper);
 
   template <int DIM>
-  void loadStrandParameters(rapidxml::xml_node<>* node, TwoDScene<DIM>& scene);
+  void loadStrandParameters(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& scene);
 
   template <int DIM>
-  void loadStrandForces(rapidxml::xml_node<>* node, TwoDScene<DIM>& scene);
+  void loadStrandForces(rapidxml::xml_node<>* node, libwethair::TwoDScene<DIM>& scene);
 
-  void loadMaxTime(rapidxml::xml_node<>* node, scalar& max_t);
+  void loadMaxTime(rapidxml::xml_node<>* node, libwethair::scalar& max_t);
 
-  void loadMaxSimFrequency(rapidxml::xml_node<>* node, scalar& max_freq);
+  void loadMaxSimFrequency(rapidxml::xml_node<>* node, libwethair::scalar& max_freq);
 
-  bool loadViewport(rapidxml::xml_node<>* node, renderingutils::Viewport& view);
+  bool loadViewport(rapidxml::xml_node<>* node, libwethair::renderingutils::Viewport& view);
 
   void loadBackgroundColor(rapidxml::xml_node<>* node,
-                           renderingutils::Color& color);
+                           libwethair::renderingutils::Color& color);
 
   void loadParticleColors(rapidxml::xml_node<>* node,
-                          std::vector<renderingutils::Color>& particle_colors);
+                          std::vector<libwethair::renderingutils::Color>& particle_colors);
 
   void loadEdgeColors(rapidxml::xml_node<>* node,
-                      std::vector<renderingutils::Color>& edge_colors);
+                      std::vector<libwethair::renderingutils::Color>& edge_colors);
 
   void loadSceneDescriptionString(rapidxml::xml_node<>* node,
                                   std::string& description_string);

@@ -21,6 +21,8 @@
 #include "array2.h"
 #include "pcgsolver/pcg_solver.h"
 
+namespace libwethair {
+
 enum ParticleType { PT_LIQUID, PT_HAIR, PT_SOLID };
 
 enum ParticleDrawMode { PDM_REGULAR, PDM_PRESSURE };
@@ -252,5 +254,7 @@ class FluidSim {
   virtual void addGradEToTotal(const VectorXs& x, const VectorXs& v,
                                const VectorXs& m, VectorXs& gradE) = 0;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_FLUIDSIM_H_

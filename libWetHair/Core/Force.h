@@ -17,6 +17,8 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
+
 class Force {
  protected:
   int m_internal_index_pos;
@@ -98,5 +100,7 @@ class Force {
 
   virtual void postStepScene(const scalar& dt);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_FORCE_H_

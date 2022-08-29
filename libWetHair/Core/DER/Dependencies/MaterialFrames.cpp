@@ -11,6 +11,8 @@
 
 #include "MaterialFrames.h"
 
+namespace libwethair {
+
 template <>
 const char* MaterialFrames<1>::name() const {
   return "MaterialFrames1";
@@ -84,3 +86,5 @@ void MaterialFrames<2>::compute() {
 
   setDependentsDirty();
 }
+
+}  // namespace libwethair

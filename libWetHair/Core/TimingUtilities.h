@@ -16,10 +16,12 @@
 
 #include <iostream>
 
+namespace libwethair {
 namespace timingutils {
 
 double seconds();
 
-}
+}  // namespace timingutils
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_TIMING_UTILITIES_H_

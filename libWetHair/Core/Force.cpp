@@ -11,6 +11,8 @@
 
 #include "Force.h"
 
+namespace libwethair {
+
 Force::~Force() {}
 
 void Force::preCompute(const VectorXs& x, const VectorXs& v, const VectorXs& m,
@@ -37,3 +39,5 @@ void Force::setInternalIndex(int index_pos, int index_vel, int index_J,
   m_internal_index_Jxv = index_Jxv;
   m_internal_index_tildeK = index_tildeK;
 }
+
+}  // namespace libwethair

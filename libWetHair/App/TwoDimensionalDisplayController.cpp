@@ -13,6 +13,8 @@
 
 #include "TwoDSceneRenderer.h"
 
+using namespace libwethair;
+
 void* g_display_controller = NULL;
 
 template <int DIM>

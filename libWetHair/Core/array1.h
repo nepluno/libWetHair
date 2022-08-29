@@ -33,6 +33,8 @@
 // push_back() are limited. Note: for the most part assertions are done with
 // assert(), not exceptions...
 
+namespace libwethair {
+
 // gross template hacking to determine if a type is integral or not
 struct Array1True {};
 struct Array1False {};
@@ -770,5 +772,7 @@ typedef WrapArray1<unsigned int> WrapArray1ui;
 typedef WrapArray1<unsigned short> WrapArray1us;
 typedef WrapArray1<char> WrapArray1c;
 typedef WrapArray1<unsigned char> WrapArray1uc;
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_ARRAY1_H_

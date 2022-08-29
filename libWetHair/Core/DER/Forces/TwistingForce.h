@@ -15,6 +15,8 @@
 #include "../StrandForce.h"
 #include "ViscousOrNotViscous.h"
 
+namespace libwethair {
+
 template <typename ViscousT = NonViscous>
 class TwistingForce {
  public:
@@ -52,5 +54,7 @@ class TwistingForce {
       StrandForce& strand, VectorXs& lambda, TripletXs& J, TripletXs& tildeK,
       TripletXs& stiffness, VectorXs& Phi, const int& lambda_start);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_FORCES_TWISTING_FORCE_H_

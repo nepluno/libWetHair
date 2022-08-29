@@ -14,6 +14,7 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
 namespace renderingutils {
 const static int jetmapping_size = 256;
 
@@ -319,5 +320,7 @@ const static unsigned int jetmapping[] = {
     0xFF0000BB, 0xFF0000B7, 0xFF0000B3, 0xFF0000AF, 0xFF0000AB, 0xFF0000A7,
     0xFF0000A3, 0xFF00009F, 0xFF00009B, 0xFF000097, 0xFF000093, 0xFF00008F,
     0xFF00008B, 0xFF000087, 0xFF000083, 0xFF000080};
+
 }  // namespace renderingutils
+}  // namespace libwethair
 #endif  // LIBWETHAIR_CORE_JET_H_

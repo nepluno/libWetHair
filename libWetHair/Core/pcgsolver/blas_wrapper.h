@@ -18,8 +18,8 @@
 #include <Eigen/Core>
 #include <vector>
 
+namespace libwethair {
 namespace robertbridson {
-
 namespace BLAS {
 // dot products ==============================================================
 
@@ -61,4 +61,5 @@ inline void add_scaled(double alpha, const std::vector<double> &x,
 }
 }  // namespace BLAS
 }  // namespace robertbridson
+}  // namespace libwethair
 #endif  // LIBWETHAIR_CORE_BLAS_WRAPPER_H_

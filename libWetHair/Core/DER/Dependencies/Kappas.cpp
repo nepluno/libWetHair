@@ -13,6 +13,8 @@
 
 #include "ElasticStrandUtils.h"
 
+namespace libwethair {
+
 void Kappas::compute() {
   m_value.resize(m_size);
   const Vec3Array& curvatureBinormals = m_curvatureBinormals.get();
@@ -348,3 +350,5 @@ void ThetaHessKappas::compute() {
 
   setDependentsDirty();
 }
+
+}  // namespace libwethair

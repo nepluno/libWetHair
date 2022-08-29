@@ -25,6 +25,7 @@
 
 //#define SURFACE_TENSION_ON_HAIRS
 
+namespace libwethair {
 using namespace mathutils;
 
 const static int MAX_BRIDGE_PER_EDGE = 64;
@@ -2633,3 +2634,5 @@ void extrapolate(Array2s& grid, Array2s& old_grid, const Array2s& grid_weight,
     *pgrid_source = *pgrid_target;
   }
 }
+
+}  // namespace libwethair

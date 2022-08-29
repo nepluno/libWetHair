@@ -15,6 +15,8 @@
 #include "../Definitions.h"
 #include "../StrandForce.h"
 
+namespace libwethair {
+
 template <typename ForceT>
 class ForceAccumulator {
  public:
@@ -89,5 +91,7 @@ class ForceAccumulator {
     }
   }
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_FORCE_FORCE_ACCUMULATOR_H_

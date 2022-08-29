@@ -14,6 +14,7 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
 namespace bresemham {
 template <typename Callable>
 void Bresenham3D(int x1, int y1, int z1, const int x2, const int y2,
@@ -134,6 +135,7 @@ void Bresenham2D(int x1, int y1, const int x2, const int y2, Callable func) {
   func(point[0], point[1]);
 }
 
-};  // namespace bresemham
+}  // namespace bresemham
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_BRESEMHAM_H_

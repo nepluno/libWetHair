@@ -18,6 +18,8 @@
 #include "Force.h"
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 class SpringForce : public Force {
  public:
@@ -73,5 +75,7 @@ class SpringForce : public Force {
   scalar m_lambda;
   scalar m_lambda_v;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_SPRING_FORCE_H_

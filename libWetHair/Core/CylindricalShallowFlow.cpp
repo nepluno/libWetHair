@@ -23,10 +23,11 @@
 #include "fluidsim3D.h"
 #include "liangbarsky.h"
 
-static const char* cylindrical_film_static_name = "cylindricalshallowflow";
-
+namespace libwethair {
 using namespace mathutils;
-using namespace mathutils::shallowflow;
+using namespace shallowflow;
+
+static const char* cylindrical_film_static_name = "cylindricalshallowflow";
 
 const int N_GAUSS = 2;
 
@@ -2042,3 +2043,5 @@ const char* CylindricalShallowFlow<DIM>::name() {
 // explicit instantiations at bottom
 template class CylindricalShallowFlow<2>;
 template class CylindricalShallowFlow<3>;
+
+}  // namespace libwethair

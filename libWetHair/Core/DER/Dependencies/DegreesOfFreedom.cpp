@@ -13,6 +13,8 @@
 
 #include "ElasticStrandUtils.h"
 
+namespace libwethair {
+
 void Edges::compute() {
   m_value.resize(m_size);
   const VecX& dofs = m_dofs.get();
@@ -123,3 +125,5 @@ void TrigThetas::compute() {
 
   setDependentsDirty();
 }
+
+}  // namespace libwethair

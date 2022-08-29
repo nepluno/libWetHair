@@ -20,6 +20,8 @@
 // stiffness and "rest shape" (the actual rest-shape for non-viscous or the
 // shape at the beginning of time step for viscous).
 
+namespace libwethair {
+
 class NonViscous {
  protected:
   NonViscous() {}
@@ -102,5 +104,7 @@ class Viscous {
 
   class DissipativeForce {};
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_FORCES_VISCOUS_OR_NOT_VISCOUS_H_

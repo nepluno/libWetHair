@@ -17,6 +17,8 @@
 
 #include "Force.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -84,5 +86,7 @@ class SimpleGravityForce : public Force {
 
   const Vector3s& m_gravity;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_SIMPLE_GRAVITY_FORCE_H_

@@ -18,6 +18,8 @@
 
 #include "MathDefs.h"
 
+namespace libwethair {
+
 class RoundCornerBox {
  protected:
   std::vector<int> m_index_to_verts;
@@ -344,5 +346,7 @@ class RoundCornerBox {
     }
   }
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_ROUND_CORNER_BOX_H_

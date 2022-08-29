@@ -23,6 +23,8 @@
 #include "fluidsim2D.h"
 #include "fluidsim3D.h"
 
+namespace libwethair {
+
 WetHairParameter::WetHairParameter()
     : dt(0.004),
       rho(1.0),
@@ -2458,3 +2460,5 @@ WetHairParameter& TwoDScene<DIM>::getParameter() {
 // explicit instantiations at bottom
 template class TwoDScene<2>;
 template class TwoDScene<3>;
+
+}  // namespace libwethair

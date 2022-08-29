@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <tbb/tbb.h>
 
+namespace libwethair {
 using namespace std;
 
 Sorter::Sorter(int ni_, int nj_, int nk_) : ni(ni_), nj(nj_), nk(nk_) {
@@ -30,3 +31,5 @@ void Sorter::resize(int ni_, int nj_, int nk_) {
   nj = nj_;
   nk = nk_;
 }
+
+}  // namespace libwethair

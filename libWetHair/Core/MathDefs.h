@@ -26,6 +26,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+namespace libwethair {
+
 typedef double scalar;
 typedef unsigned long long uint64;
 
@@ -561,5 +563,7 @@ struct int_Vectors_scalar {
 
   bool operator<(const int_Vectors_scalar& b) const { return d < b.d; }
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_MATH_DEFS_H_

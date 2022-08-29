@@ -22,6 +22,8 @@
 
 #define RADPERDEG 0.0174533
 
+using namespace libwethair;
+
 const static Vector3s liquid_color =
     Vector3s(64.0 / 255.0, 164.0 / 255.0, 223.0 / 255.0);
 const static int disc_arc = 5;

@@ -16,6 +16,8 @@
 #include "ElasticityParameters.h"
 #include "Kappas.h"
 
+namespace libwethair {
+
 typedef std::vector<Mat2, Eigen::aligned_allocator<Mat2> >
     Mat2Array;  ///< an array of 2d scalar matrices
 typedef std::vector<Mat11, Eigen::aligned_allocator<Mat11> >
@@ -66,5 +68,7 @@ class BendingProducts : public DependencyNode<Mat11Array> {
   BendingMatrixBase& m_bendingMatrixBase;
   GradKappas& m_gradKappas;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_BENDINGPRODUCTS_H_

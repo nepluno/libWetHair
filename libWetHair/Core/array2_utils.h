@@ -15,6 +15,8 @@
 #include "MathUtilities.h"
 #include "array2.h"
 
+namespace libwethair {
+
 template <class S, class T>
 T interpolate_value(const Eigen::Matrix<S, 2, 1>& point,
                     const Array2<T, Array1<T> >& grid) {
@@ -172,5 +174,7 @@ void write_matlab_array(std::ostream& output, Array2<T, Array1<T> >& a,
   if (transpose) output << "'";
   output << ";" << std::endl;
 }
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_ARRAY2_UTILS_H_

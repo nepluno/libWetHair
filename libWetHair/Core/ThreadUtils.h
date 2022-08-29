@@ -24,6 +24,7 @@
 #include <tbb/tbb.h>
 #endif
 
+namespace libwethair {
 namespace threadutils {
 inline unsigned get_num_threads() {
 #ifdef NDEBUG
@@ -233,5 +234,7 @@ class thread_pool {
 #endif
   }
 };
-};     // namespace threadutils
+
+}  // namespace threadutils
+}  // namespace libwethair
 #endif  // LIBWETHAIR_CORE_THREAD_UTILS_H_

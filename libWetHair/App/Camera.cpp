@@ -13,6 +13,8 @@
 
 #include <iostream>
 
+using namespace libwethair;
+
 Camera::Camera(const double fov)
     : rotation_(Eigen::Quaterniond(1, 0, 0, 0)),
       center_(Eigen::Vector3d()),

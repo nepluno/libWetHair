@@ -16,6 +16,8 @@
 
 #include "MathUtilities.h"
 
+namespace libwethair {
+
 #define COLLISION_COHESION_TABLE
 
 inline scalar spring_func(const scalar& x, const scalar& dmin, const scalar& k0,
@@ -872,3 +874,5 @@ scalar CohesionTable::getRadiusMultiplier() const {
 scalar CohesionTable::getCollisionStiffness() const {
   return m_collision_stiffness;
 }
+
+}  // namespace libwethair

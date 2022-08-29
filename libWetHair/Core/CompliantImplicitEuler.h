@@ -18,6 +18,8 @@
 #include "MathUtilities.h"
 #include "SceneStepper.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -80,5 +82,7 @@ class CompliantImplicitEuler : public SceneStepper<DIM> {
   Eigen::SimplicialLDLT<SparseXs> m_solver;
   Eigen::ConjugateGradient<SparseXs> m_iterative_solver;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_COMPLIANT_IMPLICIT_EULER_H_

@@ -14,6 +14,8 @@
 
 #include "DependencyNode.h"
 
+namespace libwethair {
+
 /**
  * Unit: cm for position dofs, no dimension for theta
  */
@@ -194,5 +196,7 @@ class TrigThetas : public DependencyNode<std::pair<VecX, VecX> > {
  private:
   void vdSinCos(const int n, const double a[], double r1[], double r2[]);
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_DEGREES_OF_FREEDOM_H_

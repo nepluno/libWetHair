@@ -17,11 +17,15 @@
 
 #include "StringUtilities.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
 template <int DIM>
 class SceneStepper;
+
+}  // namespace libwethair
 
 template <int DIM>
 class TwoDSceneRenderer;
@@ -30,39 +34,39 @@ template <int DIM>
 class TwoDSceneSerializer {
  public:
   void serializeFluidReadable(
-      TwoDScene<DIM>& scene,
+      libwethair::TwoDScene<DIM>& scene,
       std::vector<std::ostringstream>& outputstream) const;
 
-  void serializeHairReadable(TwoDScene<DIM>& scene,
+  void serializeHairReadable(libwethair::TwoDScene<DIM>& scene,
                              std::ostream& outputstream) const;
 
   void serializeShallowFlowReadable(const TwoDSceneRenderer<DIM>* renderer,
-                                    TwoDScene<DIM>& scene,
+                                    libwethair::TwoDScene<DIM>& scene,
                                     std::ostream& outputstream) const;
 
   void serializeBoundariesReadable(const TwoDSceneRenderer<DIM>* renderer,
-                                   TwoDScene<DIM>& scene,
+                                   libwethair::TwoDScene<DIM>& scene,
                                    std::ostream& os_boundary_single,
                                    std::ostream& os_boundary_double);
 
   void serializePolygonalCohesionReadable(
-      const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene,
+      const TwoDSceneRenderer<DIM>* renderer, libwethair::TwoDScene<DIM>& scene,
       std::ostream& os_pe, std::ostream& os_poe, std::ostream& os_ppp) const;
 
   bool deSerializeFluidReadable(
-      TwoDScene<DIM>& scene, const std::vector<std::string>& filename_fluids);
+      libwethair::TwoDScene<DIM>& scene, const std::vector<std::string>& filename_fluids);
 
-  bool deSerializeHairReadable(TwoDScene<DIM>& scene,
+  bool deSerializeHairReadable(libwethair::TwoDScene<DIM>& scene,
                                const std::string& filename_hairs);
 
   bool deSerializeShallowFlowReadable(const TwoDSceneRenderer<DIM>* renderer,
-                                      TwoDScene<DIM>& scene,
+                                      libwethair::TwoDScene<DIM>& scene,
                                       const std::string& filename_flows);
 
-  void serializeScene(TwoDScene<DIM>& scene, SceneStepper<DIM>* stepper,
+  void serializeScene(libwethair::TwoDScene<DIM>& scene, libwethair::SceneStepper<DIM>* stepper,
                       std::ostream& outputstream) const;
 
-  void loadScene(TwoDScene<DIM>& scene, SceneStepper<DIM>* stepper,
+  void loadScene(libwethair::TwoDScene<DIM>& scene, libwethair::SceneStepper<DIM>* stepper,
                  std::istream& inputstream) const;
 };
 

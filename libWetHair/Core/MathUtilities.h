@@ -19,6 +19,8 @@
 #include "MathDefs.h"
 #include "ThreadUtils.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -6776,5 +6778,6 @@ inline void accumulateJTPhi_coeff(VectorXs& b, const scalar& c,
 }
 
 }  // namespace mathutils
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_MATH_UTILITIES_H_

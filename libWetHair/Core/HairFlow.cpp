@@ -19,6 +19,7 @@
 #include "array2_utils.h"
 #include "fluidsim2D.h"
 
+namespace libwethair {
 using namespace mathutils;
 
 //#define NO_COHESION_FORCE
@@ -507,3 +508,5 @@ template class HairFlow<3>;
 
 template struct HairParticleBridge<2>;
 template struct HairParticleBridge<3>;
+
+}  // namespace libwethair

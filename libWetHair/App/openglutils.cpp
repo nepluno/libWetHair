@@ -31,6 +31,8 @@
 #endif
 #include <cmath>
 
+using namespace libwethair;
+
 void draw_circle2d(const Vector2s& centre, scalar rad, int segs) {
   glBegin(GL_POLYGON);
   for (int i = 0; i < segs; i++) {

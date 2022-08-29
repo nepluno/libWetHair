@@ -21,11 +21,14 @@
 #include "fluidsim3D.h"
 
 //#define WRITE_PC_VARS
+using namespace libwethair;
 
 template <int DIM>
 ParticleSimulation<DIM>::ParticleSimulation(
-    TwoDScene<DIM>* scene, SceneStepper<DIM>* scene_stepper,
-    TwoDSceneRenderer<DIM>* scene_renderer, const std::vector<Script>& scripts)
+    TwoDScene<DIM>* scene,
+    SceneStepper<DIM>* scene_stepper,
+    TwoDSceneRenderer<DIM>* scene_renderer,
+    const std::vector<Script>& scripts)
     : m_scene(scene),
       m_scene_stepper(scene_stepper),
       m_scene_renderer(scene_renderer),
@@ -240,10 +243,11 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer() {
   TwAddVarRW(bar, "volume summary", TW_TYPE_BOOL8, &parameters.volume_summary,
              " help='Turn On to Summarize for Volume Info' ");
 
-  TwEnumVal massmodeEV[MUM_COUNT] = {{MUM_MOMENTUM, "Update Momentum"},
-                                     {MUM_MASS_ONLY, "Mass-Only"},
-                                     {MUM_DIRECT_DIV, "Velocity-Scaling"},
-                                     {MUM_NONE, "Constant Mass"}};
+  TwEnumVal massmodeEV[MUM_COUNT] = {
+    {MUM_MOMENTUM, "Update Momentum"},
+    {MUM_MASS_ONLY, "Mass-Only"},
+    {MUM_DIRECT_DIV, "Velocity-Scaling"},
+    {MUM_NONE, "Constant Mass"}};
 
   TwType massmodeType = TwDefineEnum("MassModeType", massmodeEV, MUM_COUNT);
 

@@ -14,6 +14,8 @@
 
 #include "MaterialFrames.h"
 
+namespace libwethair {
+
 /**
  * Unit: no dimension.
  */
@@ -165,5 +167,7 @@ class ThetaHessKappas : public DependencyNode<ThetaHessKArrayType> {
   MaterialFrames<1>& m_materialFrames1;
   MaterialFrames<2>& m_materialFrames2;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_KAPPAS_H_

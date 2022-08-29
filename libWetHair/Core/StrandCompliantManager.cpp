@@ -18,6 +18,7 @@
 #include "TimingUtilities.h"
 #include "TwoDScene.h"
 
+namespace libwethair {
 using namespace threadutils;
 
 template <int DIM>
@@ -692,3 +693,5 @@ std::string StrandCompliantManager<DIM>::getName() const {
 // explicit instantiations at bottom
 template class StrandCompliantManager<2>;
 template class StrandCompliantManager<3>;
+
+}  // namespace libwethair

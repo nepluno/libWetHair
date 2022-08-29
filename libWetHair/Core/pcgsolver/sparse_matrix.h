@@ -21,6 +21,8 @@
 
 //============================================================================
 // Dynamic compressed sparse row matrix.
+
+namespace libwethair {
 namespace robertbridson {
 template <class T>
 struct SparseMatrix {
@@ -403,5 +405,6 @@ void multiply_and_subtract(const FixedSparseMatrix<T> &matrix,
   });
 }
 }  // namespace robertbridson
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_PCGSOLVER_SPARSE_MATRIX_H_

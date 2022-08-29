@@ -25,6 +25,8 @@
 
 #define LOAD_HAIR_ONLY
 
+using namespace libwethair;
+
 template <int DIM>
 void TwoDSceneSerializer<DIM>::serializeFluidReadable(
     TwoDScene<DIM>& scene,
@@ -35,8 +37,10 @@ void TwoDSceneSerializer<DIM>::serializeFluidReadable(
 
 template <int DIM>
 void TwoDSceneSerializer<DIM>::serializeBoundariesReadable(
-    const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene,
-    std::ostream& os_boundary_single, std::ostream& os_boundary_double) {
+    const TwoDSceneRenderer<DIM>* renderer,
+    TwoDScene<DIM>& scene,
+    std::ostream& os_boundary_single,
+    std::ostream& os_boundary_double) {
   renderer->writeBoundaries(os_boundary_single, os_boundary_double);
 }
 
@@ -51,7 +55,8 @@ void TwoDSceneSerializer<DIM>::serializeHairReadable(
 
 template <int DIM>
 void TwoDSceneSerializer<DIM>::serializePolygonalCohesionReadable(
-    const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene,
+    const TwoDSceneRenderer<DIM>* renderer,
+    TwoDScene<DIM>& scene,
     std::ostream& os_pe, std::ostream& os_poe, std::ostream& os_ppp) const {
   const PolygonalCohesion<DIM>* cohesion = scene.getPolygonalCohesion();
   cohesion->writeReadable(os_pe, os_poe, os_ppp);
@@ -59,7 +64,8 @@ void TwoDSceneSerializer<DIM>::serializePolygonalCohesionReadable(
 
 template <int DIM>
 void TwoDSceneSerializer<DIM>::serializeShallowFlowReadable(
-    const TwoDSceneRenderer<DIM>* renderer, TwoDScene<DIM>& scene,
+    const TwoDSceneRenderer<DIM>* renderer,
+    TwoDScene<DIM>& scene,
     std::ostream& outputstream) const {
   renderer->writeTransformedHairFlow(outputstream, scene);
 }

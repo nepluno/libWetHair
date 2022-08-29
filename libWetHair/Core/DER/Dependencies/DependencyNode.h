@@ -18,6 +18,8 @@
 
 //#define VERBOSE_DEPENDENCY_NODE
 
+namespace libwethair {
+
 /**
  * @brief Base class for the template family DependencyNode
  *
@@ -248,5 +250,7 @@ inline std::ostream& operator<<(std::ostream& os,
 
   return os;
 }
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DER_DEPENDENCIES_DEPENDENCY_NODE_H_

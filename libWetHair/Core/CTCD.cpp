@@ -17,6 +17,7 @@
 
 #include "rpoly.h"
 
+namespace libwethair {
 using namespace Eigen;
 using namespace std;
 
@@ -728,3 +729,5 @@ double CTCD::ClosestPtSegmentSegment(const Vector3d &p1, const Vector3d &q1,
   c2 = p2 + d2 * t;
   return (c1 - c2).dot(c1 - c2);
 }
+
+}  // namespace libwethair

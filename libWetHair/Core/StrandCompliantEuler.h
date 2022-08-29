@@ -18,6 +18,8 @@
 #include "MathUtilities.h"
 #include "SceneStepper.h"
 
+namespace libwethair {
+
 template <int DIM>
 class StrandCompliantManager;
 
@@ -86,5 +88,7 @@ class StrandCompliantEuler {
   int m_start_global_dof;
   int m_num_global_dof;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_STRAND_COMPLIANT_EULER_

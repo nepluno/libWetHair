@@ -13,6 +13,8 @@
 
 #include "TwoDScene.h"
 
+namespace libwethair {
+
 template <int DIM>
 SpringForce<DIM>::SpringForce(const std::pair<int, int>& endpoints,
                               const scalar& k, const scalar& l0,
@@ -204,3 +206,5 @@ bool SpringForce<DIM>::isContained(int pidx) {
 // explicit instantiations at bottom
 template class SpringForce<2>;
 template class SpringForce<3>;
+
+}  // namespace libwethair

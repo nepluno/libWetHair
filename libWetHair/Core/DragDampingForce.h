@@ -18,6 +18,8 @@
 #include "Force.h"
 #include "MathDefs.h"
 
+namespace libwethair {
+
 template <int DIM>
 class TwoDScene;
 
@@ -71,5 +73,7 @@ class DragDampingForce : public Force {
   VectorXs m_lambda_v;
   const TwoDScene<DIM>& m_scene;
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_DRAG_DAMPING_FORCE_H_

@@ -31,6 +31,8 @@
 
 #include "math.h"
 
+namespace libwethair {
+
 class RootFinder {
  public:
   int rpoly(const double *op, int degree, double *zeror, double *zeroi) {
@@ -712,5 +714,7 @@ class RootFinder {
     }
   }
 };
+
+}  // namespace libwethair
 
 #endif  // LIBWETHAIR_CORE_RPOLY_H_

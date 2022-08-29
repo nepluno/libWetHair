@@ -13,6 +13,8 @@
 
 #include "ViscousOrNotViscous.h"
 
+namespace libwethair {
+
 template <typename ViscousT>
 scalar StretchingForce<ViscousT>::localEnergy(const StrandForce& strand,
                                               const IndexType vtx) {
@@ -139,3 +141,5 @@ void StretchingForce<ViscousT>::accumulateIntegrationVars(
 
 template class StretchingForce<NonViscous>;
 template class StretchingForce<Viscous>;
+
+}  // namespace libwethair

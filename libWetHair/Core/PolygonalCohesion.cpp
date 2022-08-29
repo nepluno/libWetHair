@@ -28,6 +28,7 @@
 
 //#define DEBUG_COHESION_TABLE
 //#define DEBUG_PLANAR_COHESION_TABLE
+namespace libwethair {
 
 template <int DIM>
 PolygonalCohesion<DIM>::PolygonalCohesion(TwoDScene<DIM>* scene)
@@ -2747,3 +2748,5 @@ std::ostream& operator<<(std::ostream& os, const ParticleParticlePair& info) {
   os << "[" << info.toString() << "]";
   return os;
 }
+
+}  // namespace libwethair
