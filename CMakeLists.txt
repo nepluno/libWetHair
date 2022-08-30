@@ -7,6 +7,12 @@ set(CMAKE_CXX_STANDARD          11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS        OFF)
 
+option(LIBWETHAIR_BUILD_CORE "Enable the core library, it is ON by default. Use BUILD_SHARED_LIBS to control the type of the library" ON)
+option(LIBWETHAIR_BUILD_APP "Enable the libWetHair executable, it is ON by default." ON)
+option(LIBWETHAIR_INSTALL_ASSETS "Install the assests, it is ON by default." ON)
+
+include(GNUInstallDirs)
+
 if (NOT CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 endif (NOT CMAKE_INSTALL_PREFIX)
@@ -33,15 +39,10 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   message (FATAL_ERROR "Remove the created \"CMakeCache.txt\" file and the \"CMakeFiles\" directory, then create a build directory and call \"${CMAKE_COMMAND} <path to the sources>\".")
 endif ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
-# Finds all files with a given extension
-macro (append_files files ext)
-  foreach (dir ${ARGN})
-    file (GLOB _files "${dir}/*.${ext}")
-    list (APPEND ${files} ${_files})
-  endforeach (dir)
-endmacro (append_files)
 
-include(GNUInstallDirs)
 add_subdirectory (libWetHair)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/libWetHair)
+
+if (LIBWETHAIR_INSTALL_ASSETS)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/libWetHair)
+endif (LIBWETHAIR_INSTALL_ASSESTS)
