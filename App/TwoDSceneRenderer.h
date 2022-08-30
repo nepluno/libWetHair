@@ -15,13 +15,14 @@
 #include <Eigen/StdVector>
 #include <iostream>
 
-#include "Capsule.h"
-#include "HairFlow.h"
-#include "Icosphere.h"
-#include "MathUtilities.h"
+#include <libWetHair/Capsule.h>
+#include <libWetHair/HairFlow.h>
+#include <libWetHair/Icosphere.h>
+#include <libWetHair/MathUtilities.h>
+#include <libWetHair/RoundCornerBox.h>
+#include <libWetHair/TwoDScene.h>
+
 #include "RenderingUtilities.h"
-#include "RoundCornerBox.h"
-#include "TwoDScene.h"
 
 // TODO: Get display controller out of here
 // TODO: Make particle system and rigid body renderers that inherit from this

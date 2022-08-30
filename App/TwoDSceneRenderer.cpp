@@ -13,11 +13,12 @@
 
 #include <sstream>
 
-#include "HairFlow.h"
-#include "PolygonalCohesion.h"
+#include <libWetHair/HairFlow.h>
+#include <libWetHair/fluidsim2D.h>
+#include <libWetHair/fluidsim3D.h>
+#include <libWetHair/PolygonalCohesion.h>
+
 #include "TwoDimensionalDisplayController.h"
-#include "fluidsim2D.h"
-#include "fluidsim3D.h"
 #include "openglutils.h"
 
 #define RADPERDEG 0.0174533

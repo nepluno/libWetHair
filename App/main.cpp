@@ -24,17 +24,18 @@
 #endif
 
 // TODO: Clean these up, we don't need them all anymore.
+#include <libWetHair/Force.h>
+#include <libWetHair/MathDefs.h>
+#include <libWetHair/TwoDScene.h>
+#include <libWetHair/SceneStepper.h>
+#include <libWetHair/SpringForce.h>
+#include <libWetHair/TimingUtilities.h>
+
 #include "DefaultXMLScene.h"
 #include "ExecutableSimulation.h"
-#include "Force.h"
-#include "MathDefs.h"
 #include "ParticleSimulation.h"
 #include "RenderingUtilities.h"
-#include "SceneStepper.h"
-#include "SpringForce.h"
 #include "StringUtilities.h"
-#include "TimingUtilities.h"
-#include "TwoDScene.h"
 #include "TwoDSceneRenderer.h"
 #include "TwoDSceneSerializer.h"
 #include "TwoDSceneXMLParser.h"

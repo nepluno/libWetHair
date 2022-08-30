@@ -17,29 +17,30 @@
 #include <iostream>
 #include <limits>
 
+#include <libWetHair/CompliantImplicitEuler.h>
+#include <libWetHair/CylindricalShallowFlow.h>
+#include <libWetHair/DER/StrandForce.h>
+#include <libWetHair/DER/StrandParameters.h>
+#include <libWetHair/DragDampingForce.h>
+#include <libWetHair/LevelSetForce.h>
+#include <libWetHair/LinearBendingForce.h>
+#include <libWetHair/LinearSpringForce.h>
+#include <libWetHair/PolygonalCohesion.h>
+#include <libWetHair/SimpleGravityForce.h>
+#include <libWetHair/SpringForce.h>
+#include <libWetHair/StrandCompliantManager.h>
+#include <libWetHair/TwoDScene.h>
+#include <libWetHair/fluidsim2D.h>
+#include <libWetHair/fluidsim3D.h>
+#include <rapidxml.hpp>
+
 #include "Camera.h"
-#include "CompliantImplicitEuler.h"
-#include "CylindricalShallowFlow.h"
-#include "DER/StrandForce.h"
-#include "DER/StrandParameters.h"
-#include "DragDampingForce.h"
 #include "ExecutableSimulation.h"
-#include "LevelSetForce.h"
-#include "LinearBendingForce.h"
-#include "LinearSpringForce.h"
 #include "ParticleSimulation.h"
-#include "PolygonalCohesion.h"
 #include "RenderingUtilities.h"
-#include "SimpleGravityForce.h"
-#include "SpringForce.h"
-#include "StrandCompliantManager.h"
 #include "StringUtilities.h"
-#include "TwoDScene.h"
-#include "TwoDSceneRenderer.h"
 #include "TwoDimensionalDisplayController.h"
-#include "fluidsim2D.h"
-#include "fluidsim3D.h"
-#include "rapidxml.hpp"
+#include "TwoDSceneRenderer.h"
 
 // REALLY USEFULL TODOs
 //   TODO: Improve error messages to display all valid options, etc. Could

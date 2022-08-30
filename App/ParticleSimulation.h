@@ -12,13 +12,14 @@
 #ifndef LIBWETHAIR_APP_PARTICLE_SIMULATION_H_
 #define LIBWETHAIR_APP_PARTICLE_SIMULATION_H_
 
+#include <libWetHair/SceneStepper.h>
+#include <libWetHair/TwoDScene.h>
+#include <libWetHair/WetHairCore.h>
+
 #include "ExecutableSimulation.h"
-#include "SceneStepper.h"
-#include "TwoDScene.h"
 #include "TwoDSceneRenderer.h"
 #include "TwoDSceneSerializer.h"
 #include "TwoDimensionalDisplayController.h"
-#include "WetHairCore.h"
 
 extern bool g_bPrintSummary;
 extern bool g_rendering_enabled;

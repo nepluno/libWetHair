@@ -31,9 +31,9 @@
 #include <iostream>
 #include <list>
 
-#include "JET.h"
-#include "MathDefs.h"
-#include "MathUtilities.h"
+#include <libWetHair/JET.h>
+#include <libWetHair/MathDefs.h>
+#include <libWetHair/MathUtilities.h>
 #include "StringUtilities.h"
 
 namespace libwethair {

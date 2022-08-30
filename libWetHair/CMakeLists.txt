@@ -56,8 +56,8 @@ target_link_libraries(WetHairCore
   Threads::Threads)
 
 target_include_directories(WetHairCore INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libWetHair>)
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 install(TARGETS WetHairCore
   EXPORT WetHairCore)

@@ -15,8 +15,9 @@
 #include <Eigen/Core>
 #include <string>
 
+#include <libWetHair/MathDefs.h>
+
 #include "Camera.h"
-#include "MathDefs.h"
 #include "RenderingUtilities.h"
 
 template <int DIM>

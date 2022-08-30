@@ -13,7 +13,7 @@
 #define LIBWETHAIR_CORE_CAMERA_H_
 #include <Eigen/Dense>
 
-#include "MathDefs.h"
+#include <libWetHair/MathDefs.h>
 
 class Camera {
  public:

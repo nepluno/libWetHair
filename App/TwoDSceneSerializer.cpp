@@ -15,13 +15,14 @@
 #include <iostream>
 #include <string>
 
-#include "HairFlow.h"
-#include "PolygonalCohesion.h"
-#include "SceneStepper.h"
-#include "TwoDScene.h"
+#include <libWetHair/HairFlow.h>
+#include <libWetHair/PolygonalCohesion.h>
+#include <libWetHair/SceneStepper.h>
+#include <libWetHair/TwoDScene.h>
+#include <libWetHair/fluidsim2D.h>
+#include <libWetHair/fluidsim3D.h>
+
 #include "TwoDSceneRenderer.h"
-#include "fluidsim2D.h"
-#include "fluidsim3D.h"
 
 #define LOAD_HAIR_ONLY
 

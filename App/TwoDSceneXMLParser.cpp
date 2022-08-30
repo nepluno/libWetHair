@@ -11,8 +11,8 @@
 
 #include "TwoDSceneXMLParser.h"
 
-#include "DER/Dependencies/ElasticStrandUtils.h"
-#include "ThreadUtils.h"
+#include <libWetHair/DER/Dependencies/ElasticStrandUtils.h>
+#include <libWetHair/ThreadUtils.h>
 
 using namespace libwethair;
 

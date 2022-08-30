@@ -23,8 +23,8 @@
 
 #include <cfloat>
 
-#include "MathDefs.h"
-#include "MathUtilities.h"
+#include <libWetHair/MathDefs.h>
+#include <libWetHair/MathUtilities.h>
 
 #ifdef WIN32
 #define _USE_MATH_DEFINES

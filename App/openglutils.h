@@ -14,8 +14,8 @@
 
 #include <vector>
 
-#include "MathDefs.h"
-#include "array2.h"
+#include <libWetHair/MathDefs.h>
+#include <libWetHair/array2.h>
 
 void draw_circle2d(const libwethair::Vector2s& centre, libwethair::scalar rad, int segs);
 void draw_grid2d(const libwethair::Vector2s& origin, libwethair::scalar dx, int nx, int ny);

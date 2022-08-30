@@ -15,10 +15,11 @@
 
 #include <iomanip>
 
-#include "TimingUtilities.h"
+#include <libWetHair/TimingUtilities.h>
+#include <libWetHair/fluidsim2D.h>
+#include <libWetHair/fluidsim3D.h>
+
 #include "TwoDSceneRenderer.h"
-#include "fluidsim2D.h"
-#include "fluidsim3D.h"
 
 //#define WRITE_PC_VARS
 using namespace libwethair;
