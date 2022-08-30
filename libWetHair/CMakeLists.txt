@@ -55,7 +55,7 @@ target_link_libraries(WetHairCore
   PRIVATE
   Threads::Threads)
 
-target_include_directories(WetHairCore INTERFACE
+target_include_directories(WetHairCore PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
