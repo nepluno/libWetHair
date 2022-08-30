@@ -11,7 +11,7 @@
 
 #include "ElasticStrandUtils.h"
 
-#include "../../TimingUtilities.h"
+#include <libWetHair/TimingUtilities.h>
 
 namespace libwethair {
 

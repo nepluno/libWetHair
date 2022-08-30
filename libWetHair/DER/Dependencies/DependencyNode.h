@@ -14,7 +14,7 @@
 
 #include <list>
 
-#include "../Definitions.h"
+#include <libWetHair/DER/Definitions.h>
 
 //#define VERBOSE_DEPENDENCY_NODE
 

@@ -12,7 +12,7 @@
 #ifndef LIBWETHAIR_CORE_DER_FORCES_TWISTING_FORCE_H_
 #define LIBWETHAIR_CORE_DER_FORCES_TWISTING_FORCE_H_
 
-#include "../StrandForce.h"
+#include <libWetHair/DER/StrandForce.h>
 #include "ViscousOrNotViscous.h"
 
 namespace libwethair {

@@ -20,7 +20,7 @@
 #endif
 #include <math.h>
 
-#include "../Definitions.h"
+#include <libWetHair/DER/Definitions.h>
 
 namespace libwethair {
 

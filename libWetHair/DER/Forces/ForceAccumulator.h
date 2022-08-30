@@ -12,8 +12,8 @@
 #ifndef LIBWETHAIR_CORE_DER_FORCE_FORCE_ACCUMULATOR_H_
 #define LIBWETHAIR_CORE_DER_FORCE_FORCE_ACCUMULATOR_H_
 
-#include "../Definitions.h"
-#include "../StrandForce.h"
+#include <libWetHair/DER/Definitions.h>
+#include <libWetHair/DER/StrandForce.h>
 
 namespace libwethair {
 

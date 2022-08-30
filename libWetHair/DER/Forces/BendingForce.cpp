@@ -11,7 +11,7 @@
 
 #include "BendingForce.h"
 
-#include "../Dependencies/ElasticStrandUtils.h"
+#include <libWetHair/DER/Dependencies/ElasticStrandUtils.h>
 #include "ViscousOrNotViscous.h"
 
 namespace libwethair {

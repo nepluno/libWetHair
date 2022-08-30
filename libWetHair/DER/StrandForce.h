@@ -15,8 +15,8 @@
 #include <Eigen/Core>
 #include <iostream>
 
-#include "../Force.h"
-#include "../TwoDScene.h"
+#include <libWetHair/Force.h>
+#include <libWetHair/TwoDScene.h>
 #include "Definitions.h"
 #include "Dependencies/BendingProducts.h"
 #include "Dependencies/DegreesOfFreedom.h"

@@ -17,7 +17,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../MathUtilities.h"
+#include <libWetHair/MathUtilities.h>
 
 //============================================================================
 // Dynamic compressed sparse row matrix.

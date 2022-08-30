@@ -12,8 +12,8 @@
 #ifndef LIBWETHAIR_CORE_DER_FORCES_VISCOUS_OR_NOT_VISCOUS_H_
 #define LIBWETHAIR_CORE_DER_FORCES_VISCOUS_OR_NOT_VISCOUS_H_
 
-#include "../StrandForce.h"
-#include "../StrandParameters.h"
+#include <libWetHair/DER/StrandForce.h>
+#include <libWetHair/DER/StrandParameters.h>
 // These classes are taken as template arguments for the internal forces,
 // indicating whether we want the non-viscous or the viscous version.
 // The forces call their ViscousT's static methods returning the appropriate
