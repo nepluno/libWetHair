@@ -1,123 +1,79 @@
+# Find dependencies
+find_package (Eigen3 REQUIRED CONFIG)
+find_package (TBB REQUIRED CONFIG)
+set (THREADS_PREFER_PTHREAD_FLAG ON)
+find_package (Threads REQUIRED)
 
-if (LIBWETHAIR_BUILD_CORE)
-  # Find dependencies
-  find_package (Eigen3 REQUIRED CONFIG)
-  find_package (TBB REQUIRED CONFIG)
-  set (THREADS_PREFER_PTHREAD_FLAG ON)
-  find_package (Threads REQUIRED)
+add_library (WetHairCore
+  "DER/Dependencies/DegreesOfFreedom.cpp"
+  "DER/Dependencies/ElasticStrandUtils.cpp"
+  "DER/Dependencies/Kappas.cpp"
+  "DER/Dependencies/MaterialFrames.cpp"
+  "DER/Dependencies/ReferenceFrames.cpp"
+  "DER/Dependencies/Twists.cpp"
+  "DER/Forces/BendingForce.cpp"
+  "DER/Forces/StretchingForce.cpp"
+  "DER/Forces/TwistingForce.cpp"
+  "DER/StrandForce.cpp"
+  "CTCD.cpp"
+  "Capsule.cpp"
+  "CohesionTableGen.cpp"
+  "CompliantImplicitEuler.cpp"
+  "CylindricalShallowFlow.cpp"
+  "DragDampingForce.cpp"
+  "FluidDragForce.cpp"
+  "Force.cpp"
+  "GeometricLevelGen.cpp"
+  "HairFlow.cpp"
+  "Icosphere.cpp"
+  "LevelSetForce.cpp"
+  "LinearBendingForce.cpp"
+  "LinearSpringForce.cpp"
+  "MathUtilities.cpp"
+  "PolygonalCohesion.cpp"
+  "SceneStepper.cpp"
+  "SimpleGravityForce.cpp"
+  "SpringForce.cpp"
+  "StrandCompliantEuler.cpp"
+  "StrandCompliantManager.cpp"
+  "TimingUtilities.cpp"
+  "TwoDScene.cpp"
+  "WetHairCore.cpp"
+  "fluidsim.cpp"
+  "fluidsim2D.cpp"
+  "fluidsim3D.cpp"
+  "liangbarsky.cpp"
+  "sorter.cpp"
+  "viscosity3d.cpp"
+  "volume_fractions.cpp")
+add_library(libWetHair::WetHairCore ALIAS WetHairCore)
 
-  add_library (WetHairCore
-    "Core/DER/Dependencies/DegreesOfFreedom.cpp"
-    "Core/DER/Dependencies/ElasticStrandUtils.cpp"
-    "Core/DER/Dependencies/Kappas.cpp"
-    "Core/DER/Dependencies/MaterialFrames.cpp"
-    "Core/DER/Dependencies/ReferenceFrames.cpp"
-    "Core/DER/Dependencies/Twists.cpp"
-    "Core/DER/Forces/BendingForce.cpp"
-    "Core/DER/Forces/StretchingForce.cpp"
-    "Core/DER/Forces/TwistingForce.cpp"
-    "Core/DER/StrandForce.cpp"
-    "Core/CTCD.cpp"
-    "Core/Capsule.cpp"
-    "Core/CohesionTableGen.cpp"
-    "Core/CompliantImplicitEuler.cpp"
-    "Core/CylindricalShallowFlow.cpp"
-    "Core/DragDampingForce.cpp"
-    "Core/FluidDragForce.cpp"
-    "Core/Force.cpp"
-    "Core/GeometricLevelGen.cpp"
-    "Core/HairFlow.cpp"
-    "Core/Icosphere.cpp"
-    "Core/LevelSetForce.cpp"
-    "Core/LinearBendingForce.cpp"
-    "Core/LinearSpringForce.cpp"
-    "Core/MathUtilities.cpp"
-    "Core/PolygonalCohesion.cpp"
-    "Core/SceneStepper.cpp"
-    "Core/SimpleGravityForce.cpp"
-    "Core/SpringForce.cpp"
-    "Core/StrandCompliantEuler.cpp"
-    "Core/StrandCompliantManager.cpp"
-    "Core/TimingUtilities.cpp"
-    "Core/TwoDScene.cpp"
-    "Core/WetHairCore.cpp"
-    "Core/fluidsim.cpp"
-    "Core/fluidsim2D.cpp"
-    "Core/fluidsim3D.cpp"
-    "Core/liangbarsky.cpp"
-    "Core/sorter.cpp"
-    "Core/viscosity3d.cpp"
-    "Core/volume_fractions.cpp")
-  add_library(libWetHair::WetHairCore ALIAS WetHairCore)
+target_link_libraries(WetHairCore
+  PUBLIC
+  Eigen3::Eigen
+  TBB::tbb
+  PRIVATE
+  Threads::Threads)
 
-  target_link_libraries(WetHairCore
-    PUBLIC
-    Eigen3::Eigen
-    TBB::tbb
-    PRIVATE
-    Threads::Threads)
+target_include_directories(WetHairCore INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libWetHair>)
 
-  target_include_directories(WetHairCore INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Core>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libWetHair>)
+install(TARGETS WetHairCore
+  EXPORT WetHairCore)
 
-  install(TARGETS WetHairCore
-    EXPORT WetHairCore)
+install(EXPORT WetHairCore
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libWetHair"
+  NAMESPACE libWetHair::
+  FILE libWetHair_WetHairCore.cmake
+  COMPONENT WetHairCore)
 
-  install(EXPORT WetHairCore
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libWetHair"
-    NAMESPACE libWetHair::
-    FILE libWetHair_WetHairCore.cmake
-    COMPONENT WetHairCore)
+install(FILES libWetHairConfig.cmake
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libWetHair")
 
-  install(FILES libWetHairConfig.cmake
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libWetHair")
+# Install headers
+install(DIRECTORY .
+  DESTINATION include/libWetHair
+  FILES_MATCHING
+  PATTERN *.h)
 
-  # Install headers
-  install(DIRECTORY Core/
-    DESTINATION include/libWetHair
-    FILES_MATCHING
-    PATTERN *.h)
-
-endif (LIBWETHAIR_BUILD_CORE)
-
-if (LIBWETHAIR_BUILD_APP)
-  # Find dependencies
-  if (NOT TARGET libWetHair::WetHairCore)
-    find_package (libWetHair REQUIRED CONFIG)
-  endif (NOT TARGET libWetHair::WetHairCore)
-  find_package (ANTTWEAKBAR REQUIRED)
-  find_package (Eigen3 REQUIRED CONFIG)
-  find_package (FreeGLUT REQUIRED CONFIG)
-  find_package (GLEW REQUIRED)
-  find_package (OpenGL REQUIRED)
-  find_package (PNG REQUIRED)
-  find_package (RapidXML REQUIRED)
-  find_package (TCLAP REQUIRED)
-
-  add_executable (libWetHair
-    "App/Camera.cpp"
-    "App/ParticleSimulation.cpp"
-    "App/RenderingUtilities.cpp"
-    "App/StringUtilities.cpp"
-    "App/TwoDSceneRenderer.cpp"
-    "App/TwoDSceneSerializer.cpp"
-    "App/TwoDSceneXMLParser.cpp"
-    "App/TwoDimensionalDisplayController.cpp"
-    "App/YImage.cpp"
-    "App/main.cpp"
-    "App/openglutils.cpp")
-
-  target_link_libraries(libWetHair PRIVATE
-    libWetHair::WetHairCore
-    ANTTWEAKBAR::AntTweakBar
-    Eigen3::Eigen
-    FreeGLUT::freeglut
-    GLEW::glew
-    OpenGL::GLU
-    PNG::PNG
-    RapidXML::RapidXML
-    TCLAP::tclap)
-
-  install(TARGETS libWetHair)
-endif (LIBWETHAIR_BUILD_APP)

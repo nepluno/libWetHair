@@ -39,10 +39,15 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   message (FATAL_ERROR "Remove the created \"CMakeCache.txt\" file and the \"CMakeFiles\" directory, then create a build directory and call \"${CMAKE_COMMAND} <path to the sources>\".")
 endif ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
+if (LIBWETHAIR_BUILD_CORE)
+  add_subdirectory (libWetHair)
+endif (LIBWETHAIR_BUILD_CORE)
 
-add_subdirectory (libWetHair)
+if (LIBWETHAIR_BUILD_APP)
+  add_subdirectory (App)
+endif (LIBWETHAIR_BUILD_APP)
 
 if (LIBWETHAIR_INSTALL_ASSETS)
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
     DESTINATION ${CMAKE_INSTALL_DATADIR}/libWetHair)
-endif (LIBWETHAIR_INSTALL_ASSESTS)
+endif (LIBWETHAIR_INSTALL_ASSETS)
