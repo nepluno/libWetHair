@@ -54,7 +54,6 @@ if (LIBWETHAIR_BUILD_CORE)
     PUBLIC
     Eigen3::Eigen
     TBB::tbb
-    PRIVATE
     Threads::Threads)
 
   target_include_directories(WetHairCore INTERFACE
