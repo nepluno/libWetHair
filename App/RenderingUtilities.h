@@ -13,6 +13,7 @@
 #define LIBWETHAIR_APP_RENDERING_UTILITIES_H_
 
 #ifdef WIN32
+#define NOMINMAX
 #include <Windows.h>
 #endif
 #include <GL/glew.h>

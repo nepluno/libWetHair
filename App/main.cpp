@@ -476,7 +476,7 @@ void dumpstate_readable(const std::vector<std::string>& filename_fluids,
   os_ppp.clear();
 }
 
-void reshape(int w, int h) {
+void reshape(GLFWwindow* window, int w, int h) {
   TwWindowSize(w, h);
 
   g_executable_simulation->reshape(w, h);
@@ -649,6 +649,7 @@ void initializeOpenGLandGLFW(int argc, char** argv) {
   glfwSetKeyCallback(g_window, keyboard);
   glfwSetMouseButtonCallback(g_window, mouse);
   glfwSetCursorPosCallback(g_window, motion);
+  glfwSetFramebufferSizeCallback(g_window, reshape);
   
   glfwMakeContextCurrent(g_window);
   glfwSwapInterval(1);
@@ -877,7 +878,7 @@ int main(int argc, char** argv) {
   if (g_rendering_enabled) {
     int w, h;
     glfwGetFramebufferSize(g_window, &w, &h);
-    reshape(w, h);
+    reshape(g_window, w, h);
     g_executable_simulation->initializeOpenGLRenderer();
   }
 
