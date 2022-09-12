@@ -48,16 +48,16 @@ add_library (WetHairCore
   "volume_fractions.cpp")
 add_library(libWetHair::WetHairCore ALIAS WetHairCore)
 
-target_link_libraries(WetHairCore
-  PUBLIC
-  Eigen3::Eigen
-  TBB::tbb
-  PRIVATE
-  Threads::Threads)
 
 target_include_directories(WetHairCore PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+target_link_libraries(WetHairCore
+  PUBLIC
+  Eigen3::Eigen
+  TBB::tbb
+  Threads::Threads)
 
 install(TARGETS WetHairCore
   EXPORT WetHairCore)
