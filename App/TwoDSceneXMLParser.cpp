@@ -17,6 +17,7 @@
 using namespace libwethair;
 
 void TwoDSceneXMLParser::loadExecutableSimulation(
+    GLFWwindow* window,
     const std::string& file_name, const char* memory_str,
     const std::string& init_filename, bool simulate_comparison,
     bool rendering_enabled, ExecutableSimulation** execsim,
@@ -75,11 +76,11 @@ void TwoDSceneXMLParser::loadExecutableSimulation(
       simtype == "mass-spring") {
     switch (dimension) {
       case 2:
-        loadParticleSimulation<2>(simulate_comparison, rendering_enabled,
+        loadParticleSimulation<2>(window, simulate_comparison, rendering_enabled,
                                   execsim, view, bgcolor, node, init_filename);
         break;
       case 3:
-        loadParticleSimulation<3>(simulate_comparison, rendering_enabled,
+        loadParticleSimulation<3>(window, simulate_comparison, rendering_enabled,
                                   execsim, view, bgcolor, node, init_filename);
         break;
       default:
@@ -92,7 +93,7 @@ void TwoDSceneXMLParser::loadExecutableSimulation(
         break;
     }
   } else if (simtype == "DiscreteElasticRods" && dimension == 3) {
-    loadDERSimulation(simulate_comparison, rendering_enabled, execsim, view,
+    loadDERSimulation(window, simulate_comparison, rendering_enabled, execsim, view,
                       bgcolor, node, init_filename);
   } else {
     std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Invalid simtype '"
@@ -2079,6 +2080,7 @@ void TwoDSceneXMLParser::loadLinearBendingForces(rapidxml::xml_node<>* node,
 
 template <int DIM>
 void TwoDSceneXMLParser::loadParticleSimulation(
+    GLFWwindow* window,
     bool simulate_comparison, bool rendering_enabled,
     ExecutableSimulation** execsim, renderingutils::Viewport& view,
     renderingutils::Color& bgcolor, rapidxml::xml_node<>* node,
@@ -2154,7 +2156,7 @@ void TwoDSceneXMLParser::loadParticleSimulation(
   }
 
   ParticleSimulation<DIM>* ps = new ParticleSimulation<DIM>(
-      scene, scene_stepper, scene_renderer, scripts);
+      window, scene, scene_stepper, scene_renderer, scripts);
   *execsim = ps;
 
   if (rendering_enabled) {
@@ -2163,7 +2165,8 @@ void TwoDSceneXMLParser::loadParticleSimulation(
   }
 }
 
-void TwoDSceneXMLParser::loadDERSimulation(bool simulate_comparison,
+void TwoDSceneXMLParser::loadDERSimulation(GLFWwindow* window,
+                                           bool simulate_comparison,
                                            bool rendering_enabled,
                                            ExecutableSimulation** execsim,
                                            renderingutils::Viewport& view,
@@ -2247,7 +2250,7 @@ void TwoDSceneXMLParser::loadDERSimulation(bool simulate_comparison,
   }
 
   ParticleSimulation<DIM>* ps = new ParticleSimulation<DIM>(
-      scene, scene_stepper, scene_renderer, scripts);
+      window, scene, scene_stepper, scene_renderer, scripts);
   *execsim = ps;
 
   if (rendering_enabled) {

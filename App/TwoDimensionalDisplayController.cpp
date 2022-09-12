@@ -19,7 +19,7 @@ void* g_display_controller = NULL;
 
 template <int DIM>
 TwoDimensionalDisplayController<DIM>::TwoDimensionalDisplayController(
-    int width, int height)
+    GLFWwindow* window, int width, int height)
     : m_window_width(width),
       m_window_height(height),
       m_scale_factor(1.0),
@@ -30,8 +30,8 @@ TwoDimensionalDisplayController<DIM>::TwoDimensionalDisplayController(
       m_last_x(0),
       m_last_y(0),
       m_render(NULL),
-      m_modifiers(0),
-      m_right_part_click(false) {
+      m_right_part_click(false),
+      m_window(window) {
   g_display_controller = (void*)this;
 }
 
@@ -81,8 +81,6 @@ void TwoDimensionalDisplayController<3>::applyProjection() const {
     m_camera.getLookAt(eye, center, up);
     gluLookAt(eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),
               up.x(), up.y(), up.z());
-
-    glutPostRedisplay();
   }
 }
 
@@ -94,8 +92,6 @@ void TwoDimensionalDisplayController<2>::applyProjection() const {
 
   double ratio = getRatio();
   applyOrtho(ratio);
-  // Render the scene
-  glutPostRedisplay();
 }
 
 template <int DIM>
@@ -141,36 +137,31 @@ int TwoDimensionalDisplayController<DIM>::getWorldHeight() const {
 }
 
 template <int DIM>
-void TwoDimensionalDisplayController<DIM>::keyboard(unsigned char key, int x,
-                                                    int y) {
-  if (key == '-' || key == '_') {
+void TwoDimensionalDisplayController<DIM>::keyboard(int key) {
+  if (key == GLFW_KEY_MINUS) {
     m_scale_factor += 0.1;
     reshape(m_window_width, m_window_height);
-  } else if (key == '=' || key == '+') {
+  } else if (key == GLFW_KEY_EQUAL) {
     m_scale_factor = std::max(0.1, m_scale_factor - 0.1);
     reshape(m_window_width, m_window_height);
-  } else if (m_render && (key == 'P' || key == 'p')) {
+  } else if (m_render && key == GLFW_KEY_P) {
     m_render->selectNextParticleVisMode();
-    glutPostRedisplay();
-  } else if (m_render && (key == 'K' || key == 'k')) {
+  } else if (m_render && key == GLFW_KEY_K) {
     m_cam_stack.push(m_camera);
-  } else if (m_render && (key == 'L' || key == 'l')) {
+  } else if (m_render && key == GLFW_KEY_L) {
     if (m_cam_stack.size() > 0) {
       m_camera = m_cam_stack.top();
       if (m_cam_stack.size() > 1) m_cam_stack.pop();
 
       applyProjection();
     }
-  } else if (m_render && (key == 'E' || key == 'e')) {
+  } else if (m_render && key == GLFW_KEY_E) {
     m_render->selectNextEdgeVisMode();
-    glutPostRedisplay();
-  } else if (m_render && (key == 'M' || key == 'm')) {
+  } else if (m_render && key == GLFW_KEY_M) {
     m_render->switchShowEdgeNormal();
-    glutPostRedisplay();
-  } else if (m_render && (key == 'N' || key == 'n')) {
+  } else if (m_render && key == GLFW_KEY_N) {
     m_render->switchShowParticleNormal();
-    glutPostRedisplay();
-  } else if (key == 'I' || key == 'i') {
+  } else if (key == GLFW_KEY_I) {
     if (DIM == 2) {
       std::cout << "<viewport cx=\"" << m_center_x << "\" cy=\"" << m_center_y
                 << "\" size=\"" << m_scale_factor << "\" cz=\"0\"/>"
@@ -179,59 +170,57 @@ void TwoDimensionalDisplayController<DIM>::keyboard(unsigned char key, int x,
       std::cout << m_camera << std::endl;
     }
   }
-}
-
-template <int DIM>
-void TwoDimensionalDisplayController<DIM>::special(int key, int x, int y) {
-  if (GLUT_KEY_UP == key) {
+  if (GLFW_KEY_UP == key) {
     m_center_y += 0.1;
     reshape(m_window_width, m_window_height);
-  } else if (GLUT_KEY_DOWN == key) {
+  } else if (GLFW_KEY_DOWN == key) {
     m_center_y -= 0.1;
     reshape(m_window_width, m_window_height);
-  } else if (GLUT_KEY_LEFT == key) {
+  } else if (GLFW_KEY_LEFT == key) {
     m_center_x -= 0.1;
     reshape(m_window_width, m_window_height);
-  } else if (GLUT_KEY_RIGHT == key) {
+  } else if (GLFW_KEY_RIGHT == key) {
     m_center_x += 0.1;
     reshape(m_window_width, m_window_height);
   }
 }
 
 template <>
-void TwoDimensionalDisplayController<2>::mouse(int button, int state, int x,
-                                               int y) {
-  if (!m_right_drag && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+void TwoDimensionalDisplayController<2>::mouse(int button, int state, int res_scale) {
+  double dx = 0, dy = 0;
+  glfwGetCursorPos(m_window, &dx, &dy);
+  int x = (int) dx * res_scale, y = (int) dy * res_scale;
+  
+  if (!m_right_drag && button == GLFW_MOUSE_BUTTON_LEFT && state == GLFW_PRESS) {
     m_left_drag = true;
     m_last_x = x;
     m_last_y = y;
-    m_modifiers = glutGetModifiers();
     m_right_part_click = false;
   }
-  if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+  if (button == GLFW_MOUSE_BUTTON_LEFT && state == GLFW_RELEASE) {
     m_left_drag = false;
-    m_modifiers = 0;
     m_right_part_click = false;
   }
 
-  if (!m_left_drag && button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+  if (!m_left_drag && button == GLFW_MOUSE_BUTTON_RIGHT && state == GLFW_PRESS) {
     m_right_drag = true;
     m_last_x = x;
     m_last_y = y;
-    m_modifiers = glutGetModifiers();
     m_right_part_click = false;
   }
-  if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
+  if (button == GLFW_MOUSE_BUTTON_RIGHT && state == GLFW_RELEASE) {
     m_right_drag = false;
-    m_modifiers = 0;
     m_right_part_click = false;
   }
 }
 
 template <>
-void TwoDimensionalDisplayController<3>::mouse(int button, int state, int x,
-                                               int y) {
-  if (!m_right_drag && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+void TwoDimensionalDisplayController<3>::mouse(int button, int state, int res_scale) {
+  double dx = 0, dy = 0;
+  glfwGetCursorPos(m_window, &dx, &dy);
+  int x = (int) dx * res_scale, y = (int) dy * res_scale;
+  
+  if (!m_right_drag && button == GLFW_MOUSE_BUTTON_LEFT && state == GLFW_PRESS) {
     m_right_part_click = (x > m_window_width / 2);
 
     m_left_drag = true;
@@ -248,16 +237,13 @@ void TwoDimensionalDisplayController<3>::mouse(int button, int state, int x,
 
     m_last_x = nx;
     m_last_y = ny;
-
-    m_modifiers = glutGetModifiers();
   }
-  if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+  if (button == GLFW_MOUSE_BUTTON_LEFT && state == GLFW_RELEASE) {
     m_right_part_click = false;
     m_left_drag = false;
-    m_modifiers = 0;
   }
 
-  if (!m_left_drag && button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+  if (!m_left_drag && button == GLFW_MOUSE_BUTTON_RIGHT && state == GLFW_PRESS) {
     m_right_part_click = (x > m_window_width / 2);
 
     int iPart = 1;
@@ -274,12 +260,10 @@ void TwoDimensionalDisplayController<3>::mouse(int button, int state, int x,
     m_last_x = nx;
     m_last_y = ny;
     m_right_drag = true;
-    m_modifiers = glutGetModifiers();
   }
-  if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
+  if (button == GLFW_MOUSE_BUTTON_RIGHT && state == GLFW_RELEASE) {
     m_right_part_click = false;
     m_right_drag = false;
-    m_modifiers = 0;
   }
 }
 
@@ -367,7 +351,7 @@ void TwoDimensionalDisplayController<3>::motion(int x, int y) {
 
     m_last_x = nx;
     m_last_y = ny;
-    if (m_modifiers & GLUT_ACTIVE_SHIFT) {
+    if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
       m_camera.pan(ox, oy, nx, ny);
     } else {
       m_camera.rotate(ox, oy, nx, ny);

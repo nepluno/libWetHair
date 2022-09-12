@@ -857,47 +857,6 @@ void TwoDSceneRenderer<DIM>::renderVolumeGraph(
 }
 
 template <int DIM>
-int TwoDSceneRenderer<DIM>::renderDebuggingInfo(
-    const HairFlow<DIM>& flow) const {
-  int line = 2 * flow.index() + 1;
-  if (m_pvm != PVM_NONE) {
-    std::ostringstream oss;
-    switch (m_pvm) {
-      case PVM_ETA:
-        // oss << "Flow " << flow.index() << " - vertex eta (Min: " <<
-        // flow.getMinEta() << ", Max: " << flow.getMaxEta() << ", Pool: " <<
-        // flow.getPoolSize() << ")";
-        oss << "Flow " << flow.index()
-            << " - vertex eta (Min: " << flow.getMinEta()
-            << ", Max: " << flow.getMaxEta() << ")";
-        break;
-
-      default:
-        break;
-    }
-
-    renderingutils::drawHUDString(line++, oss.str());
-  }
-
-  if (m_evm != EVM_NONE) {
-    std::ostringstream oss;
-    switch (m_evm) {
-      case EVM_AREA:
-        oss << "Flow " << flow.index()
-            << " - edge area (Min: " << flow.getMinAreaE()
-            << ", Max: " << flow.getMaxAreaE() << ")";
-        break;
-      default:
-        break;
-    }
-
-    renderingutils::drawHUDString(line++, oss.str());
-  }
-
-  return line;
-}
-
-template <int DIM>
 void TwoDSceneRenderer<DIM>::selectNextParticleVisMode() {
   m_pvm = (m_pvm + 1) % PVM_COUNT;
 }

@@ -70,12 +70,10 @@ class ExecutableSimulation {
   virtual std::string getSolverName() = 0;
 
   virtual void centerCamera(bool b_reshape = true) = 0;
-  virtual void keyboard(unsigned char key, int x, int y) = 0;
+  virtual void keyboard(int key) = 0;
   virtual void reshape(int w, int h) = 0;
 
-  virtual void special(int key, int x, int y) = 0;
-
-  virtual void mouse(int button, int state, int x, int y) = 0;
+  virtual void mouse(int button, int state, int res_scale) = 0;
 
   virtual void translateView(double dx, double dy) = 0;
 

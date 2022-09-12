@@ -28,15 +28,13 @@ class TwoDSceneRenderer;
 template <int DIM>
 class TwoDimensionalDisplayController {
  public:
-  TwoDimensionalDisplayController(int width, int height);
+  TwoDimensionalDisplayController(GLFWwindow* window, int width, int height);
 
   void reshape(int w, int h);
 
-  void keyboard(unsigned char key, int x, int y);
+  void keyboard(int key);
 
-  void special(int key, int x, int y);
-
-  void mouse(int button, int state, int x, int y);
+  void mouse(int button, int state, int res_scale);
 
   void translateView(double dx, double dy);
 
@@ -106,13 +104,13 @@ class TwoDimensionalDisplayController {
 
   bool m_right_part_click;
 
-  unsigned m_modifiers;
-
   TwoDSceneRenderer<DIM>* m_render;
 
   Camera m_camera;
 
   std::stack<Camera> m_cam_stack;
+    
+  GLFWwindow* m_window;
 };
 
 template <int DIM>

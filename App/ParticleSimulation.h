@@ -28,7 +28,8 @@ extern bool g_rendering_enabled;
 template <int DIM>
 class ParticleSimulation : public ExecutableSimulation {
  public:
-  ParticleSimulation(libwethair::TwoDScene<DIM>* scene,
+  ParticleSimulation(GLFWwindow* window,
+                     libwethair::TwoDScene<DIM>* scene,
                      libwethair::SceneStepper<DIM>* scene_stepper,
                      TwoDSceneRenderer<DIM>* scene_renderer,
                      const std::vector<libwethair::Script>& scripts);
@@ -64,12 +65,10 @@ class ParticleSimulation : public ExecutableSimulation {
   // Status Functions
 
   virtual void centerCamera(bool b_reshape = true);
-  virtual void keyboard(unsigned char key, int x, int y);
+  virtual void keyboard(int key);
   virtual void reshape(int w, int h);
 
-  virtual void special(int key, int x, int y);
-
-  virtual void mouse(int button, int state, int x, int y);
+  virtual void mouse(int button, int state, int res_scale);
 
   virtual void translateView(double dx, double dy);
 

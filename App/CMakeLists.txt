@@ -2,16 +2,26 @@
 if (NOT TARGET libWetHair::WetHairCore)
   find_package (libWetHair REQUIRED CONFIG)
 endif (NOT TARGET libWetHair::WetHairCore)
-find_package (ANTTWEAKBAR REQUIRED)
-find_package (Eigen3 REQUIRED CONFIG)
-find_package (FreeGLUT REQUIRED CONFIG)
-find_package (GLEW REQUIRED)
+include (glfw)
+include (glew)
+include (anttweakbar)
+include (tclap)
+include (rapidxml)
+include (stb)
+
 find_package (OpenGL REQUIRED)
-find_package (PNG REQUIRED)
-find_package (RapidXML REQUIRED)
-find_package (TCLAP REQUIRED)
 
 add_executable (libWetHair
+  "Camera.h"
+  "ExecutableSimulation.h"
+  "ParticleSimulation.h"
+  "RenderingUtilities.h"
+  "StringUtilities.h"
+  "TwoDSceneRenderer.h"
+  "TwoDSceneSerializer.h"
+  "TwoDSceneXMLParser.h"
+  "TwoDimensionalDisplayController.h"
+  "openglutils.h"
   "Camera.cpp"
   "ParticleSimulation.cpp"
   "RenderingUtilities.cpp"
@@ -20,19 +30,18 @@ add_executable (libWetHair
   "TwoDSceneSerializer.cpp"
   "TwoDSceneXMLParser.cpp"
   "TwoDimensionalDisplayController.cpp"
-  "YImage.cpp"
   "main.cpp"
   "openglutils.cpp")
 
 target_link_libraries(libWetHair PRIVATE
   libWetHair::WetHairCore
-  ANTTWEAKBAR::AntTweakBar
+  glfw::glfw
+  anttweakbar::anttweakbar
   Eigen3::Eigen
-  FreeGLUT::freeglut
-  GLEW::glew
+  glew::glew
   OpenGL::GLU
-  PNG::PNG
-  RapidXML::RapidXML
-  TCLAP::tclap)
+  rapidxml::rapidxml
+  tclap::tclap
+  stb::stb)
 
 install(TARGETS libWetHair)

@@ -14,24 +14,7 @@ It is the original implementation of paper A Multi-Scale Model for Simulating Li
 
 Dependencies
 --------------------
-libWetHair depends on following libraries (some of them have been included in the code base, marked with an asterisk):
-
-- Eigen* (http://eigen.tuxfamily.org/)
-- RapidXML* (http://rapidxml.sourceforge.net)
-- tclap* (http://tclap.sourceforge.net)
-- AntTweakBar (http://anttweakbar.sourceforge.net/doc/)
-- Intel TBB (https://www.threadingbuildingblocks.org)
-- FreeGLUT (http://freeglut.sourceforge.net/)
-- GLEW (http://glew.sourceforge.net)
-- libPNG (https://libpng.sourceforge.io/)
-- zlib (https://www.zlib.net/)
-
-On Mac OS X or Linux-based systems, most of the dependencies are either included, or can be easily installed with Homebrew (https://brew.sh) or the APT package handling utility. For example, with Homebrew on Mac OS X, these external dependencies can be installed through
-```
-brew install anttweakbar tbb freeglut libpng zlib glew
-```
-
-On Windows you may need manually download and install some of them.
+libWetHair has several dependencies, and will fetch them through CMake's `FetchContent`. Please make sure your internet smooth before the first time of configuration.
 
 Compilation
 -----------------

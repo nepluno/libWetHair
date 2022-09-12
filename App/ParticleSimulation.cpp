@@ -26,6 +26,7 @@ using namespace libwethair;
 
 template <int DIM>
 ParticleSimulation<DIM>::ParticleSimulation(
+    GLFWwindow* window,
     TwoDScene<DIM>* scene,
     SceneStepper<DIM>* scene_stepper,
     TwoDSceneRenderer<DIM>* scene_renderer,
@@ -34,7 +35,7 @@ ParticleSimulation<DIM>::ParticleSimulation(
       m_scene_stepper(scene_stepper),
       m_scene_renderer(scene_renderer),
       m_scripts(scripts),
-      m_display_controller(1920, 1080) {
+      m_display_controller(window, 1920, 1080) {
   m_wet_hair_core = new WetHairCore<DIM>(
       scene, scene_stepper, [&](double dt) { return stepScript(dt); });
 }
@@ -425,8 +426,8 @@ void ParticleSimulation<DIM>::centerCamera(bool b_reshape) {
 }
 
 template <int DIM>
-void ParticleSimulation<DIM>::keyboard(unsigned char key, int x, int y) {
-  m_display_controller.keyboard(key, x, y);
+void ParticleSimulation<DIM>::keyboard(int key) {
+  m_display_controller.keyboard(key);
 }
 
 template <int DIM>
@@ -435,13 +436,8 @@ void ParticleSimulation<DIM>::reshape(int w, int h) {
 }
 
 template <int DIM>
-void ParticleSimulation<DIM>::special(int key, int x, int y) {
-  m_display_controller.special(key, x, y);
-}
-
-template <int DIM>
-void ParticleSimulation<DIM>::mouse(int button, int state, int x, int y) {
-  m_display_controller.mouse(button, state, x, y);
+void ParticleSimulation<DIM>::mouse(int button, int state, int res_scale) {
+  m_display_controller.mouse(button, state, res_scale);
 }
 
 template <int DIM>
