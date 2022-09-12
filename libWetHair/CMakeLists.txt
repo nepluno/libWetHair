@@ -1,8 +1,6 @@
 # Find dependencies
-find_package (Eigen3 REQUIRED CONFIG)
-find_package (TBB REQUIRED CONFIG)
-set (THREADS_PREFER_PTHREAD_FLAG ON)
-find_package (Threads REQUIRED)
+include (eigen)
+include (onetbb)
 
 add_library (WetHairCore
   "DER/Dependencies/DegreesOfFreedom.cpp"
@@ -56,8 +54,7 @@ target_include_directories(WetHairCore PUBLIC
 target_link_libraries(WetHairCore
   PUBLIC
   Eigen3::Eigen
-  TBB::tbb
-  Threads::Threads)
+  TBB::tbb)
 
 install(TARGETS WetHairCore
   EXPORT WetHairCore)

@@ -14,46 +14,24 @@ It is the original implementation of paper A Multi-Scale Model for Simulating Li
 
 Dependencies
 --------------------
-libWetHair depends on following libraries (some of them have been included in the code base, marked with an asterisk):
-
-- Eigen* (http://eigen.tuxfamily.org/)
-- RapidXML* (http://rapidxml.sourceforge.net)
-- tclap* (http://tclap.sourceforge.net)
-- AntTweakBar (http://anttweakbar.sourceforge.net/doc/)
-- Intel TBB (https://www.threadingbuildingblocks.org)
-- FreeGLUT (http://freeglut.sourceforge.net/)
-- GLEW (http://glew.sourceforge.net)
-- libPNG (https://libpng.sourceforge.io/)
-- zlib (https://www.zlib.net/)
-
-On Mac OS X or Linux-based systems, most of the dependencies are either included, or can be easily installed with Homebrew (https://brew.sh) or the APT package handling utility. For example, with Homebrew on Mac OS X, these external dependencies can be installed through
-```
-brew install anttweakbar tbb freeglut libpng zlib glew
-```
-
-On Windows you may need manually download and install some of them.
+libWetHair has several dependencies and will fetch them through CMake's `FetchContent`. Please make sure your internet is smooth before the first time of configuration.
 
 Compilation
 -----------------
 libWetHair has been tested with AppleClang (under Mac OS X), GCC 4.8+ (under Linux), and Microsoft Visual Studio (under Windows 10).
 
-To compile libWetHair, you'll need CMake on Mac OS X or Linux, or CMake-GUI (https://cmake.org) on Windows.
+To compile libWetHair, you'll need CMake or CMake-GUI (https://cmake.org).
 
-On Mac OS X or Linux:
+For CMake:
 1. make a directory, say, *build*, with *mkdir build*, enter the *build* directory, type *cmake ..*
-2. Optionally you can adjust the options with *ccmake .*
-3. type *make* to compile the code. For speeding up the compilation process you may use *make -j*.
+2. Optionally, you can adjust the options with *ccmake .*
+3. Optionally, you may use cmake to generate project files corresponding to different IDEs. For example, on Windows you may use `cmake -G "Visual Studio 17 2022" -A x64` to generate a project for Visual Studio 2022 using x64 architecture.
+4. type *make* to compile the code. For speeding up the compilation process you may use *make -j*.
 
-On Windows:
-1. open CMake-GUI, enter the correct directory for source code and build. Then click *Configure*, choose your installed version of the Microsoft Visual Studio.
-2. after configuration you may find several libraries not found, check the *Advanced* box and locate those missing libraries manually. Please make sure you have picked the libraries corresponding to the architecture you have selected (say, 32-bit libraries for x86, and 64-bit libraries for x64).
-3. click generate after fixing all missing variables to generate your Visual Studio solution.
-4. open the solution and compile the code.
+Similar (or more convenient) configuration can be done in CMake-GUI.
 
 Run the Demo
 --------------------
-Before running the demo, you may need to install [XQuartz](https://www.xquartz.org/) to allow FreeGLUT to initiate a window on MacOS.
-
 To run the demo of libWetHair, you may simply use the command line argument *-s [scene_file]* to specify the scene to be loaded. For example, you may type
 
 ./libWetHair -s assets/unit_tests/cylinder_2.xml

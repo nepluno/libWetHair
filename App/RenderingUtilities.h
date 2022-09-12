@@ -13,18 +13,18 @@
 #define LIBWETHAIR_APP_RENDERING_UTILITIES_H_
 
 #ifdef WIN32
+#define NOMINMAX
 #include <Windows.h>
 #endif
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #ifdef __APPLE__
-#include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <GL/glut.h>
 #endif
 
 #include <cstdio>
@@ -75,32 +75,6 @@ inline void setOrthographicProjection() {
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
-
-  assert(renderingutils::checkGLErrors());
-}
-
-inline void renderBitmapString(float x, float y, float z, void* font,
-                               const std::string& s) {
-  glRasterPos3f(x, y, z);
-  for (auto i = s.begin(); i != s.end(); ++i) {
-    char c = *i;
-    glutBitmapCharacter(font, c);
-  }
-
-  assert(checkGLErrors());
-}
-
-inline void drawHUDString(int line, const std::string& s) {
-  if (s.empty()) return;
-  setOrthographicProjection();
-  auto& color = getDCBackgroundColor();
-  glColor3f(1.0 - color.r, 1.0 - color.g, 1.0 - color.b);
-  renderBitmapString(4, getDCWindowHeight() - 20 * (line + 1), 0.0,
-                     GLUT_BITMAP_HELVETICA_18, s);
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
-  glPopMatrix();
 
   assert(renderingutils::checkGLErrors());
 }

@@ -11,20 +11,18 @@
 
 #include "openglutils.h"
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>  // why does Apple have to put glut.h here...
-#else
-#ifdef WIN32
-#define NOMINMAX
-#include <Windows.h>
-#endif
-#include <GL/glut.h>  // ...when everyone else puts it here?
-#endif
-
 #include <cfloat>
 
 #include <libWetHair/MathDefs.h>
 #include <libWetHair/MathUtilities.h>
+
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 
 #ifdef WIN32
 #define _USE_MATH_DEFINES

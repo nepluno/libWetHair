@@ -55,6 +55,7 @@
 class TwoDSceneXMLParser {
  public:
   void loadExecutableSimulation(
+      GLFWwindow* window,
       const std::string& file_name,
       const char* memory_str,
       const std::string& init_filename,
@@ -73,14 +74,16 @@ class TwoDSceneXMLParser {
   // TODO: NEED AN EIGEN_ALIGNED_THING_HERE ?
  private:
   template <int DIM>
-  void loadParticleSimulation(bool simulate_comparison, bool rendering_enabled,
+  void loadParticleSimulation(GLFWwindow* window,
+                              bool simulate_comparison, bool rendering_enabled,
                               ExecutableSimulation** execsim,
                               libwethair::renderingutils::Viewport& view,
                               libwethair::renderingutils::Color& bgcolor,
                               rapidxml::xml_node<>* node,
                               const std::string& init_filename);
 
-  void loadDERSimulation(bool simulate_comparison, bool rendering_enabled,
+  void loadDERSimulation(GLFWwindow* window,
+                         bool simulate_comparison, bool rendering_enabled,
                          ExecutableSimulation** execsim,
                          libwethair::renderingutils::Viewport& view,
                          libwethair::renderingutils::Color& bgcolor,

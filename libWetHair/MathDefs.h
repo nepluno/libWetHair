@@ -14,6 +14,7 @@
 
 #ifdef WIN32
 #define _USE_MATH_DEFINES
+#define NOMINMAX
 #endif
 #include <Eigen/Core>
 #include <Eigen/Dense>

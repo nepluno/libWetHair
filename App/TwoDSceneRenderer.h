@@ -93,8 +93,6 @@ class TwoDSceneRenderer {
 
   void writeBoundaries(std::ostream& os_single, std::ostream& os_double) const;
 
-  int renderDebuggingInfo(const libwethair::HairFlow<DIM>& flow) const;
-
   void renderAnalyticalShape(const libwethair::TwoDScene<DIM>& scene, int layer) const;
 
   const TwoDimensionalDisplayController<DIM>* m_dc;

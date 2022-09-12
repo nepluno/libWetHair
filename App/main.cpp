@@ -19,6 +19,9 @@
 #include <iostream>
 #include <sstream>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 #ifdef WIN32
 #include <direct.h>
 #endif
@@ -40,7 +43,6 @@
 #include "TwoDSceneSerializer.h"
 #include "TwoDSceneXMLParser.h"
 #include "TwoDimensionalDisplayController.h"
-#include "YImage.h"
 
 using namespace libwethair;
 
@@ -58,10 +60,12 @@ extern int getDCWindowHeight() {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Rendering State
+GLFWwindow* g_window = NULL;
 bool g_rendering_enabled = true;
 int g_dump_png = 0;
 int g_dump_binary = 0;
 int g_dump_readable = 0;
+int g_res_scale = 1;
 double g_sec_per_frame;
 double g_last_time = timingutils::seconds();
 
@@ -259,9 +263,14 @@ void headlessSimLoop() {
   }
 }
 
-void dumpPNGsubprog(YImage* image, char* fnstr) {
-  image->flip();
-  image->save(fnstr);
+void dumpPNGsubprog(char* image, char* fnstr, int w, int h) {
+  unsigned* uimage = (unsigned*) image;
+  for (int i = 0; i < h / 2; ++i) {
+    for (int j = 0; j < w; ++j) {
+      std::swap(uimage[i * w + j], uimage[(h - i - 1) * w + j]);
+    }
+  }
+  stbi_write_png(fnstr, w, h, 4, image, w * 4);
   delete image;
   delete fnstr;
 }
@@ -270,12 +279,12 @@ void dumpPNGsubprog(YImage* image, char* fnstr) {
 // Rendering and UI functions
 
 void dumpPNG(const std::string& filename) {
-  YImage* image = new YImage;
   char* fnstr = new char[filename.length() + 1];
   strcpy(fnstr, filename.data());
+  int w, h;
+  glfwGetFramebufferSize(g_window, &w, &h);
 
-  image->resize(g_executable_simulation->getWindowWidth(),
-                g_executable_simulation->getWindowHeight());
+  char* img_data = new char[w * h * 4];
 
   glFinish();
 
@@ -286,11 +295,10 @@ void dumpPNG(const std::string& filename) {
   glReadBuffer(GL_BACK);
 
   glFinish();
-  glReadPixels(0, 0, g_executable_simulation->getWindowWidth(),
-               g_executable_simulation->getWindowHeight(), GL_RGBA,
-               GL_UNSIGNED_BYTE, image->data());
+  glReadPixels(0, 0, w, h, GL_RGBA,
+               GL_UNSIGNED_BYTE, img_data);
 
-  std::thread t(std::bind(dumpPNGsubprog, image, fnstr));
+  std::thread t(std::bind(dumpPNGsubprog, img_data, fnstr, w, h));
 
   t.detach();
 }
@@ -468,7 +476,7 @@ void dumpstate_readable(const std::vector<std::string>& filename_fluids,
   os_ppp.clear();
 }
 
-void reshape(int w, int h) {
+void reshape(GLFWwindow* window, int w, int h) {
   TwWindowSize(w, h);
 
   g_executable_simulation->reshape(w, h);
@@ -488,77 +496,61 @@ void display() {
 
   drawHUD();
 
-  glutSwapBuffers();
+  assert(renderingutils::checkGLErrors());
+}
+
+void keyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
+  if (TwEventCharGLFW(key, action) || TwEventKeyGLFW3(window, key, scancode, action, mods)) {
+    return;
+  }
+
+  if (action == GLFW_PRESS) {
+    g_executable_simulation->keyboard(key);
+
+    if (key == GLFW_KEY_ESCAPE) {
+      TwTerminate();
+      glfwDestroyWindow(g_window);
+      glfwTerminate();
+
+      exit(0);
+    } else if (key == GLFW_KEY_SPACE) {
+      g_paused = !g_paused;
+    } else if (key == GLFW_KEY_C) {
+      g_executable_simulation->centerCamera();
+    } else if (key == GLFW_KEY_S) {
+      stepSystem();
+    } else if (key == GLFW_KEY_B) {
+      g_should_dump_state = true;
+    } else if (key == GLFW_KEY_G) {
+      int current_step = (int)g_executable_simulation->getCurrentFrame();
+      int sdiv = g_dump_png ? g_dump_png : 1;
+      std::stringstream oss;
+      oss << g_short_file_name << "/frame" << std::setw(5) << std::setfill('0')
+          << (current_step / sdiv) << ".png";
+      dumpPNG(oss.str());
+      oss.clear();
+    }
+  }
 
   assert(renderingutils::checkGLErrors());
 }
 
-void keyboard(unsigned char key, int x, int y) {
-  if (TwEventKeyboardGLUT(key, x, y)) {
-    glutPostRedisplay();
+void mouse(GLFWwindow *window, int button, int action, int mods) {
+  if (TwEventMouseButtonGLFW3(window, button, action, mods)) {
     return;
   }
 
-  g_executable_simulation->keyboard(key, x, y);
-
-  if (key == 27 || key == 'q') {
-    TwTerminate();
-
-    exit(0);
-  } else if (key == ' ') {
-    g_paused = !g_paused;
-  } else if (key == 'c' || key == 'C') {
-    g_executable_simulation->centerCamera();
-
-    glutPostRedisplay();
-  } else if (key == 's' || key == 'S') {
-    stepSystem();
-
-    glutPostRedisplay();
-  } else if (key == 'b' || key == 'B') {
-    g_should_dump_state = true;
-  } else if (key == 'g' || key == 'G') {
-    int current_step = (int)g_executable_simulation->getCurrentFrame();
-    int sdiv = g_dump_png ? g_dump_png : 1;
-    std::stringstream oss;
-    oss << g_short_file_name << "/frame" << std::setw(5) << std::setfill('0')
-        << (current_step / sdiv) << ".png";
-    dumpPNG(oss.str());
-    oss.clear();
-  }
-  assert(renderingutils::checkGLErrors());
-}
-
-// Proccess 'special' keys
-void special(int key, int x, int y) {
-  if (TwEventSpecialGLUT(key, x, y)) {
-    glutPostRedisplay();
-    return;
-  }
-
-  g_executable_simulation->special(key, x, y);
+  g_executable_simulation->mouse(button, action, g_res_scale);
 
   assert(renderingutils::checkGLErrors());
 }
 
-void mouse(int button, int state, int x, int y) {
-  if (TwEventMouseButtonGLUT(button, state, x, y)) {
-    glutPostRedisplay();
+void motion(GLFWwindow *window, double x, double y) {
+  if (TwEventCursorPosGLFW3(window, x * g_res_scale, y * g_res_scale)) {
     return;
   }
 
-  g_executable_simulation->mouse(button, state, x, y);
-
-  assert(renderingutils::checkGLErrors());
-}
-
-void motion(int x, int y) {
-  if (TwEventMouseMotionGLUT(x, y)) {
-    glutPostRedisplay();
-    return;
-  }
-
-  g_executable_simulation->motion(x, y);
+  g_executable_simulation->motion((int) x * g_res_scale, (int) y * g_res_scale);
 
   assert(renderingutils::checkGLErrors());
 }
@@ -572,7 +564,7 @@ void idle() {
   if (!g_paused && current_time - g_last_time >= g_sec_per_frame) {
     g_last_time = current_time;
     stepSystem();
-    glutPostRedisplay();
+
   }
 
   int current_step = (int)g_executable_simulation->getCurrentFrame();
@@ -644,35 +636,23 @@ void idle() {
   assert(renderingutils::checkGLErrors());
 }
 
-void initializeOpenGLandGLUT(int argc, char** argv) {
-  // Initialize GLUT
-  glutInit(&argc, argv);
-  // glutInitDisplayString("rgba stencil=8 depth=24 samples=4 hidpi");
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE | GLUT_DEPTH);
-
-  int scrwidth = glutGet(GLUT_SCREEN_WIDTH);
-  int scrheight = glutGet(GLUT_SCREEN_HEIGHT);
-
-  int factor = std::min(scrwidth / 320, scrheight / 180);
-  scrwidth = factor * 320;
-  scrheight = factor * 180;
-  /*#ifdef __APPLE__
-   scrwidth *= 2;
-   scrheight *= 2;
-   #endif*/
-  g_executable_simulation->setWindowWidth(scrwidth);
-  g_executable_simulation->setWindowHeight(scrheight);
-
-  glutInitWindowSize(scrwidth, scrheight);
-  glutCreateWindow("HairSim");
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
-  glutSpecialFunc(special);
-  glutMouseFunc(mouse);
-  glutMotionFunc(motion);
-  glutPassiveMotionFunc(motion);
-  glutIdleFunc(idle);
+void initializeOpenGLandGLFW(int argc, char** argv) {
+  // Initialize GLFW
+  if (!glfwInit())
+    exit(-1);
+  
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+  
+  g_window = glfwCreateWindow(1920, 1080, "HairSim", NULL, NULL);
+  
+  glfwSetKeyCallback(g_window, keyboard);
+  glfwSetMouseButtonCallback(g_window, mouse);
+  glfwSetCursorPosCallback(g_window, motion);
+  glfwSetFramebufferSizeCallback(g_window, reshape);
+  
+  glfwMakeContextCurrent(g_window);
+  glfwSwapInterval(1);
 
   GLenum err = glewInit();
   if (GLEW_OK != err) {
@@ -685,10 +665,13 @@ void initializeOpenGLandGLUT(int argc, char** argv) {
 
   TwInit(TW_OPENGL, NULL);
 
-  TwGLUTModifiersFunc(glutGetModifiers);
-
   // Initialize OpenGL
-  reshape(scrwidth, scrheight);
+  int w, h;
+  glfwGetFramebufferSize(g_window, &w, &h);
+  int ww, wh;
+  glfwGetWindowSize(g_window, &ww, &wh);
+  g_res_scale = w / ww;
+  glViewport(0, 0, w, h);
   glClearColor(g_bgcolor.r, g_bgcolor.g, g_bgcolor.b, 1.0);
 
   glEnable(GL_BLEND);
@@ -710,8 +693,6 @@ void initializeOpenGLandGLUT(int argc, char** argv) {
       0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55};
 
   glPolygonStipple(halftone);
-
-  g_executable_simulation->initializeOpenGLRenderer();
 
   assert(renderingutils::checkGLErrors());
 }
@@ -737,6 +718,7 @@ void loadScene(const std::string& file_name, const char* memory_str) {
   bool cam_init = false;
   bool view_init = false;
   xml_scene_parser.loadExecutableSimulation(
+      g_window,
       file_name, memory_str, g_initstate_file_name, false, g_rendering_enabled,
       &g_executable_simulation, view, cam, max_time, steps_per_sec_cap,
       g_bgcolor, g_description, g_scene_tag, cam_init, view_init);
@@ -883,6 +865,9 @@ int main(int argc, char** argv) {
   // Function to cleanup at progarm exit
   atexit(cleanupAtExit);
 
+  // Initialization for OpenGL and GLFW
+  if (g_rendering_enabled) initializeOpenGLandGLFW(argc, argv);
+  
   // Load the user-specified scene
   if (loadDefaultScene) {
     loadScene(g_xml_scene_file, default_xml_str);
@@ -890,8 +875,12 @@ int main(int argc, char** argv) {
     loadScene(g_xml_scene_file, NULL);
   }
 
-  // Initialization for OpenGL and GLUT
-  if (g_rendering_enabled) initializeOpenGLandGLUT(argc, argv);
+  if (g_rendering_enabled) {
+    int w, h;
+    glfwGetFramebufferSize(g_window, &w, &h);
+    reshape(g_window, w, h);
+    g_executable_simulation->initializeOpenGLRenderer();
+  }
 
   // Print a header
   std::cout << libwethair_header << std::endl;
@@ -919,10 +908,20 @@ int main(int argc, char** argv) {
   std::cout << outputmod::startblue << "Description: " << outputmod::endblue
             << g_description << std::endl;
 
-  if (g_rendering_enabled)
-    glutMainLoop();
-  else
+  if (g_rendering_enabled) {
+    while (!glfwWindowShouldClose(g_window)) {
+      idle();
+      display();
+      
+      glfwSwapBuffers(g_window);
+      glfwPollEvents();
+    }
+    
+    glfwDestroyWindow(g_window);
+    glfwTerminate();
+  } else {
     headlessSimLoop();
+  }
 
   return 0;
 }
