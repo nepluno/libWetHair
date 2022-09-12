@@ -30,6 +30,8 @@ For CMake:
 
 Similar (or more convenient) configuration can be done in CMake-GUI.
 
+In addition, to configure for the demo on Windows, you'll need to have `fxc.exe` contained in one of the directories specified through your system's `PATH` environment variable. This executable is usually under your installation directory for Windows SDK (e.g., for Windows 10, it's in a directory named with a specific SDK version under `C:\Program Files (x86)\Windows Kits\10\bin`).
+
 Run the Demo
 --------------------
 To run the demo of libWetHair, you may simply use the command line argument *-s [scene_file]* to specify the scene to be loaded. For example, you may type
