@@ -851,8 +851,6 @@ int main(int argc, char** argv) {
   // srand('SIGG' ^ 'RAPH');
   srand('S' ^ 'R');
 
-  Eigen::initParallel();
-  Eigen::setNbThreads(std::thread::hardware_concurrency());
   std::ios::sync_with_stdio(false);
 
   // Parse command line arguments
