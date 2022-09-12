@@ -35,6 +35,8 @@ On Windows:
 
 Run the Demo
 --------------------
+Before running the demo, you may need to install [XQuartz](https://www.xquartz.org/) to allow FreeGLUT to initiate a window on MacOS.
+
 To run the demo of libWetHair, you may simply use the command line argument *-s [scene_file]* to specify the scene to be loaded. For example, you may type
 
 ./libWetHair -s assets/unit_tests/cylinder_2.xml
@@ -53,7 +55,7 @@ Where:
      Binary file to load simulation state from for initialization
 
    -o <integer>,  --readableoutput <integer>
-     readable file to save simulation state to; *after getting the output here, you may do surface reconstruction and rendering with the Houdini .HIP file provided* at http://www.cs.columbia.edu/cg/liquidhair/pseudo_dog.hipnc by renaming the HIP file into the name of the folder storing all output files (please check the python scripts in the HIP file for details).
+     readable file to save simulation state to; after getting the output here, you may do surface reconstruction and rendering with the [Houdini .HIP file](http://www.cs.columbia.edu/cg/liquidhair/pseudo_dog.hipnc) by renaming the HIP file into the name of the folder storing all output files (please check the python scripts in the HIP file for details).
 
    -d <boolean>,  --display <boolean>
      Run the simulation with display enabled if 1, without if 0
