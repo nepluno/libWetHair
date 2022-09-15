@@ -2,6 +2,7 @@
 if (NOT TARGET libWetHair::WetHairCore)
   find_package (libWetHair REQUIRED CONFIG)
 endif (NOT TARGET libWetHair::WetHairCore)
+include (eigen)
 include (glfw)
 include (glew)
 include (anttweakbar)
