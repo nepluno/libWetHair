@@ -9,11 +9,11 @@
 # Changxi Zheng, and Eitan Grinspun
 # 
 
-if(TARGET glew::glew)
+if(TARGET GLEW::glew)
     return()
 endif()
 
-message(STATUS "Third-party (external): creating target 'glew::glew'")
+message(STATUS "Third-party (external): creating target 'GLEW::glew'")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -26,6 +26,6 @@ set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "glew")
 set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "")
 FetchContent_MakeAvailable(glew)
 
-add_library(glew::glew ALIAS libglew_static)
+add_library(GLEW::glew ALIAS libglew_static)
 
 set_target_properties(libglew_static PROPERTIES FOLDER third_party)

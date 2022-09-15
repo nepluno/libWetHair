@@ -38,7 +38,7 @@ target_link_libraries(libWetHair PRIVATE
   glfw::glfw
   anttweakbar::anttweakbar
   Eigen3::Eigen
-  glew::glew
+  GLEW::glew
   OpenGL::GLU
   rapidxml::rapidxml
   tclap::tclap
