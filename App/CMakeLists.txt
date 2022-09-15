@@ -36,7 +36,7 @@ add_executable (libWetHair
 target_link_libraries(libWetHair PRIVATE
   libWetHair::WetHairCore
   glfw::glfw
-  anttweakbar::anttweakbar
+  AntTweakBar::AntTweakBar
   Eigen3::Eigen
   GLEW::glew
   OpenGL::GLU
