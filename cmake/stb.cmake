@@ -11,6 +11,9 @@
 #
 if(TARGET stb::stb)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(stb REQUIRED)
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'stb::stb'")

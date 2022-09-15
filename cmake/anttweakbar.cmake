@@ -11,6 +11,13 @@
 
 if(TARGET anttweakbar::anttweakbar)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(AntTweakBar REQUIRED CONFIG)
+    # The AntTweakBar config does not namespace their target
+    if(NOT TARGET AntTweakBar::AntTweakBar)
+        add_library(AntTweakBar::AntTweakBar ALIAS AntTweakBar)
+    endif()
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'anttweakbar::anttweakbar'")

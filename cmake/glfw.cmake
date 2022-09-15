@@ -11,6 +11,13 @@
 #
 if(TARGET glfw::glfw)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(glfw3 REQUIRED CONFIG)
+    # The glfw3 config does not namespace their target
+    if(NOT TARGET glfw::glfw)
+        add_library(glfw::glfw ALIAS glfw)
+    endif()
+    return()
 endif()
 
 if(EMSCRIPTEN)

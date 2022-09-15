@@ -11,6 +11,9 @@
 
 if(TARGET GLEW::glew)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(GLEW REQUIRED)
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'GLEW::glew'")

@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 option(LIBWETHAIR_BUILD_CORE "Enable the core library, it is ON by default. Use BUILD_SHARED_LIBS to control the type of the library" ON)
 option(LIBWETHAIR_BUILD_APP "Enable the libWetHair executable, it is ON by default." ON)
 option(LIBWETHAIR_INSTALL_ASSETS "Install the assests, it is ON by default." ON)
+option(LIBWETHAIR_FIND_DEPENDENCIES "Find dependencies instead of downloading them" OFF)
 
 include(GNUInstallDirs)
 

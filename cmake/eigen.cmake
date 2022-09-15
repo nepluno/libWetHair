@@ -11,6 +11,9 @@
 #
 if(TARGET Eigen3::Eigen)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(Eigen3 REQUIRED CONFIG)
+    return()
 endif()
 
 option(EIGEN_WITH_MKL "Use Eigen with MKL" OFF)

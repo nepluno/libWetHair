@@ -11,6 +11,9 @@
 
 if(TARGET tclap::tclap)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(tclap REQUIRED)
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'tclap::tclap'")

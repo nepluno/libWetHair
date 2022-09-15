@@ -11,6 +11,9 @@
 
 if(TARGET rapidxml::rapidxml)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(rapidxml REQUIRED)
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'rapidxml::rapidxml'")
