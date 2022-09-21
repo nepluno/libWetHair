@@ -2,6 +2,7 @@
 if (NOT TARGET libWetHair::WetHairCore)
   find_package (libWetHair REQUIRED CONFIG)
 endif (NOT TARGET libWetHair::WetHairCore)
+include (eigen)
 include (glfw)
 include (glew)
 include (anttweakbar)
@@ -36,9 +37,9 @@ add_executable (libWetHair
 target_link_libraries(libWetHair PRIVATE
   libWetHair::WetHairCore
   glfw::glfw
-  anttweakbar::anttweakbar
+  AntTweakBar::AntTweakBar
   Eigen3::Eigen
-  glew::glew
+  GLEW::glew
   OpenGL::GLU
   rapidxml::rapidxml
   tclap::tclap

@@ -11,6 +11,9 @@
 #
 if(TARGET TBB::tbb)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(TBB REQUIRED CONFIG)
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'TBB::tbb' (OneTBB)")

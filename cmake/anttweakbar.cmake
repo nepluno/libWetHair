@@ -11,6 +11,13 @@
 
 if(TARGET anttweakbar::anttweakbar)
     return()
+elseif(LIBWETHAIR_FIND_DEPENDENCIES)
+    find_package(AntTweakBar REQUIRED CONFIG)
+    # The AntTweakBar config does not namespace their target
+    if(NOT TARGET AntTweakBar::AntTweakBar)
+        add_library(AntTweakBar::AntTweakBar ALIAS AntTweakBar)
+    endif()
+    return()
 endif()
 
 message(STATUS "Third-party (external): creating target 'anttweakbar::anttweakbar'")
@@ -26,6 +33,6 @@ set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "anttweakbar")
 set(ATB_BUILD_EXAMPLES OFF CACHE BOOL "")
 FetchContent_MakeAvailable(anttweakbar)
 
-add_library(anttweakbar::anttweakbar ALIAS AntTweakBar)
+add_library(AntTweakBar::AntTweakBar ALIAS AntTweakBar)
 
 set_target_properties(AntTweakBar PROPERTIES FOLDER third_party)
