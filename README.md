@@ -14,7 +14,9 @@ It is the original implementation of paper A Multi-Scale Model for Simulating Li
 
 Dependencies
 --------------------
-libWetHair has several dependencies and will fetch them through CMake's `FetchContent`. Please make sure your internet is smooth before the first time of configuration.
+libWetHair has several dependencies and by default it will fetch them through CMake's `FetchContent`. Please make sure your internet is smooth before the first time of configuration.
+
+Alternatively, if preferring a package manager, one can turn on the switch `LIBWETHAIR_FIND_DEPENDENCIES`, which will have cmake to find those dependencies through a package manager.
 
 Compilation
 -----------------
