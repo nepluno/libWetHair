@@ -2,6 +2,9 @@
 include (eigen)
 include (onetbb)
 
+set (THREADS_PREFER_PTHREAD_FLAG ON)
+find_package (Threads REQUIRED)
+
 add_library (WetHairCore
   "DER/Dependencies/DegreesOfFreedom.cpp"
   "DER/Dependencies/ElasticStrandUtils.cpp"
@@ -54,7 +57,8 @@ target_include_directories(WetHairCore PUBLIC
 target_link_libraries(WetHairCore
   PUBLIC
   Eigen3::Eigen
-  TBB::tbb)
+  TBB::tbb
+  Threads::Threads)
 
 install(TARGETS WetHairCore
   EXPORT WetHairCore)
