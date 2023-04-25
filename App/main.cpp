@@ -909,19 +909,29 @@ int main(int argc, char** argv) {
   std::cout << outputmod::startblue << "Description: " << outputmod::endblue
             << g_description << std::endl;
 
-  if (g_rendering_enabled) {
-    while (!glfwWindowShouldClose(g_window)) {
-      idle();
-      display();
-      
-      glfwSwapBuffers(g_window);
-      glfwPollEvents();
+  try {
+    if (g_rendering_enabled) {
+      while (!glfwWindowShouldClose(g_window)) {
+        idle();
+        display();
+
+        glfwSwapBuffers(g_window);
+        glfwPollEvents();
+      }
+
+      glfwDestroyWindow(g_window);
+      g_window = nullptr;
+      glfwTerminate();
+    } else {
+      headlessSimLoop();
     }
-    
-    glfwDestroyWindow(g_window);
-    glfwTerminate();
-  } else {
-    headlessSimLoop();
+  } catch (std::runtime_error& error) {
+    if (g_rendering_enabled && g_window != nullptr) {
+      glfwDestroyWindow(g_window);
+      glfwTerminate();
+    }
+    std::cerr << "ERROR: " << error.what() << std::endl;
+    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
