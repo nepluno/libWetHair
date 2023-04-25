@@ -11,12 +11,14 @@
 
 #include "fluidsim3D.h"
 
-#include <fstream>
 #include <iomanip>
 #include <numeric>
+#include <sstream>
+#include <ostream>
 
 #include "AlgebraicMultigrid.h"
 #include "FluidDragForce.h"
+#include "LogUtilities.h"
 #include "MathUtilities.h"
 #include "ThreadUtils.h"
 #include "TwoDScene.h"
@@ -1934,51 +1936,55 @@ void FluidSim3D::solve_pressure(scalar dt) {
 #endif
 
   if (!success) {
-    printf(
-        "WARNING: Pressure solve "
-        "failed!************************************************\n");
+    std::cerr <<
+      "WARNING: Pressure solve "
+      "failed!************************************************\n";
 
-    std::cout << "rhs=[";
-    for (scalar s : rhs) {
-      std::cout << s << "; ";
-    }
-    std::cout << "];" << std::endl;
+    auto write_error_log = [&](std::ostream& out) {
+      out << "rhs=[";
+      for (scalar s : rhs) {
+        out << s << "; ";
+      }
+      out << "];\n";
 
-    std::cout << "pressure=[";
-    for (scalar s : pressure) {
-      std::cout << s << "; ";
-    }
-    std::cout << "];" << std::endl;
+      out << "pressure=[";
+      for (scalar s : pressure) {
+        out << s << "; ";
+      }
+      out << "];\n";
 
-    write_matlab_array(std::cout, u, "u");
-    write_matlab_array(std::cout, v, "v");
-    write_matlab_array(std::cout, w, "w");
+      write_matlab_array(out, u, "u");
+      write_matlab_array(out, v, "v");
+      write_matlab_array(out, w, "w");
 
-    write_matlab_array(std::cout, u_solid, "u_solid");
-    write_matlab_array(std::cout, v_solid, "v_solid");
-    write_matlab_array(std::cout, w_solid, "w_solid");
+      write_matlab_array(out, u_solid, "u_solid");
+      write_matlab_array(out, v_solid, "v_solid");
+      write_matlab_array(out, w_solid, "w_solid");
 
-    write_matlab_array(std::cout, u_particle, "u_particle");
-    write_matlab_array(std::cout, v_particle, "v_particle");
-    write_matlab_array(std::cout, w_particle, "w_particle");
+      write_matlab_array(out, u_particle, "u_particle");
+      write_matlab_array(out, v_particle, "v_particle");
+      write_matlab_array(out, w_particle, "w_particle");
 
-    write_matlab_array(std::cout, u_drag, "u_drag");
-    write_matlab_array(std::cout, v_drag, "v_drag");
-    write_matlab_array(std::cout, w_drag, "w_drag");
+      write_matlab_array(out, u_drag, "u_drag");
+      write_matlab_array(out, v_drag, "v_drag");
+      write_matlab_array(out, w_drag, "w_drag");
 
-    write_matlab_array(std::cout, u_weights, "u_weights");
-    write_matlab_array(std::cout, v_weights, "v_weights");
-    write_matlab_array(std::cout, w_weights, "w_weights");
+      write_matlab_array(out, u_weights, "u_weights");
+      write_matlab_array(out, v_weights, "v_weights");
+      write_matlab_array(out, w_weights, "w_weights");
 
-    write_matlab_array(std::cout, u_weight_particle, "u_weight_particle");
-    write_matlab_array(std::cout, v_weight_particle, "v_weight_particle");
-    write_matlab_array(std::cout, w_weight_particle, "w_weight_particle");
+      write_matlab_array(out, u_weight_particle, "u_weight_particle");
+      write_matlab_array(out, v_weight_particle, "v_weight_particle");
+      write_matlab_array(out, w_weight_particle, "w_weight_particle");
 
-    write_matlab_array(std::cout, u_weight_total, "u_weight_total");
-    write_matlab_array(std::cout, v_weight_total, "v_weight_total");
-    write_matlab_array(std::cout, w_weight_total, "w_weight_total");
+      write_matlab_array(out, u_weight_total, "u_weight_total");
+      write_matlab_array(out, v_weight_total, "v_weight_total");
+      write_matlab_array(out, w_weight_total, "w_weight_total");
 
-    write_matlab_array(std::cout, liquid_phi, "liquid_phi");
+      write_matlab_array(out, liquid_phi, "liquid_phi");
+    };
+
+    delegateLogOutput(tempLogFile("libWetHair-fluidsim3D-"), write_error_log);
 
     exit(0);
   }
