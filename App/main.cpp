@@ -15,6 +15,7 @@
 
 #include <Eigen/StdVector>
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -922,6 +923,5 @@ int main(int argc, char** argv) {
   } else {
     headlessSimLoop();
   }
-
-  return 0;
+  return EXIT_SUCCESS;
 }
