@@ -30,6 +30,7 @@ add_library (WetHairCore
   "LevelSetForce.cpp"
   "LinearBendingForce.cpp"
   "LinearSpringForce.cpp"
+  "LogUtilities.cpp"
   "MathUtilities.cpp"
   "PolygonalCohesion.cpp"
   "SceneStepper.cpp"
