@@ -1980,7 +1980,7 @@ void FluidSim3D::solve_pressure(scalar dt) {
 
     write_matlab_array(std::cout, liquid_phi, "liquid_phi");
 
-    exit(0);
+    throw std::runtime_error("pressure solve failed");
   }
 
   threadutils::thread_pool::ParallelFor(
