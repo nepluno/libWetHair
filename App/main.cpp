@@ -15,6 +15,7 @@
 
 #include <Eigen/StdVector>
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -908,20 +909,29 @@ int main(int argc, char** argv) {
   std::cout << outputmod::startblue << "Description: " << outputmod::endblue
             << g_description << std::endl;
 
-  if (g_rendering_enabled) {
-    while (!glfwWindowShouldClose(g_window)) {
-      idle();
-      display();
-      
-      glfwSwapBuffers(g_window);
-      glfwPollEvents();
-    }
-    
-    glfwDestroyWindow(g_window);
-    glfwTerminate();
-  } else {
-    headlessSimLoop();
-  }
+  try {
+    if (g_rendering_enabled) {
+      while (!glfwWindowShouldClose(g_window)) {
+        idle();
+        display();
 
-  return 0;
+        glfwSwapBuffers(g_window);
+        glfwPollEvents();
+      }
+
+      glfwDestroyWindow(g_window);
+      g_window = nullptr;
+      glfwTerminate();
+    } else {
+      headlessSimLoop();
+    }
+  } catch (std::runtime_error& error) {
+    if (g_rendering_enabled && g_window != nullptr) {
+      glfwDestroyWindow(g_window);
+      glfwTerminate();
+    }
+    std::cerr << "ERROR: " << error.what() << std::endl;
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
