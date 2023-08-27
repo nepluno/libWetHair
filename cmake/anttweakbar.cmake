@@ -25,8 +25,8 @@ message(STATUS "Third-party (external): creating target 'anttweakbar::anttweakba
 include(FetchContent)
 FetchContent_Declare(
     anttweakbar
-    GIT_REPOSITORY https://github.com/tschw/AntTweakBar.git
-    GIT_TAG        4ff73b96515164cbe66b484022e56e771ea6c224
+    GIT_REPOSITORY https://github.com/nepluno/AntTweakBar.git
+    GIT_TAG        7ee2557bdf41fb5c17ad02ee0dab6c52b8cc4e1b
 )
 
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "anttweakbar")
