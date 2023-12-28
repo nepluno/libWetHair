@@ -1697,11 +1697,11 @@ void FluidSim2D::init_random_particles(const scalar& rl, const scalar& rr,
 
   for (int i = 0; i < ni; ++i) {
     for (int j = 0; j < nj; ++j) {
-      scalar x = ((scalar)i + 0.5 +
-                  (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5)) *
+      scalar x = ((scalar)i +
+                  (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
                  dx;
-      scalar y = ((scalar)j + 0.5 +
-                  (((scalar)rand() / (scalar)RAND_MAX) * 0.5 - 0.5)) *
+      scalar y = ((scalar)j +
+                  (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
                  dx;
       Vector2s pt = Vector2s(x, y) + origin;
       Vector2s vel;
