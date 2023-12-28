@@ -2173,14 +2173,14 @@ void FluidSim3D::init_random_particles(const scalar& rl, const scalar& rr,
     for (int i = 0; i < ni; ++i) {
       for (int j = 0; j < nj; ++j) {
         for (int r = 0; r < default_particle_in_cell(); ++r) {
-          scalar x = ((scalar)i + 0.5 +
-                      (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0)) *
+          scalar x = ((scalar)i +
+                      (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
                      dx;
-          scalar y = ((scalar)j + 0.5 +
-                      (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0)) *
+          scalar y = ((scalar)j +
+                      (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
                      dx;
-          scalar z = ((scalar)k + 0.5 +
-                      (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0)) *
+          scalar z = ((scalar)k +
+                      (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
                      dx;
           Vector3s pt = Vector3s(x, y, z) + origin;
 
