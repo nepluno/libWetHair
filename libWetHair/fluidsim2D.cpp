@@ -13,6 +13,7 @@
 
 #include <fstream>
 #include <numeric>
+#include <random>
 
 #include "FluidDragForce.h"
 #include "MathUtilities.h"
@@ -1681,6 +1682,11 @@ void FluidSim2D::init_hair_particles() {
   }
 }
 
+void FluidSim2D::set_particle_seed(const std::size_t seed)
+{
+    particle_seed = seed;
+}
+
 void FluidSim2D::init_random_particles(const scalar& rl, const scalar& rr,
                                        const scalar& rb, const scalar& rt) {
   particles.clear();
@@ -1695,14 +1701,13 @@ void FluidSim2D::init_random_particles(const scalar& rl, const scalar& rr,
   scalar srb = rb * nj * dx;
   scalar srt = rt * nj * dx;
 
+  std::mt19937 generator(particle_seed);
+  std::uniform_real_distribution<scalar> distribution(-0.5, 0.5);
+
   for (int i = 0; i < ni; ++i) {
     for (int j = 0; j < nj; ++j) {
-      scalar x = ((scalar)i +
-                  (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
-                 dx;
-      scalar y = ((scalar)j +
-                  (((scalar)rand() / (scalar)RAND_MAX) - 0.5)) *
-                 dx;
+      scalar x = ((scalar)i + distribution(generator)) * dx;
+      scalar y = ((scalar)j + distribution(generator)) * dx;
       Vector2s pt = Vector2s(x, y) + origin;
       Vector2s vel;
       if (compute_phi_vel(pt, vel) > 0 && x >= srl && x <= srr && y >= srb &&

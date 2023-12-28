@@ -44,6 +44,7 @@ class FluidSim2D : public FluidSim {
 
   virtual void advect_boundary(const scalar& dt);
   virtual void update_boundary();
+  virtual void set_particle_seed(const std::size_t seed);
   virtual void init_random_particles(const scalar& rl, const scalar& rr,
                                      const scalar& rb, const scalar& rt);
   virtual void init_hair_particles();
@@ -288,6 +289,8 @@ class FluidSim2D : public FluidSim {
   std::vector<std::vector<HairParticleBridge<2> > > m_hair_bridge_buffer;
 
   std::vector<int> m_hair_particle_affected;
+
+  std::size_t particle_seed = 665;
 };
 
 }  // namespace libwethair
