@@ -264,9 +264,9 @@ void CylindricalShallowFlow<2>::updateToFilteredGrid(const VectorXs& x,
   scalar cellsize = fluid2d->cellsize();
 
   const VectorXs& drag_buffer = m_parent->getFluidDragBuffer();
-  std::vector<EdgeVelDragIntersection<2> >& u_edge_vel_drag =
+  std::vector<EdgeVelDragIntersection<2>>& u_edge_vel_drag =
       fluid2d->get_u_edge_vel_drag()[ibuffer];
-  std::vector<EdgeVelDragIntersection<2> >& v_edge_vel_drag =
+  std::vector<EdgeVelDragIntersection<2>>& v_edge_vel_drag =
       fluid2d->get_v_edge_vel_drag()[ibuffer];
 
   u_edge_vel_drag.resize(0);
@@ -392,7 +392,8 @@ void CylindricalShallowFlow<2>::updateToFilteredGrid(const VectorXs& x,
           bresemham::Bresenham2D(ixcb(0), ixcb(1), i, j, [&](int ii, int jj) {
             line_buffer.push_back(Vector2i(ii, jj));
           });
-          if (line_buffer.size() == 0) line_buffer.push_back(Vector2i(i, j));
+          if (line_buffer.size() == 0)
+            line_buffer.push_back(Vector2i(i, j));
 
           scalar ubase_c = vel_c(0);
           scalar uflow_c = u_first(0) * (1.0 - alpha) + u_second(0) * alpha;
@@ -467,7 +468,8 @@ void CylindricalShallowFlow<2>::updateToFilteredGrid(const VectorXs& x,
           bresemham::Bresenham2D(ixcb(0), ixcb(1), i, j, [&](int ii, int jj) {
             line_buffer.push_back(Vector2i(ii, jj));
           });
-          if (line_buffer.size() == 0) line_buffer.push_back(Vector2i(i, j));
+          if (line_buffer.size() == 0)
+            line_buffer.push_back(Vector2i(i, j));
 
           scalar vbase_c = vel_c(1);
           scalar vflow_c = u_first(1) * (1.0 - alpha) + u_second(1) * alpha;
@@ -763,11 +765,11 @@ void CylindricalShallowFlow<3>::updateToFilteredGrid(const VectorXs& x,
   scalar cellsize = fluid3d->cellsize();
 
   const VectorXs& drag_buffer = m_parent->getFluidDragBuffer();
-  std::vector<EdgeVelDragIntersection<3> >& u_edge_vel_drag =
+  std::vector<EdgeVelDragIntersection<3>>& u_edge_vel_drag =
       fluid3d->get_u_edge_vel_drag()[ibuffer];
-  std::vector<EdgeVelDragIntersection<3> >& v_edge_vel_drag =
+  std::vector<EdgeVelDragIntersection<3>>& v_edge_vel_drag =
       fluid3d->get_v_edge_vel_drag()[ibuffer];
-  std::vector<EdgeVelDragIntersection<3> >& w_edge_vel_drag =
+  std::vector<EdgeVelDragIntersection<3>>& w_edge_vel_drag =
       fluid3d->get_w_edge_vel_drag()[ibuffer];
 
   u_edge_vel_drag.resize(0);
@@ -1642,7 +1644,8 @@ void CylindricalShallowFlow<DIM>::add_force(const VectorXs& x,
 
   auto& gv = HairFlow<DIM>::m_parent->getSimpleGravity();
   VectorXs g(DIM);
-  for (int i = 0; i < DIM; ++i) g(i) = gv(i);
+  for (int i = 0; i < DIM; ++i)
+    g(i) = gv(i);
   // add force
   compute_accel_v(accel, HairFlow<DIM>::m_particle_indices, g,
                   HairFlow<DIM>::m_accel_v, HairFlow<DIM>::m_parent);
@@ -1747,7 +1750,8 @@ void CylindricalShallowFlow<DIM>::updateHairFlowHeight(const scalar& dt) {
   VectorXs& m = HairFlow<DIM>::m_parent->getM();
 
   if (HairFlow<DIM>::m_parent->isIndividualTransfer()) {
-    for (int i = 1; i < np - 1; ++i) m_rhs_plus.row(i) = m_rhs.row(i);
+    for (int i = 1; i < np - 1; ++i)
+      m_rhs_plus.row(i) = m_rhs.row(i);
   } else {
     const MatrixXs& inter_rhs = cohesion->getRhsOffsetVGlobal();
     for (int i = 1; i < np - 1; ++i)

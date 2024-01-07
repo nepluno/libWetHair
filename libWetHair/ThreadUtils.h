@@ -38,7 +38,7 @@ template <typename T>
 class thread_safe_queue {
  private:
   mutable std::mutex mut;
-  std::queue<std::shared_ptr<T> > data_queue;
+  std::queue<std::shared_ptr<T>> data_queue;
   std::condition_variable data_cond;
 
  public:
@@ -53,7 +53,8 @@ class thread_safe_queue {
 
   bool try_pop(T& value) {
     std::lock_guard<std::mutex> lk(mut);
-    if (data_queue.empty()) return false;
+    if (data_queue.empty())
+      return false;
     value = std::move(*data_queue.front());  // 2
     data_queue.pop();
     return true;
@@ -69,7 +70,8 @@ class thread_safe_queue {
 
   std::shared_ptr<T> try_pop() {
     std::lock_guard<std::mutex> lk(mut);
-    if (data_queue.empty()) return std::shared_ptr<T>();
+    if (data_queue.empty())
+      return std::shared_ptr<T>();
     std::shared_ptr<T> res = data_queue.front();  // 4
     data_queue.pop();
     return res;
@@ -96,7 +98,8 @@ class join_threads {
       : threads(threads_) {}
   ~join_threads() {
     for (unsigned long i = 0; i < threads.size(); ++i) {
-      if (threads[i].joinable()) threads[i].join();
+      if (threads[i].joinable())
+        threads[i].join();
     }
   }
 };

@@ -51,9 +51,9 @@ class DOFs : public DependencyNode<VecX> {
   }
 
   // Accessors to the theta degrees of freedom
-  const Eigen::Map<const VecX, Eigen::Unaligned, Eigen::InnerStride<4> >
+  const Eigen::Map<const VecX, Eigen::Unaligned, Eigen::InnerStride<4>>
   getThetas() const {
-    return Eigen::Map<const VecX, Eigen::Unaligned, Eigen::InnerStride<4> >(
+    return Eigen::Map<const VecX, Eigen::Unaligned, Eigen::InnerStride<4>>(
         m_value.data() + 3, m_numEdges);
   }
 
@@ -66,7 +66,7 @@ class DOFs : public DependencyNode<VecX> {
   void setThetas(const VecX& thetas, int numberOfFixedThetas = 0) {
     assert(thetas.size() == m_numEdges);
 
-    Eigen::Map<VecX, Eigen::Unaligned, Eigen::InnerStride<4> >(
+    Eigen::Map<VecX, Eigen::Unaligned, Eigen::InnerStride<4>>(
         m_value.data() + 4 * numberOfFixedThetas + 3,
         m_numEdges - numberOfFixedThetas) =
         thetas.tail(m_numEdges - numberOfFixedThetas);
@@ -116,10 +116,10 @@ class Edges : public DependencyNode<Vec3Array> {
 /**
  * Unit: cm
  */
-class Lengths : public DependencyNode<std::vector<scalar> > {
+class Lengths : public DependencyNode<std::vector<scalar>> {
  public:
   Lengths(Edges& edges)
-      : DependencyNode<std::vector<scalar> >(0, edges.size()), m_edges(edges) {
+      : DependencyNode<std::vector<scalar>>(0, edges.size()), m_edges(edges) {
     m_edges.addDependent(this);
   }
 
@@ -174,10 +174,10 @@ class CurvatureBinormals : public DependencyNode<Vec3Array> {
 /**
  * Unit: no dimension
  */
-class TrigThetas : public DependencyNode<std::pair<VecX, VecX> > {
+class TrigThetas : public DependencyNode<std::pair<VecX, VecX>> {
  public:
   TrigThetas(DOFs& dofs)
-      : DependencyNode<std::pair<VecX, VecX> >(std::make_pair(VecX(), VecX())),
+      : DependencyNode<std::pair<VecX, VecX>>(std::make_pair(VecX(), VecX())),
         m_dofs(dofs) {
     m_dofs.addDependent(this);
   }

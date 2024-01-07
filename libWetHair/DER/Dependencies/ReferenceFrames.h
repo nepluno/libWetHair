@@ -100,10 +100,10 @@ class ReferenceFrames2 : public DependencyNode<Vec3Array> {
  * (space-parallel transported) Bishop frame and the actual (time-parallel
  * transported) reference frame.
  */
-class ReferenceTwists : public DependencyNode<std::vector<scalar> > {
+class ReferenceTwists : public DependencyNode<std::vector<scalar>> {
  public:
   ReferenceTwists(Tangents& tangents, ReferenceFrames1& referenceFrames1)
-      : DependencyNode<std::vector<scalar> >(1, tangents.size()),
+      : DependencyNode<std::vector<scalar>>(1, tangents.size()),
         m_tangents(tangents),
         m_referenceFrames1(referenceFrames1) {
     m_tangents.addDependent(this);

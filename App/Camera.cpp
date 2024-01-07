@@ -27,7 +27,9 @@ Camera::Camera(const double fov)
   this->init(-b, b);
 }
 
-Camera::Camera(const Camera& that) { clone(that); }
+Camera::Camera(const Camera& that) {
+  clone(that);
+}
 
 Camera::Camera(Eigen::Quaterniond& rot, Eigen::Vector3d& center,
                const double& dist, const double& radius, const double& fov)
@@ -53,7 +55,9 @@ void Camera::clone(const Camera& that) {
   return;
 }
 
-void Camera::operator=(const Camera& that) { clone(that); }
+void Camera::operator=(const Camera& that) {
+  clone(that);
+}
 
 void Camera::getViewDir(Eigen::Vector3d& viewdir) const {
   Eigen::Matrix3d r;  // rotation matrix
@@ -89,7 +93,8 @@ void Camera::getPerspective(double& fov, double& zNear, double& zFar) const {
   fov = this->fov_;
   zNear = this->dist_ - this->radius_ * 10.0;
   zFar = this->dist_ + this->radius_ * 10.0;
-  if (zNear < 0) zNear = 0.1;
+  if (zNear < 0)
+    zNear = 0.1;
 
   return;
 }
@@ -98,7 +103,8 @@ void Camera::rotate(const double oldx, const double oldy, const double newx,
   Eigen::Vector3d oldp(oldx, oldy, 0);
   Eigen::Vector3d newp(newx, newy, 0);
 
-  if (oldp.isApprox(newp, 1.0e-16)) return;
+  if (oldp.isApprox(newp, 1.0e-16))
+    return;
 
   double radius_virtual_sphere = 0.9;
   this->project_to_sphere(radius_virtual_sphere, oldp);

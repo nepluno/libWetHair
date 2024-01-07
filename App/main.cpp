@@ -30,10 +30,10 @@
 // TODO: Clean these up, we don't need them all anymore.
 #include <libWetHair/Force.h>
 #include <libWetHair/MathDefs.h>
-#include <libWetHair/TwoDScene.h>
 #include <libWetHair/SceneStepper.h>
 #include <libWetHair/SpringForce.h>
 #include <libWetHair/TimingUtilities.h>
+#include <libWetHair/TwoDScene.h>
 
 #include "DefaultXMLScene.h"
 #include "ExecutableSimulation.h"
@@ -78,7 +78,9 @@ int g_fluid_stream_level = 1;
 
 renderingutils::Color g_bgcolor(0.93, 0.93, 0.93);
 
-extern renderingutils::Color& getDCBackgroundColor() { return g_bgcolor; };
+extern renderingutils::Color& getDCBackgroundColor() {
+  return g_bgcolor;
+};
 ///////////////////////////////////////////////////////////////////////////////
 // SVG Rendering State
 bool g_svg_enabled = false;
@@ -241,7 +243,8 @@ void stepSystem() {
   }
 
   // Update the state of the renderers
-  if (g_rendering_enabled) g_executable_simulation->updateOpenGLRendererState();
+  if (g_rendering_enabled)
+    g_executable_simulation->updateOpenGLRendererState();
 
   // If the user wants to generate a PNG movie
   if (g_dump_png && !(current_step % g_dump_png)) {
@@ -260,12 +263,13 @@ void headlessSimLoop() {
     stepSystem();
     int current_step = (int)g_executable_simulation->getCurrentFrame();
 
-    if (current_step > g_num_steps) break;
+    if (current_step > g_num_steps)
+      break;
   }
 }
 
 void dumpPNGsubprog(char* image, char* fnstr, int w, int h) {
-  unsigned* uimage = (unsigned*) image;
+  unsigned* uimage = (unsigned*)image;
   for (int i = 0; i < h / 2; ++i) {
     for (int j = 0; j < w; ++j) {
       std::swap(uimage[i * w + j], uimage[(h - i - 1) * w + j]);
@@ -296,8 +300,7 @@ void dumpPNG(const std::string& filename) {
   glReadBuffer(GL_BACK);
 
   glFinish();
-  glReadPixels(0, 0, w, h, GL_RGBA,
-               GL_UNSIGNED_BYTE, img_data);
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, img_data);
 
   std::thread t(std::bind(dumpPNGsubprog, img_data, fnstr, w, h));
 
@@ -394,7 +397,8 @@ void dumpstate_readable(const std::vector<std::string>& filename_fluids,
                                                   os_bd_single, os_bd_double,
                                                   os_pe, os_poe, os_ppp);
 
-  for (int i = 0; i < g_fluid_stream_level; ++i) os_fluids[i].flush();
+  for (int i = 0; i < g_fluid_stream_level; ++i)
+    os_fluids[i].flush();
 
   os_hairs.flush();
   os_flows.flush();
@@ -485,7 +489,9 @@ void reshape(GLFWwindow* window, int w, int h) {
   assert(renderingutils::checkGLErrors());
 }
 
-void drawHUD() { TwDraw(); }
+void drawHUD() {
+  TwDraw();
+}
 
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -501,7 +507,8 @@ void display() {
 }
 
 void keyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
-  if (TwEventCharGLFW(key, action) || TwEventKeyGLFW3(window, key, scancode, action, mods)) {
+  if (TwEventCharGLFW(key, action) ||
+      TwEventKeyGLFW3(window, key, scancode, action, mods)) {
     return;
   }
 
@@ -536,7 +543,7 @@ void keyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
   assert(renderingutils::checkGLErrors());
 }
 
-void mouse(GLFWwindow *window, int button, int action, int mods) {
+void mouse(GLFWwindow* window, int button, int action, int mods) {
   if (TwEventMouseButtonGLFW3(window, button, action, mods)) {
     return;
   }
@@ -546,12 +553,12 @@ void mouse(GLFWwindow *window, int button, int action, int mods) {
   assert(renderingutils::checkGLErrors());
 }
 
-void motion(GLFWwindow *window, double x, double y) {
+void motion(GLFWwindow* window, double x, double y) {
   if (TwEventCursorPosGLFW3(window, x * g_res_scale, y * g_res_scale)) {
     return;
   }
 
-  g_executable_simulation->motion((int) x * g_res_scale, (int) y * g_res_scale);
+  g_executable_simulation->motion((int)x * g_res_scale, (int)y * g_res_scale);
 
   assert(renderingutils::checkGLErrors());
 }
@@ -565,7 +572,6 @@ void idle() {
   if (!g_paused && current_time - g_last_time >= g_sec_per_frame) {
     g_last_time = current_time;
     stepSystem();
-
   }
 
   int current_step = (int)g_executable_simulation->getCurrentFrame();
@@ -641,17 +647,17 @@ void initializeOpenGLandGLFW(int argc, char** argv) {
   // Initialize GLFW
   if (!glfwInit())
     exit(-1);
-  
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-  
+
   g_window = glfwCreateWindow(1920, 1080, "HairSim", NULL, NULL);
-  
+
   glfwSetKeyCallback(g_window, keyboard);
   glfwSetMouseButtonCallback(g_window, mouse);
   glfwSetCursorPosCallback(g_window, motion);
   glfwSetFramebufferSizeCallback(g_window, reshape);
-  
+
   glfwMakeContextCurrent(g_window);
   glfwSwapInterval(1);
 
@@ -719,10 +725,10 @@ void loadScene(const std::string& file_name, const char* memory_str) {
   bool cam_init = false;
   bool view_init = false;
   xml_scene_parser.loadExecutableSimulation(
-      g_window,
-      file_name, memory_str, g_initstate_file_name, false, g_rendering_enabled,
-      &g_executable_simulation, view, cam, max_time, steps_per_sec_cap,
-      g_bgcolor, g_description, g_scene_tag, cam_init, view_init);
+      g_window, file_name, memory_str, g_initstate_file_name, false,
+      g_rendering_enabled, &g_executable_simulation, view, cam, max_time,
+      steps_per_sec_cap, g_bgcolor, g_description, g_scene_tag, cam_init,
+      view_init);
   assert(g_executable_simulation != NULL);
 
   if (cam_init) {
@@ -867,8 +873,9 @@ int main(int argc, char** argv) {
   atexit(cleanupAtExit);
 
   // Initialization for OpenGL and GLFW
-  if (g_rendering_enabled) initializeOpenGLandGLFW(argc, argv);
-  
+  if (g_rendering_enabled)
+    initializeOpenGLandGLFW(argc, argv);
+
   // Load the user-specified scene
   if (loadDefaultScene) {
     loadScene(g_xml_scene_file, default_xml_str);

@@ -150,13 +150,13 @@ class HairFlow {
 
   virtual const std::unordered_map<int, int>& getGlobalToLocal() const;
 
-  virtual const std::vector<std::vector<int> >& getEdgeBridges() const;
+  virtual const std::vector<std::vector<int>>& getEdgeBridges() const;
 
-  virtual std::vector<std::vector<int> >& getEdgeBridges();
+  virtual std::vector<std::vector<int>>& getEdgeBridges();
 
-  virtual const std::vector<std::pair<int, int> >& getLocalEdges() const;
+  virtual const std::vector<std::pair<int, int>>& getLocalEdges() const;
 
-  virtual const std::vector<std::pair<int, int> >& getGlobalEdges() const;
+  virtual const std::vector<std::pair<int, int>>& getGlobalEdges() const;
 
   virtual const std::vector<int>& getEdgeIndices() const;
 
@@ -245,9 +245,9 @@ class HairFlow {
   std::vector<int> m_particle_indices;
   std::vector<unsigned char> m_particle_state;
   std::vector<int> m_edge_indices;
-  std::vector<std::pair<int, int> > m_internal_edges;
-  std::vector<std::pair<int, int> > m_global_edges;
-  std::vector<std::vector<int> > m_particle_to_edges;
+  std::vector<std::pair<int, int>> m_internal_edges;
+  std::vector<std::pair<int, int>> m_global_edges;
+  std::vector<std::vector<int>> m_particle_to_edges;
   std::unordered_map<int, int> m_global_to_local;
 
   // liquid state
@@ -290,7 +290,7 @@ class HairFlow {
   Vector6i m_constraint_starts;
   Vector6i m_constraint_length;
 
-  std::vector<std::vector<int> > m_edge_bridges;
+  std::vector<std::vector<int>> m_edge_bridges;
 
   int m_flow_index;
 };

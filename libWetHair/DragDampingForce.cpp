@@ -128,7 +128,8 @@ Force* DragDampingForce<DIM>::createNewCopy() {
 template <int DIM>
 void DragDampingForce<DIM>::getAffectedVars(int colidx,
                                             std::unordered_set<int>& vars) {
-  if (m_scene.getComponent(colidx) == DIM) return;
+  if (m_scene.getComponent(colidx) == DIM)
+    return;
   vars.insert(colidx);
 }
 
@@ -141,7 +142,8 @@ int DragDampingForce<DIM>::getAffectedHair(
 template <int DIM>
 bool DragDampingForce<DIM>::isContained(int colidx) {
   int idir = m_scene.getComponent(colidx);
-  if (idir == DIM) return false;
+  if (idir == DIM)
+    return false;
   int pidx = m_scene.getVertFromDof(colidx);
   const std::vector<int>& particle_hairs = m_scene.getParticleToHairs();
   return particle_hairs[pidx] == m_hidx;

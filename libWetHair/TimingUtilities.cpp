@@ -24,7 +24,7 @@ struct timezone {
   int tz_dsttime;     /* type of dst correction */
 };
 
-int gettimeofday(struct timeval *tv, struct timezone *tz) {
+int gettimeofday(struct timeval* tv, struct timezone* tz) {
   FILETIME ft;
   unsigned __int64 tmpres = 0;
   static int tzflag = 0;

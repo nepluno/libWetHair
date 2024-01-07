@@ -162,7 +162,8 @@ void draw_arrow2d(const Vector2s& start, const Vector2s& end,
 
   // TODO Possibly automatically scale arrowhead length based on vector
   // magnitude
-  if (dir_norm.norm() < 1e-14) return;
+  if (dir_norm.norm() < 1e-14)
+    return;
 
   dir_norm.normalize();
   Vector2s perp(dir_norm[1], -dir_norm[0]);
@@ -188,12 +189,14 @@ void draw_arrow3d(const Vector3s& start, const Vector3s& end,
 
   Vector3s dir_norm = direction;
 
-  if (dir_norm.norm() < 1e-14) return;
+  if (dir_norm.norm() < 1e-14)
+    return;
 
   dir_norm.normalize();
 
   Vector3s perp = dir_norm.cross(view_dir);
-  if (perp.norm() < 1e-14) perp = dir_norm.cross(Vector3s(0, 0, 1));
+  if (perp.norm() < 1e-14)
+    perp = dir_norm.cross(Vector3s(0, 0, 1));
 
   perp.normalize();
 

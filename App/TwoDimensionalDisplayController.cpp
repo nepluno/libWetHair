@@ -151,7 +151,8 @@ void TwoDimensionalDisplayController<DIM>::keyboard(int key) {
   } else if (m_render && key == GLFW_KEY_L) {
     if (m_cam_stack.size() > 0) {
       m_camera = m_cam_stack.top();
-      if (m_cam_stack.size() > 1) m_cam_stack.pop();
+      if (m_cam_stack.size() > 1)
+        m_cam_stack.pop();
 
       applyProjection();
     }
@@ -186,12 +187,14 @@ void TwoDimensionalDisplayController<DIM>::keyboard(int key) {
 }
 
 template <>
-void TwoDimensionalDisplayController<2>::mouse(int button, int state, int res_scale) {
+void TwoDimensionalDisplayController<2>::mouse(int button, int state,
+                                               int res_scale) {
   double dx = 0, dy = 0;
   glfwGetCursorPos(m_window, &dx, &dy);
-  int x = (int) dx * res_scale, y = (int) dy * res_scale;
-  
-  if (!m_right_drag && button == GLFW_MOUSE_BUTTON_LEFT && state == GLFW_PRESS) {
+  int x = (int)dx * res_scale, y = (int)dy * res_scale;
+
+  if (!m_right_drag && button == GLFW_MOUSE_BUTTON_LEFT &&
+      state == GLFW_PRESS) {
     m_left_drag = true;
     m_last_x = x;
     m_last_y = y;
@@ -202,7 +205,8 @@ void TwoDimensionalDisplayController<2>::mouse(int button, int state, int res_sc
     m_right_part_click = false;
   }
 
-  if (!m_left_drag && button == GLFW_MOUSE_BUTTON_RIGHT && state == GLFW_PRESS) {
+  if (!m_left_drag && button == GLFW_MOUSE_BUTTON_RIGHT &&
+      state == GLFW_PRESS) {
     m_right_drag = true;
     m_last_x = x;
     m_last_y = y;
@@ -215,12 +219,14 @@ void TwoDimensionalDisplayController<2>::mouse(int button, int state, int res_sc
 }
 
 template <>
-void TwoDimensionalDisplayController<3>::mouse(int button, int state, int res_scale) {
+void TwoDimensionalDisplayController<3>::mouse(int button, int state,
+                                               int res_scale) {
   double dx = 0, dy = 0;
   glfwGetCursorPos(m_window, &dx, &dy);
-  int x = (int) dx * res_scale, y = (int) dy * res_scale;
-  
-  if (!m_right_drag && button == GLFW_MOUSE_BUTTON_LEFT && state == GLFW_PRESS) {
+  int x = (int)dx * res_scale, y = (int)dy * res_scale;
+
+  if (!m_right_drag && button == GLFW_MOUSE_BUTTON_LEFT &&
+      state == GLFW_PRESS) {
     m_right_part_click = (x > m_window_width / 2);
 
     m_left_drag = true;
@@ -243,7 +249,8 @@ void TwoDimensionalDisplayController<3>::mouse(int button, int state, int res_sc
     m_left_drag = false;
   }
 
-  if (!m_left_drag && button == GLFW_MOUSE_BUTTON_RIGHT && state == GLFW_PRESS) {
+  if (!m_left_drag && button == GLFW_MOUSE_BUTTON_RIGHT &&
+      state == GLFW_PRESS) {
     m_right_part_click = (x > m_window_width / 2);
 
     int iPart = 1;

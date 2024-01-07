@@ -28,8 +28,7 @@ extern bool g_rendering_enabled;
 template <int DIM>
 class ParticleSimulation : public ExecutableSimulation {
  public:
-  ParticleSimulation(GLFWwindow* window,
-                     libwethair::TwoDScene<DIM>* scene,
+  ParticleSimulation(GLFWwindow* window, libwethair::TwoDScene<DIM>* scene,
                      libwethair::SceneStepper<DIM>* scene_stepper,
                      TwoDSceneRenderer<DIM>* scene_renderer,
                      const std::vector<libwethair::Script>& scripts);
@@ -101,7 +100,8 @@ class ParticleSimulation : public ExecutableSimulation {
   virtual std::string getSolverName();
 
   virtual const std::vector<libwethair::scalar>& getTimingStatistics() const;
-  virtual const std::vector<libwethair::scalar>& getStepperTimingStatistics() const;
+  virtual const std::vector<libwethair::scalar>& getStepperTimingStatistics()
+      const;
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
  private:

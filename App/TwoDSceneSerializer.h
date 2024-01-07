@@ -54,7 +54,8 @@ class TwoDSceneSerializer {
       std::ostream& os_pe, std::ostream& os_poe, std::ostream& os_ppp) const;
 
   bool deSerializeFluidReadable(
-      libwethair::TwoDScene<DIM>& scene, const std::vector<std::string>& filename_fluids);
+      libwethair::TwoDScene<DIM>& scene,
+      const std::vector<std::string>& filename_fluids);
 
   bool deSerializeHairReadable(libwethair::TwoDScene<DIM>& scene,
                                const std::string& filename_hairs);
@@ -63,10 +64,12 @@ class TwoDSceneSerializer {
                                       libwethair::TwoDScene<DIM>& scene,
                                       const std::string& filename_flows);
 
-  void serializeScene(libwethair::TwoDScene<DIM>& scene, libwethair::SceneStepper<DIM>* stepper,
+  void serializeScene(libwethair::TwoDScene<DIM>& scene,
+                      libwethair::SceneStepper<DIM>* stepper,
                       std::ostream& outputstream) const;
 
-  void loadScene(libwethair::TwoDScene<DIM>& scene, libwethair::SceneStepper<DIM>* stepper,
+  void loadScene(libwethair::TwoDScene<DIM>& scene,
+                 libwethair::SceneStepper<DIM>* stepper,
                  std::istream& inputstream) const;
 };
 

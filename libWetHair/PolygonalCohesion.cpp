@@ -158,13 +158,17 @@ PolygonalCohesion<DIM>::PolygonalCohesion(TwoDScene<DIM>* scene)
 
 template <int DIM>
 PolygonalCohesion<DIM>::~PolygonalCohesion() {
-  if (m_sorter) delete m_sorter;
-  if (m_max_cohesion_table) delete m_max_cohesion_table;
-  if (m_min_cohesion_table) delete m_min_cohesion_table;
+  if (m_sorter)
+    delete m_sorter;
+  if (m_max_cohesion_table)
+    delete m_max_cohesion_table;
+  if (m_min_cohesion_table)
+    delete m_min_cohesion_table;
 
   for (auto& adj : m_adjacency_categorized) {
     for (auto& hp : adj) {
-      if (hp.second) delete hp.second;
+      if (hp.second)
+        delete hp.second;
     }
   }
 }
@@ -196,11 +200,12 @@ void PolygonalCohesion<DIM>::findEdgeEdgeContact(const VectorXs x,
                                                  const VectorXs v,
                                                  const scalar& dt,
                                                  const int& base_eidx) {
-  if (DIM == 2) return;
+  if (DIM == 2)
+    return;
   const std::vector<int>& particle_to_hairs = m_parent->getParticleToHairs();
   const std::vector<int>& particle_local_indices =
       m_parent->getParticleToHairLocalIndices();
-  const std::vector<std::pair<int, int> >& scene_edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& scene_edges = m_parent->getEdges();
 
   const std::pair<int, int>& base_edge = scene_edges[base_eidx];
 
@@ -213,7 +218,8 @@ void PolygonalCohesion<DIM>::findEdgeEdgeContact(const VectorXs x,
 
   int pidx = base_edge.first;
   int hidx = particle_to_hairs[pidx];
-  if (hidx < 0) return;
+  if (hidx < 0)
+    return;
 
   int local_idx_0 = particle_local_indices[base_edge.first];
   int local_idx_1 = particle_local_indices[base_edge.second];
@@ -269,11 +275,13 @@ void PolygonalCohesion<DIM>::findEdgeEdgeContact(const VectorXs x,
       -range[2], range[2], [&](int eidx) {
         // ignore myself
         const std::pair<int, int>& e = scene_edges[eidx];
-        if (e == base_edge) return;
+        if (e == base_edge)
+          return;
 
         // ignore edges on my strand
         int nhidx = particle_to_hairs[e.first];
-        if (nhidx < 0 || nhidx == hidx) return;
+        if (nhidx < 0 || nhidx == hidx)
+          return;
 
         // if( eidx < base_eidx ) return; // avoid duplicates
 
@@ -432,7 +440,8 @@ void PolygonalCohesion<DIM>::findEdgeEdgeContact(const VectorXs x,
           ref_pair->valid = false;
         }
 
-        if (ref_pair) ref_pair->updated = true;
+        if (ref_pair)
+          ref_pair->updated = true;
       });  // edge neighbors
 
   // remove EdgeEdgePairs that are no longer valid/updated
@@ -462,16 +471,17 @@ void PolygonalCohesion<DIM>::findParticleEdgePairs(const VectorXs& x,
   const std::vector<int>& particle_to_hairs = m_parent->getParticleToHairs();
   const std::vector<int>& particle_local_indices =
       m_parent->getParticleToHairLocalIndices();
-  const std::vector<std::pair<int, int> >& scene_edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& scene_edges = m_parent->getEdges();
   const VectorXs& radii = m_parent->getRadii();
   const scalar& radius_i = radii(pidx);
   auto& flows = m_parent->getFilmFlows();
   const scalar& theta = m_parent->getLiquidTheta();
-  const std::vector<std::vector<int> >& particle_edges =
+  const std::vector<std::vector<int>>& particle_edges =
       m_parent->getParticleToEdge();
 
   int hidx = particle_to_hairs[pidx];
-  if (hidx < 0) return;
+  if (hidx < 0)
+    return;
 
   int local_idx = particle_local_indices[pidx];
 
@@ -525,11 +535,13 @@ void PolygonalCohesion<DIM>::findParticleEdgePairs(const VectorXs& x,
       pindex[0], pindex[1], pindex[2], -range[0], range[0], -range[1], range[1],
       -range[2], range[2], [&](int eidx) {
         const std::pair<int, int>& e = scene_edges[eidx];
-        if (e.first == pidx || e.second == pidx) return;
+        if (e.first == pidx || e.second == pidx)
+          return;
 
         int nhidx = particle_to_hairs[e.first];
 
-        if (nhidx < 0 || nhidx == hidx) return;
+        if (nhidx < 0 || nhidx == hidx)
+          return;
 
         Vectors<DIM> gap_vec;
         scalar alpha;
@@ -547,8 +559,10 @@ void PolygonalCohesion<DIM>::findParticleEdgePairs(const VectorXs& x,
 
         if (itr != hair_pairs.end()) {
           ref_pair = itr->second;
-          if (ref_pair->updated && dist > ref_pair->dist) return;
-          if (!ref_pair->latest) previous_linked = true;
+          if (ref_pair->updated && dist > ref_pair->dist)
+            return;
+          if (!ref_pair->latest)
+            previous_linked = true;
         }
 
         const scalar radius_j =
@@ -615,7 +629,8 @@ void PolygonalCohesion<DIM>::findParticleEdgePairs(const VectorXs& x,
   for (auto hp : hair_pairs) {
     ParticleEdgePair* pepair = hp.second;
 
-    if (pepair->updated) continue;
+    if (pepair->updated)
+      continue;
 
     bool previous_linked = pepair->valid;
 
@@ -690,10 +705,13 @@ void PolygonalCohesion<DIM>::findParticleParticlePairsEEC(const VectorXs& x) {
   auto& radii = m_parent->getRadii();
   const int np = m_parent->getNumParticles();
   const int ne = m_parent->getNumEdges();
-  if (!np) return;
-  if (!ne) return;
+  if (!np)
+    return;
+  if (!ne)
+    return;
 
-  if (m_particle_to_pppairs.size() != np) m_particle_to_pppairs.resize(np);
+  if (m_particle_to_pppairs.size() != np)
+    m_particle_to_pppairs.resize(np);
 
   if (m_num_valid_edge_connections.size() != ne)
     m_num_valid_edge_connections.resize(ne);
@@ -704,7 +722,8 @@ void PolygonalCohesion<DIM>::findParticleParticlePairsEEC(const VectorXs& x) {
     auto& adjs = m_edge_connections[eidx];
     for (auto itr = adjs.begin(); itr != adjs.end(); ++itr) {
       const EdgeEdgePairEEC* eep = itr->second;
-      if (!eep->valid) continue;
+      if (!eep->valid)
+        continue;
 
       ++count_valid;
     }
@@ -736,7 +755,8 @@ void PolygonalCohesion<DIM>::findParticleParticlePairsEEC(const VectorXs& x) {
     int k = 0;
     for (auto itr = adjs.begin(); itr != adjs.end(); ++itr) {
       const EdgeEdgePairEEC* eep = itr->second;
-      if (!eep->valid) continue;
+      if (!eep->valid)
+        continue;
 
       const int loc = base_loc + k;
 
@@ -835,7 +855,8 @@ void PolygonalCohesion<DIM>::findParticleParticlePairs(const VectorXs& x) {
   auto& particle_hair = m_parent->getParticleToHairs();
   auto& flows = m_parent->getFilmFlows();
 
-  if (!np) return;
+  if (!np)
+    return;
 
   m_counting_valid_adjacency.resize(np);
 
@@ -877,7 +898,8 @@ void PolygonalCohesion<DIM>::findParticleParticlePairs(const VectorXs& x) {
       auto& adjs = m_adjacency_categorized[pidx];
       for (auto itr = adjs.begin(); itr != adjs.end(); ++itr) {
         const ParticleEdgePair* pep = itr->second;
-        if (!pep->valid || itr->second->dist < radii(pidx) * 4.0) continue;
+        if (!pep->valid || itr->second->dist < radii(pidx) * 4.0)
+          continue;
 
         auto& e = edges[pep->eidx];
         scalar d0 = (x.segment<DIM>(m_parent->getDof(pep->pidx)) -
@@ -940,7 +962,8 @@ void PolygonalCohesion<DIM>::findParticleParticlePairs(const VectorXs& x) {
 template <int DIM>
 void PolygonalCohesion<DIM>::findPointEdgePairsEEC(
     const VectorXs& x, int base_eidx, std::vector<PointEdgePair>& poepairs) {
-  if (DIM == 2) return;
+  if (DIM == 2)
+    return;
 
   auto& edges = m_parent->getEdges();
   auto& e = edges[base_eidx];
@@ -1007,7 +1030,8 @@ void PolygonalCohesion<DIM>::findPointEdgePairsEEC(
 
     const scalar V = vol_p_each + vol_q_each;
 
-    if (V < 1e-7) continue;
+    if (V < 1e-7)
+      continue;
 
     const Vectors<DIM>& x0 = x.segment<DIM>(m_parent->getDof(e.first));
     const Vectors<DIM>& x1 = x.segment<DIM>(m_parent->getDof(e.second));
@@ -1064,7 +1088,7 @@ void PolygonalCohesion<DIM>::findPointEdgePairs(
   auto& flows = m_parent->getFilmFlows();
 
   // get all the hairs linked with the edge
-  std::unordered_map<int, std::pair<ParticleEdgePair*, ParticleEdgePair*> >
+  std::unordered_map<int, std::pair<ParticleEdgePair*, ParticleEdgePair*>>
       hairs;  // neighbor hair index -> Particle-Edge pair connected with that
               // hair
 
@@ -1471,7 +1495,8 @@ void PolygonalCohesion<DIM>::updatePointEdgePairs(
   const int ne = m_parent->getNumEdges();
   const int np = m_parent->getNumParticles();
 
-  if (!np) return;
+  if (!np)
+    return;
 
   if (m_compute_particle_poe_mapping) {
     for (int i = 0; i < np; ++i) {
@@ -1486,7 +1511,8 @@ void PolygonalCohesion<DIM>::updatePointEdgePairs(
     m_counting_poe_pair_location.resize(ne);
 
   if (m_parent->useCtcd()) {
-    if ((int)m_edge_connections.size() != ne) m_edge_connections.resize(ne);
+    if ((int)m_edge_connections.size() != ne)
+      m_edge_connections.resize(ne);
 
     if ((int)m_num_edge_connections.size() != np)
       m_num_edge_connections.resize(np);
@@ -1631,7 +1657,8 @@ void PolygonalCohesion<DIM>::computeConnections(const VectorXs& x) {
   int np = m_parent->getNumParticles();
   int ne = m_parent->getNumEdges();
 
-  if ((int)m_pp_pair_hash.size() != np) m_pp_pair_hash.resize(np);
+  if ((int)m_pp_pair_hash.size() != np)
+    m_pp_pair_hash.resize(np);
 
   if ((int)m_adjacency_categorized.size() != np)
     m_adjacency_categorized.resize(np);
@@ -1647,7 +1674,8 @@ void PolygonalCohesion<DIM>::computeConnections(const VectorXs& x) {
     // only count valid adjs
     int sum = 0;
     for (auto& adj : adjs) {
-      if (adj.second->valid) ++sum;
+      if (adj.second->valid)
+        ++sum;
     }
 
     m_num_adjacency_categorized[i] = sum;
@@ -1669,12 +1697,14 @@ void PolygonalCohesion<DIM>::computeConnections(const VectorXs& x) {
 
   m_particle_particle_pairs.resize(0);
 
-  if (!m_parent->isIndividualTransfer()) findParticleParticlePairs(x);
+  if (!m_parent->isIndividualTransfer())
+    findParticleParticlePairs(x);
 }
 
 template <int DIM>
 void PolygonalCohesion<DIM>::buildSearchTree(const VectorXs& x) {
-  if (m_parent->useCtcd()) m_parent->updateSearchRadius();
+  if (m_parent->useCtcd())
+    m_parent->updateSearchRadius();
 
   const scalar cellsize = m_parent->getSearchRadius();
 
@@ -1694,7 +1724,8 @@ void PolygonalCohesion<DIM>::buildSearchTree(const VectorXs& x) {
   auto& edges = m_parent->getEdges();
 
   m_sorter->sort(ne, [&](int eidx, int& i, int& j, int& k) {
-    if (eidx < 0 || eidx >= edges.size()) return;
+    if (eidx < 0 || eidx >= edges.size())
+      return;
 
     auto& e = edges[eidx];
     Vectors<DIM> xc = (x.segment<DIM>(m_parent->getDof(e.first)) +
@@ -1713,7 +1744,7 @@ void PolygonalCohesion<DIM>::computeInterHairVariables() {
   int N = m_parent->getNumParticles();
   const VectorXs& x = m_parent->getX();
   const VectorXs& radius = m_parent->getRadii();
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
 
   int M_local = edges.size();
   int M_global = M_inter + M_local;
@@ -1776,7 +1807,7 @@ void PolygonalCohesion<DIM>::computeInterHairVariables() {
     m_area_v_global(ppp.pidx[0]) += ppp.d;
     m_area_v_global(ppp.pidx[1]) += ppp.d;
   }
-  const std::vector<std::vector<int> >& particle_edges =
+  const std::vector<std::vector<int>>& particle_edges =
       m_parent->getParticleToEdge();
 
   tbb::parallel_for(0, N, 1, [&](int i) {
@@ -1989,11 +2020,12 @@ void PolygonalCohesion<DIM>::computeInterHairRHS(const scalar& dt) {
                             m_gradF_interhair_T);
     mathutils::computeJTPhi_coeff(m_ce_inter_short_buffer, m_u_interhair,
                                   m_ce_inter_buffer, m_dir_f_interhair_T);
-    mathutils::computeJTPhi_coeff(m_rhs_offset_v_global, -dt, m_ce_inter_short_buffer,
-                                  m_W_fv_interhair_T, i);
+    mathutils::computeJTPhi_coeff(m_rhs_offset_v_global, -dt,
+                                  m_ce_inter_short_buffer, m_W_fv_interhair_T,
+                                  i);
 
-    mathutils::computeJTPhi_coeff(m_ce_inter_buffer, m_G_f_interhair, m_u_interhair,
-                                  m_dir_f_interhair);
+    mathutils::computeJTPhi_coeff(m_ce_inter_buffer, m_G_f_interhair,
+                                  m_u_interhair, m_dir_f_interhair);
     mathutils::computeJTPhi_coeff(m_cv_buffer, m_iG_v_global, m_ce_inter_buffer,
                                   m_gradF_interhair);
     mathutils::accumulate_cwiseProduct(m_cv_buffer, m_cur_hhrr_v_global.col(i));
@@ -2009,7 +2041,7 @@ void PolygonalCohesion<DIM>::updatePorosity() {
   const std::vector<int>& particle_to_hairs = m_parent->getParticleToHairs();
   const std::vector<int>& particle_local_indices =
       m_parent->getParticleToHairLocalIndices();
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
 
   threadutils::thread_pool::ParallelFor(0, nf, [&](int hidx) {
     HairFlow<DIM>* hair = flows[hidx];
@@ -2037,12 +2069,14 @@ void PolygonalCohesion<DIM>::updatePorosity() {
           m_adjacency_categorized[pidx];
       for (auto& adj : adjs) {
         const ParticleEdgePair& pair = *(adj.second);
-        if (!pair.valid) continue;
+        if (!pair.valid)
+          continue;
 
         auto& neighbor_e = edges[pair.eidx];
         int nhidx = particle_to_hairs[neighbor_e.first];
 
-        if (nhidx < 0) continue;
+        if (nhidx < 0)
+          continue;
 
         const VectorXs& neta = flows[nhidx]->getEta();
 
@@ -2127,7 +2161,8 @@ void PolygonalCohesion<DIM>::updatePorosityEEC() {
       for (int npidx : adjs) {
         int nhidx = particle_to_hairs[npidx];
 
-        if (nhidx < 0) continue;
+        if (nhidx < 0)
+          continue;
 
         const VectorXs& neta = flows[nhidx]->getEta();
 
@@ -2219,7 +2254,7 @@ void PolygonalCohesion<DIM>::addHessVToTotal(const VectorXs& x,
 template <int DIM>
 void PolygonalCohesion<DIM>::updateViscousStartPhi(const VectorXs& x) {
   if (m_parent->getParameter().damping_multiplier > 0.) {
-    const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+    const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
     const int npep = (int)m_point_edge_pairs.size();
     m_viscous_start_phi.clear();
 
@@ -2257,7 +2292,7 @@ void PolygonalCohesion<DIM>::computeIntegrationVars(
     VectorXs& lambda_v, TripletXs& J, TripletXs& Jv, TripletXs& Jxv,
     TripletXs& tildeK, TripletXs& stiffness, TripletXs& damping, VectorXs& Phi,
     VectorXs& Phiv, const scalar& dt) {
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
 
   const int npep = (int)m_point_edge_pairs.size();
 
@@ -2465,12 +2500,13 @@ const char* PolygonalCohesion<DIM>::name() {
 template <int DIM>
 void PolygonalCohesion<DIM>::getAffectedVars(int pidx,
                                              std::unordered_set<int>& vars) {
-  if (m_parent->getComponent(pidx) == DIM) return;
+  if (m_parent->getComponent(pidx) == DIM)
+    return;
   if (!m_use_decoupled_force) {
     int ip = m_parent->getVertFromDof(pidx);
     vars.insert(pidx);
 
-    const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+    const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
 
     std::vector<int>& pepindices = m_particle_to_point_edge_pairs[ip];
 
@@ -2485,20 +2521,23 @@ void PolygonalCohesion<DIM>::getAffectedVars(int pidx,
     }
   } else {
     int ip = m_parent->getVertFromDof(pidx);
-    for (int r = 0; r < DIM; ++r) vars.insert(m_parent->getDof(ip) + r);
+    for (int r = 0; r < DIM; ++r)
+      vars.insert(m_parent->getDof(ip) + r);
   }
 }
 
 template <int DIM>
 bool PolygonalCohesion<DIM>::isContained(int pidx) {
-  if (m_parent->getComponent(pidx) == DIM) return false;
+  if (m_parent->getComponent(pidx) == DIM)
+    return false;
   return true;
 }
 
 template <int DIM>
 void PolygonalCohesion<DIM>::preCompute(const VectorXs& x, const VectorXs& v,
                                         const VectorXs& m, const scalar& dt) {
-  if (DIM == 2 || !m_parent->useCtcd()) computeConnections(x);
+  if (DIM == 2 || !m_parent->useCtcd())
+    computeConnections(x);
   updatePointEdgePairs(x, v, dt);  // assumes end of time position given for X
 #ifndef USE_RAW_LINEAR
   if (m_use_decoupled_force)

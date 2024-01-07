@@ -22,7 +22,7 @@
 #undef EIGEN_DEFAULT_IO_FORMAT  // < To silence some warnings about redefining
 #define EIGEN_DEFAULT_IO_FORMAT EIGEN_VECTOR_IO_FORMAT
 #define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-#undef EIGEN_INITIALIZE_MATRICES_BY_ZERO  // < To silence some warnings about
+#undef EIGEN_INITIALIZE_MATRICES_BY_ZERO  // < To silence some warnings about \
                                           // redefining
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #endif  // INCLUDE_VANILLA_EIGEN
@@ -53,10 +53,10 @@ typedef Eigen::Matrix<scalar, 11, 1>
     Vec11;  ///< 11d scalar vector (stencil for local forces)
 typedef Eigen::Matrix<scalar, Eigen::Dynamic, 1> VecX;
 
-typedef std::vector<Vec2, Eigen::aligned_allocator<Vec2> >
+typedef std::vector<Vec2, Eigen::aligned_allocator<Vec2>>
     Vec2Array;  ///< an array of 2d scalar vectors
-typedef std::vector<Vec3, Eigen::aligned_allocator<Vec3> > Vec3Array;
-typedef std::vector<Vec11, Eigen::aligned_allocator<Vec11> >
+typedef std::vector<Vec3, Eigen::aligned_allocator<Vec3>> Vec3Array;
+typedef std::vector<Vec11, Eigen::aligned_allocator<Vec11>>
     Vec11Array;  ///< an array of 11d scalar vectors
 
 typedef Eigen::Matrix<scalar, 2, 2> Mat2;  ///< 2x2 scalar matrix
@@ -64,7 +64,7 @@ typedef Eigen::Matrix<scalar, 3, 3> Mat3;  ///< 3x3 scalar matrix
 typedef Eigen::Matrix<scalar, 11, 11>
     Mat11;  ///< 11x11 scalar matrix (stencil for local forces)
 typedef std::pair<Mat11, Mat11> Mat11Pair;
-typedef std::vector<Mat11, Eigen::aligned_allocator<Mat11> >
+typedef std::vector<Mat11, Eigen::aligned_allocator<Mat11>>
     Mat11Array;  ///< an array of 11d scalar matrices
 
 typedef Eigen::Triplet<scalar> Triplets;
@@ -85,9 +85,13 @@ double EIGEN_STRONG_INLINE SMALL_NUMBER<double>() {
   return 1e-12;
 }
 
-EIGEN_STRONG_INLINE scalar square(const scalar x) { return x * x; }
+EIGEN_STRONG_INLINE scalar square(const scalar x) {
+  return x * x;
+}
 
-EIGEN_STRONG_INLINE scalar cube(const scalar x) { return x * x * x; }
+EIGEN_STRONG_INLINE scalar cube(const scalar x) {
+  return x * x * x;
+}
 
 template <typename ComparableT>
 EIGEN_STRONG_INLINE ComparableT clamp(const ComparableT x, const ComparableT l,
@@ -120,8 +124,8 @@ inline void swap(Eigen::DenseBase<Derived>& a, Eigen::DenseBase<Derived>& b) {
 
 template <typename Derived>
 inline void swap(
-    pair<Eigen::DenseBase<Derived>, Eigen::DenseBase<Derived> >& a,
-    pair<Eigen::DenseBase<Derived>, Eigen::DenseBase<Derived> >& b) {
+    pair<Eigen::DenseBase<Derived>, Eigen::DenseBase<Derived>>& a,
+    pair<Eigen::DenseBase<Derived>, Eigen::DenseBase<Derived>>& b) {
   a.first.swap(b.first);
   a.second.swap(b.second);
 }

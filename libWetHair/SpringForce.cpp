@@ -65,7 +65,8 @@ void SpringForce<DIM>::computeIntegrationVars(
 
   scalar weight = -m_lambda;
 
-  if (m_b > 0.0) weight += -m_lambda_v;
+  if (m_b > 0.0)
+    weight += -m_lambda_v;
 
   for (int r = 0; r < DIM; ++r) {
     for (int s = 0; s < DIM; ++s) {
@@ -160,7 +161,8 @@ void SpringForce<DIM>::storeLambda(const VectorXs& lambda,
                                    const VectorXs& lambda_v) {
   m_lambda = lambda(m_internal_index_pos);
 
-  if (m_b > 0.0) m_lambda_v = lambda_v(m_internal_index_vel);
+  if (m_b > 0.0)
+    m_lambda_v = lambda_v(m_internal_index_vel);
 }
 
 template <int DIM>
@@ -177,7 +179,8 @@ template <int DIM>
 void SpringForce<DIM>::getAffectedVars(int pidx,
                                        std::unordered_set<int>& vars) {
   int idir = m_scene->getComponent(pidx);
-  if (idir == DIM) return;
+  if (idir == DIM)
+    return;
   int ip = m_scene->getVertFromDof(pidx);
 
   if (ip == m_endpoints.first || ip == m_endpoints.second) {
@@ -197,7 +200,8 @@ int SpringForce<DIM>::getAffectedHair(
 template <int DIM>
 bool SpringForce<DIM>::isContained(int pidx) {
   int idir = m_scene->getComponent(pidx);
-  if (idir == DIM) return false;
+  if (idir == DIM)
+    return false;
   int ip = m_scene->getVertFromDof(pidx);
 
   return (ip == m_endpoints.first || ip == m_endpoints.second);

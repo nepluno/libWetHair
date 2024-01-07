@@ -27,18 +27,19 @@ namespace libwethair {
 
 template <class T>
 struct levelGen {
-  void generateRP(const robertbridson::FixedSparseMatrix<T> &A,
-                  robertbridson::FixedSparseMatrix<T> &R,
-                  robertbridson::FixedSparseMatrix<T> &P, int ni, int nj, int nk);
+  void generateRP(const robertbridson::FixedSparseMatrix<T>& A,
+                  robertbridson::FixedSparseMatrix<T>& R,
+                  robertbridson::FixedSparseMatrix<T>& P, int ni, int nj,
+                  int nk);
 
-  void generateRPCompressed(const robertbridson::FixedSparseMatrix<T> &A,
-                            robertbridson::FixedSparseMatrix<T> &R,
-                            robertbridson::FixedSparseMatrix<T> &P,
-                            std::vector<bool> &pattern, std::vector<char> &mask,
-                            std::vector<int> &index_table,
-                            std::vector<char> &mask_this_level,
-                            std::vector<int> &idxTable_this_level, int ni, int nj,
-                            int nk) {
+  void generateRPCompressed(const robertbridson::FixedSparseMatrix<T>& A,
+                            robertbridson::FixedSparseMatrix<T>& R,
+                            robertbridson::FixedSparseMatrix<T>& P,
+                            std::vector<bool>& pattern, std::vector<char>& mask,
+                            std::vector<int>& index_table,
+                            std::vector<char>& mask_this_level,
+                            std::vector<int>& idxTable_this_level, int ni,
+                            int nj, int nk) {
     generatePattern(mask, index_table, pattern, ni, nj, nk);
     int nni = ceil((float)ni / 2.0);
     int nnj = ceil((float)nj / 2.0);
@@ -105,8 +106,8 @@ struct levelGen {
     p.clear();
   }
 
-  void generatePattern(std::vector<char> &mask, std::vector<int> &index_table,
-                       std::vector<bool> &pattern, int ni, int nj, int nk) {
+  void generatePattern(std::vector<char>& mask, std::vector<int>& index_table,
+                       std::vector<bool>& pattern, int ni, int nj, int nk) {
     pattern.resize(index_table[index_table.size() - 1] + 1);
     pattern.assign(pattern.size(), false);
     int compute_num = ni * nj * nk;
@@ -124,11 +125,12 @@ struct levelGen {
     });
   }
 
-  void generateRPSparse(const robertbridson::FixedSparseMatrix<T> &A,
-                        robertbridson::FixedSparseMatrix<T> &R,
-                        robertbridson::FixedSparseMatrix<T> &P, std::vector<bool> &pattern,
-                        std::vector<Vector3i> &Dof_ijk_fine,
-                        std::vector<Vector3i> &Dof_ijk_coarse, int ni, int nj,
+  void generateRPSparse(const robertbridson::FixedSparseMatrix<T>& A,
+                        robertbridson::FixedSparseMatrix<T>& R,
+                        robertbridson::FixedSparseMatrix<T>& P,
+                        std::vector<bool>& pattern,
+                        std::vector<Vector3i>& Dof_ijk_fine,
+                        std::vector<Vector3i>& Dof_ijk_coarse, int ni, int nj,
                         int nk) {
     generatePatternSparse(Dof_ijk_fine, pattern);
     int nni = ceil((float)ni / 2.0);
@@ -173,7 +175,8 @@ struct levelGen {
     p.clear();
   }
 
-  void generatePatternSparse(std::vector<Vector3i> &Dof_ijk, std::vector<bool> &pattern) {
+  void generatePatternSparse(std::vector<Vector3i>& Dof_ijk,
+                             std::vector<bool>& pattern) {
     pattern.resize(Dof_ijk.size());
     tbb::parallel_for((size_t)0, (size_t)Dof_ijk.size(), (size_t)1,
                       [&](size_t index) {
@@ -187,13 +190,13 @@ struct levelGen {
   }
 
   void generateLevelsGalerkinCoarseningSparse(
-      std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T> > > &A_L,
-      std::vector<robertbridson::FixedSparseMatrix<T>> &R_L,
-      std::vector<robertbridson::FixedSparseMatrix<T> > &P_L,
-      std::vector<std::vector<bool> > &b_L, int &total_level,
+      std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>>& A_L,
+      std::vector<robertbridson::FixedSparseMatrix<T>>& R_L,
+      std::vector<robertbridson::FixedSparseMatrix<T>>& P_L,
+      std::vector<std::vector<bool>>& b_L, int& total_level,
       // given
-      const std::shared_ptr<robertbridson::FixedSparseMatrix<T> > &A,
-      std::vector<Vector3i> &Dof_ijk, int ni, int nj, int nk) {
+      const std::shared_ptr<robertbridson::FixedSparseMatrix<T>>& A,
+      std::vector<Vector3i>& Dof_ijk, int ni, int nj, int nk) {
 #ifdef AMG_VERBOSE
     cout << "building levels ...... " << endl;
 #endif
@@ -212,7 +215,7 @@ struct levelGen {
     int nni = ni, nnj = nj, nnk = nk;
     unsigned int unknowns = A->n;
     while (unknowns > 4096) {
-      A_L.push_back(std::make_shared<robertbridson::FixedSparseMatrix<T> >());
+      A_L.push_back(std::make_shared<robertbridson::FixedSparseMatrix<T>>());
       R_L.push_back(robertbridson::FixedSparseMatrix<T>());
       P_L.push_back(robertbridson::FixedSparseMatrix<T>());
       nni = ceil((float)nni / 2.0);

@@ -106,7 +106,8 @@ void updateCurlyHair(const double& dL, std::vector<Vec3>& vertices,
                      double curl_radius, double curl_density,
                      double root_length) {
   const int nv = vertices.size();
-  if (nv < 2) return;
+  if (nv < 2)
+    return;
 
   // generate an orthonormal frame
   Vec3 initnorm = (vertices[1] - vertices[0]).normalized();

@@ -19,15 +19,15 @@ namespace libwethair {
 
 template <class S, class T>
 T interpolate_value(const Eigen::Matrix<S, 2, 1>& point,
-                    const Array2<T, Array1<T> >& grid) {
+                    const Array2<T, Array1<T>>& grid) {
   int i, j;
   S fx, fy;
 
   mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
   mathutils::get_barycentric(point[1], j, fy, 0, grid.nj);
 
-  return mathutils::bilerp(grid(i, j), grid(i + 1, j), grid(i, j + 1), grid(i + 1, j + 1),
-                           fx, fy);
+  return mathutils::bilerp(grid(i, j), grid(i + 1, j), grid(i, j + 1),
+                           grid(i + 1, j + 1), fx, fy);
 }
 
 template <class S, class T>
@@ -39,13 +39,14 @@ T interpolate_value(const Eigen::Matrix<S, 2, 1>& point,
   mathutils::get_barycentric(point[0], i, fx, 0, ni);
   mathutils::get_barycentric(point[1], j, fy, 0, nj);
 
-  return mathutils::bilerp(grid[j * ni + i], grid[j * ni + i + 1], grid[(j + 1) * ni + i],
-                           grid[(j + 1) * ni + (i + 1)], fx, fy);
+  return mathutils::bilerp(grid[j * ni + i], grid[j * ni + i + 1],
+                           grid[(j + 1) * ni + i], grid[(j + 1) * ni + (i + 1)],
+                           fx, fy);
 }
 
 template <class T>
 Eigen::Matrix<T, 2, 1> affine_interpolate_value(
-    const Eigen::Matrix<T, 2, 1>& point, const Array2<T, Array1<T> >& grid) {
+    const Eigen::Matrix<T, 2, 1>& point, const Array2<T, Array1<T>>& grid) {
   int i, j;
   T fx, fy;
 
@@ -59,7 +60,7 @@ Eigen::Matrix<T, 2, 1> affine_interpolate_value(
 template <class S, class T>
 T interpolate_gradient(Eigen::Matrix<T, 2, 1>& gradient,
                        const Eigen::Matrix<S, 2, 1>& point,
-                       const Array2<T, Array1<T> >& grid) {
+                       const Array2<T, Array1<T>>& grid) {
   int i, j;
   S fx, fy;
   mathutils::get_barycentric(point[0], i, fx, 0, grid.ni);
@@ -86,7 +87,7 @@ T interpolate_gradient(Eigen::Matrix<T, 2, 1>& gradient,
 template <typename S, typename T>
 void interpolate_gradient(Eigen::Matrix<S, 2, 1>& gradient,
                           const Eigen::Matrix<S, 2, 1>& point,
-                          const Array2<T, Array1<T> >& grid, S cellSize) {
+                          const Array2<T, Array1<T>>& grid, S cellSize) {
   int i, j;
   S fx, fy;
   mathutils::get_barycentric(point(0), i, fx, 0, grid.ni);
@@ -135,7 +136,7 @@ void interpolate_gradient(Eigen::Matrix<S, 2, 1>& gradient,
 template <typename S, typename T>
 void interpolate_hessian(Eigen::Matrix<S, 2, 2>& hessian,
                          const Eigen::Matrix<S, 2, 1>& point,
-                         const Array2<T, Array1<T> >& grid, S cellSize) {
+                         const Array2<T, Array1<T>>& grid, S cellSize) {
   Eigen::Matrix<S, 2, 1> gx0;
   Eigen::Matrix<S, 2, 1> gx1;
   Eigen::Matrix<S, 2, 1> gy0;
@@ -161,7 +162,7 @@ void interpolate_hessian(Eigen::Matrix<S, 2, 2>& hessian,
 }
 
 template <class T>
-void write_matlab_array(std::ostream& output, Array2<T, Array1<T> >& a,
+void write_matlab_array(std::ostream& output, Array2<T, Array1<T>>& a,
                         const char* variable_name, bool transpose = false) {
   output << variable_name << "=[";
   for (int j = 0; j < a.nj; ++j) {
@@ -171,7 +172,8 @@ void write_matlab_array(std::ostream& output, Array2<T, Array1<T> >& a,
     output << ";";
   }
   output << "]";
-  if (transpose) output << "'";
+  if (transpose)
+    output << "'";
   output << ";" << std::endl;
 }
 

@@ -228,7 +228,8 @@ void StrandCompliantEuler<DIM>::preIterate(TwoDScene<DIM>& scene, scalar dt) {
   for (int i = 0; i < nJ; ++i) {
     const Triplets& t = m_J_nz_ref[base_J + i];
     int jp = scene.getVertFromDof(t.col());
-    if (scene.isFixed(jp)) continue;
+    if (scene.isFixed(jp))
+      continue;
     int jp_local = global_local[jp];
     int jdir = scene.getComponent(t.col());
     if (scene.isMassSpring())
@@ -249,7 +250,8 @@ void StrandCompliantEuler<DIM>::preIterate(TwoDScene<DIM>& scene, scalar dt) {
   for (int i = 0; i < nJv; ++i) {
     const Triplets& t = m_Jv_nz_ref[base_Jv + i];
     int jp = scene.getVertFromDof(t.col());
-    if (scene.isFixed(jp)) continue;
+    if (scene.isFixed(jp))
+      continue;
     int jp_local = global_local[jp];
     int jdir = scene.getComponent(t.col());
     if (scene.isMassSpring())
@@ -270,7 +272,8 @@ void StrandCompliantEuler<DIM>::preIterate(TwoDScene<DIM>& scene, scalar dt) {
   for (int i = 0; i < nJxv; ++i) {
     const Triplets& t = m_Jxv_nz_ref[base_Jxv + i];
     int jp = scene.getVertFromDof(t.col());
-    if (scene.isFixed(jp)) continue;
+    if (scene.isFixed(jp))
+      continue;
     int jp_local = global_local[jp];
     int jdir = scene.getComponent(t.col());
     if (scene.isMassSpring())

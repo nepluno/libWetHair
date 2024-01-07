@@ -97,12 +97,12 @@ const std::vector<unsigned char>& HairFlow<DIM>::getState() const {
 }
 
 template <int DIM>
-const std::vector<std::vector<int> >& HairFlow<DIM>::getEdgeBridges() const {
+const std::vector<std::vector<int>>& HairFlow<DIM>::getEdgeBridges() const {
   return m_edge_bridges;
 }
 
 template <int DIM>
-std::vector<std::vector<int> >& HairFlow<DIM>::getEdgeBridges() {
+std::vector<std::vector<int>>& HairFlow<DIM>::getEdgeBridges() {
   return m_edge_bridges;
 }
 
@@ -127,12 +127,12 @@ const std::vector<int>& HairFlow<DIM>::getParticleIndices() const {
 }
 
 template <int DIM>
-const std::vector<std::pair<int, int> >& HairFlow<DIM>::getLocalEdges() const {
+const std::vector<std::pair<int, int>>& HairFlow<DIM>::getLocalEdges() const {
   return m_internal_edges;
 }
 
 template <int DIM>
-const std::vector<std::pair<int, int> >& HairFlow<DIM>::getGlobalEdges() const {
+const std::vector<std::pair<int, int>>& HairFlow<DIM>::getGlobalEdges() const {
   return m_global_edges;
 }
 

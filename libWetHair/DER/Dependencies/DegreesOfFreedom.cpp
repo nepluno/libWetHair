@@ -114,7 +114,7 @@ void TrigThetas::compute() {
   m_value.second.resize(numThetas);
 
   // Extract thetas in their own vector for mkl_vlm
-  const Eigen::Map<const VecX, Eigen::Unaligned, Eigen::InnerStride<4> >
+  const Eigen::Map<const VecX, Eigen::Unaligned, Eigen::InnerStride<4>>
       thetasMap(dofs.data() + 3, numThetas);
   const VecX thetaVec(thetasMap);
   // Compute their sine and cosine

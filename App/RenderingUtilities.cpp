@@ -41,7 +41,9 @@ Color::Color(double r, double g, double b) : r(r), g(g), b(b) {
   assert(b <= 1.0);
 }
 
-Vector3s Color::toVector() const { return Vector3s(r, g, b); }
+Vector3s Color::toVector() const {
+  return Vector3s(r, g, b);
+}
 
 }  // namespace renderingutils
 }  // namespace libwethair

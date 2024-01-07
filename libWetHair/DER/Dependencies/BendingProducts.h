@@ -18,9 +18,9 @@
 
 namespace libwethair {
 
-typedef std::vector<Mat2, Eigen::aligned_allocator<Mat2> >
+typedef std::vector<Mat2, Eigen::aligned_allocator<Mat2>>
     Mat2Array;  ///< an array of 2d scalar matrices
-typedef std::vector<Mat11, Eigen::aligned_allocator<Mat11> >
+typedef std::vector<Mat11, Eigen::aligned_allocator<Mat11>>
     Mat11Array;  ///< an array of 11d scalar matrices
 
 /**

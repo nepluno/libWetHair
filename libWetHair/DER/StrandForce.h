@@ -141,8 +141,7 @@ class StrandForce : public Force {
 
   void recomputeGlobal();
   void clearStored();
-  void getLocalAffectedVars(int colidx,
-                            std::vector<std::pair<int, int> >& vars);
+  void getLocalAffectedVars(int colidx, std::vector<std::pair<int, int>>& vars);
 
   template <typename AccumulatedT>
   void accumulateQuantity(AccumulatedT& accumulated);

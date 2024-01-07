@@ -13,7 +13,9 @@
 
 namespace libwethair {
 
-IcosphereCreator::IcosphereCreator() { index = 0; }
+IcosphereCreator::IcosphereCreator() {
+  index = 0;
+}
 
 int IcosphereCreator::addVertex(const Vector3s& p) {
   vertices.push_back(p.normalized());

@@ -154,7 +154,8 @@ void SimpleGravityForce<DIM>::addGradEToTotal(const VectorXs& x,
   assert(x.size() == gradE.size());
 
   int idir = m_scene->getComponent(pidx);
-  if (idir == DIM) return;
+  if (idir == DIM)
+    return;
 
   scalar rho = m_scene->getHairDensity(pidx);
 
@@ -236,7 +237,8 @@ void SimpleGravityForce<DIM>::getAffectedVars(int pidx,
 
 template <int DIM>
 bool SimpleGravityForce<DIM>::isContained(int pidx) {
-  if (m_scene->getComponent(pidx) == DIM) return false;
+  if (m_scene->getComponent(pidx) == DIM)
+    return false;
   return true;
 }
 

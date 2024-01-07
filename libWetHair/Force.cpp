@@ -18,7 +18,9 @@ Force::~Force() {}
 void Force::preCompute(const VectorXs& x, const VectorXs& v, const VectorXs& m,
                        const scalar& dt) {}
 
-bool Force::isInterHair() const { return false; }
+bool Force::isInterHair() const {
+  return false;
+}
 
 void Force::storeLambda(const VectorXs& lambda, const VectorXs& lambda_v) {}
 
@@ -28,7 +30,9 @@ int Force::getAffectedHair(const std::vector<int> particle_to_hairs) {
   return -1;
 }
 
-bool Force::isExternal() { return false; }
+bool Force::isExternal() {
+  return false;
+}
 
 void Force::setInternalIndex(int index_pos, int index_vel, int index_J,
                              int index_Jv, int index_Jxv, int index_tildeK) {

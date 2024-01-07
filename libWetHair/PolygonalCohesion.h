@@ -187,13 +187,13 @@ class PolygonalCohesion : public Force {
   const int m_num_quadrature = 1;
 
   TwoDScene<DIM>* m_parent;
-  std::vector<std::unordered_map<int, ParticleEdgePair*> >
+  std::vector<std::unordered_map<int, ParticleEdgePair*>>
       m_adjacency_categorized;  // pidx -> (hair_idx, pair_idx)
-  std::vector<std::unordered_map<int, EdgeEdgePairEEC*> >
+  std::vector<std::unordered_map<int, EdgeEdgePairEEC*>>
       m_edge_connections;  // eidx -> (neighbor_eidx_idx -> EE_pair)
   std::vector<int> m_num_valid_edge_connections;  // eidx -> count of valid EEP
   std::vector<int> m_num_edge_connections;        // pidx -> count
-  std::vector<std::vector<int> >
+  std::vector<std::vector<int>>
       m_particle_to_pppairs;  // pidx -> other particles connected
   // std::vector< std::vector< EdgeEdgePair > > m_edge_edge_contacts;
   std::vector<int> m_num_adjacency_categorized;
@@ -203,17 +203,17 @@ class PolygonalCohesion : public Force {
   std::vector<ParticleParticlePair> m_particle_particle_pairs;
   std::vector<PointEdgePair> m_point_edge_pairs;
 
-  std::vector<std::vector<PointEdgePair> > m_point_edge_pairs_cache;
+  std::vector<std::vector<PointEdgePair>> m_point_edge_pairs_cache;
   std::vector<int> m_counting_poe_pair_location;
 
   VectorXs m_particle_adjacency_hair_size;
 
-  std::unordered_map<int, std::unordered_set<int> >
+  std::unordered_map<int, std::unordered_set<int>>
       m_adjacency_hair_edges_buffer;
 
-  std::vector<std::vector<int> > m_particle_to_point_edge_pairs;
+  std::vector<std::vector<int>> m_particle_to_point_edge_pairs;
 
-  std::vector<std::unordered_set<int> > m_pp_pair_hash;
+  std::vector<std::unordered_set<int>> m_pp_pair_hash;
 
   VectorXs m_particle_length;
 

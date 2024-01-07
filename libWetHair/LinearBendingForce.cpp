@@ -126,7 +126,7 @@ void LinearBendingForce<DIM>::preCompute(const VectorXs& x, const VectorXs& v,
     m_R(1, 0) = sin(theta);
     m_R(0, 1) = -m_R(1, 0);
   } else if (DIM == 3) {
-    const Eigen::JacobiSVD<Matrixs<DIM> >& svd =
+    const Eigen::JacobiSVD<Matrixs<DIM>>& svd =
         A.jacobiSvd(Eigen::ComputeFullU | Eigen::ComputeFullV);
     m_R = svd.matrixU() * svd.matrixV().transpose();
   }
@@ -217,7 +217,8 @@ template <int DIM>
 void LinearBendingForce<DIM>::getAffectedVars(int colidx,
                                               std::unordered_set<int>& vars) {
   int idir = m_scene->getComponent(colidx);
-  if (idir == DIM) return;
+  if (idir == DIM)
+    return;
   int ip = m_scene->getVertFromDof(colidx);
 
   if (ip == m_idx1 || ip == m_idx2 || ip == m_idx3) {
@@ -238,7 +239,8 @@ int LinearBendingForce<DIM>::getAffectedHair(
 template <int DIM>
 bool LinearBendingForce<DIM>::isContained(int colidx) {
   int idir = m_scene->getComponent(colidx);
-  if (idir == DIM) return false;
+  if (idir == DIM)
+    return false;
   int ip = m_scene->getVertFromDof(colidx);
 
   if (ip == m_idx1 || ip == m_idx2 || ip == m_idx3)

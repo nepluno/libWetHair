@@ -33,8 +33,8 @@ Multigrid Cycles.
 namespace libwethair {
 
 template <class T>
-void RBGS(const robertbridson::FixedSparseMatrix<T> &A, const std::vector<T> &b, std::vector<T> &x,
-          int ni, int nj, int nk, int iternum) {
+void RBGS(const robertbridson::FixedSparseMatrix<T>& A, const std::vector<T>& b,
+          std::vector<T>& x, int ni, int nj, int nk, int iternum) {
   for (int iter = 0; iter < iternum; iter++) {
     size_t num = ni * nj * nk;
     size_t slice = ni * nj;
@@ -95,9 +95,10 @@ void RBGS(const robertbridson::FixedSparseMatrix<T> &A, const std::vector<T> &b,
 }
 
 template <class T>
-void restriction(const robertbridson::FixedSparseMatrix<T> &R, const robertbridson::FixedSparseMatrix<T> &A,
-                 const std::vector<T> &x, const std::vector<T> &b_curr,
-                 std::vector<T> &b_next) {
+void restriction(const robertbridson::FixedSparseMatrix<T>& R,
+                 const robertbridson::FixedSparseMatrix<T>& A,
+                 const std::vector<T>& x, const std::vector<T>& b_curr,
+                 std::vector<T>& b_next) {
   b_next.assign(b_next.size(), 0);
   std::vector<T> r = b_curr;
   multiply_and_subtract(A, x, r);
@@ -105,8 +106,8 @@ void restriction(const robertbridson::FixedSparseMatrix<T> &R, const robertbrids
   r.resize(0);
 }
 template <class T>
-void prolongatoin(const robertbridson::FixedSparseMatrix<T> &P, const std::vector<T> &x_curr,
-                  std::vector<T> &x_next) {
+void prolongatoin(const robertbridson::FixedSparseMatrix<T>& P,
+                  const std::vector<T>& x_curr, std::vector<T>& x_next) {
   static std::vector<T> xx;
   xx.resize(x_next.size());
   xx.assign(xx.size(), 0);
@@ -116,8 +117,9 @@ void prolongatoin(const robertbridson::FixedSparseMatrix<T> &P, const std::vecto
 }
 
 template <class T>
-void RBGS_with_pattern(const robertbridson::FixedSparseMatrix<T> &A, const std::vector<T> &b,
-                       std::vector<T> &x, std::vector<bool> &pattern, int iternum) {
+void RBGS_with_pattern(const robertbridson::FixedSparseMatrix<T>& A,
+                       const std::vector<T>& b, std::vector<T>& x,
+                       std::vector<bool>& pattern, int iternum) {
   for (int iter = 0; iter < iternum; iter++) {
     size_t num = x.size();
 
@@ -129,7 +131,8 @@ void RBGS_with_pattern(const robertbridson::FixedSparseMatrix<T> &A, const std::
         T diag = 0;
         for (int ii = A.rowstart[thread_idx]; ii < A.rowstart[thread_idx + 1];
              ii++) {
-          if (ii >= A.colindex.size() || ii >= A.value.size()) continue;
+          if (ii >= A.colindex.size() || ii >= A.value.size())
+            continue;
 
           if (A.colindex[ii] != thread_idx &&
               A.colindex[ii] < num)  // none diagonal terms
@@ -156,7 +159,8 @@ void RBGS_with_pattern(const robertbridson::FixedSparseMatrix<T> &A, const std::
         T diag = 0;
         for (int ii = A.rowstart[thread_idx]; ii < A.rowstart[thread_idx + 1];
              ii++) {
-          if (ii >= A.colindex.size() || ii >= A.value.size()) continue;
+          if (ii >= A.colindex.size() || ii >= A.value.size())
+            continue;
 
           if (A.colindex[ii] != thread_idx &&
               A.colindex[ii] < num)  // none diagonal terms
@@ -178,11 +182,12 @@ void RBGS_with_pattern(const robertbridson::FixedSparseMatrix<T> &A, const std::
 }
 
 template <class T>
-void amgVCycleCompressed(std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>> &A_L,
-                         std::vector<robertbridson::FixedSparseMatrix<T>> &R_L,
-                         std::vector<robertbridson::FixedSparseMatrix<T>> &P_L,
-                         std::vector<std::vector<bool>> &p_L, std::vector<T> &x,
-                         const std::vector<T> &b) {
+void amgVCycleCompressed(
+    std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>>& A_L,
+    std::vector<robertbridson::FixedSparseMatrix<T>>& R_L,
+    std::vector<robertbridson::FixedSparseMatrix<T>>& P_L,
+    std::vector<std::vector<bool>>& p_L, std::vector<T>& x,
+    const std::vector<T>& b) {
   int total_level = A_L.size();
   std::vector<std::vector<T>> x_L;
   std::vector<std::vector<T>> b_L;
@@ -233,11 +238,12 @@ void amgVCycleCompressed(std::vector<std::shared_ptr<robertbridson::FixedSparseM
   }
 }
 template <class T>
-void amgPrecondCompressed(std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>> &A_L,
-                          std::vector<robertbridson::FixedSparseMatrix<T>> &R_L,
-                          std::vector<robertbridson::FixedSparseMatrix<T>> &P_L,
-                          std::vector<std::vector<bool>> &p_L, std::vector<T> &x,
-                          const std::vector<T> &b) {
+void amgPrecondCompressed(
+    std::vector<std::shared_ptr<robertbridson::FixedSparseMatrix<T>>>& A_L,
+    std::vector<robertbridson::FixedSparseMatrix<T>>& R_L,
+    std::vector<robertbridson::FixedSparseMatrix<T>>& P_L,
+    std::vector<std::vector<bool>>& p_L, std::vector<T>& x,
+    const std::vector<T>& b) {
   // printf("preconditioning begin\n");
   x.resize(b.size());
   x.assign(x.size(), 0);
@@ -246,10 +252,11 @@ void amgPrecondCompressed(std::vector<std::shared_ptr<robertbridson::FixedSparse
 }
 
 template <class T>
-bool AMGPCGSolveSparse(const robertbridson::SparseMatrix<T> &matrix, const std::vector<T> &rhs,
-                       std::vector<T> &result, std::vector<Vector3i> &Dof_ijk,
-                       T tolerance_factor, int max_iterations, T &residual_out,
-                       int &iterations_out, int ni, int nj, int nk) {
+bool AMGPCGSolveSparse(const robertbridson::SparseMatrix<T>& matrix,
+                       const std::vector<T>& rhs, std::vector<T>& result,
+                       std::vector<Vector3i>& Dof_ijk, T tolerance_factor,
+                       int max_iterations, T& residual_out, int& iterations_out,
+                       int ni, int nj, int nk) {
   static std::shared_ptr<robertbridson::FixedSparseMatrix<T>> fixed_matrix =
       std::make_shared<robertbridson::FixedSparseMatrix<T>>();
   fixed_matrix->construct_from_matrix(matrix);

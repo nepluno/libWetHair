@@ -14,9 +14,9 @@
 #include <sstream>
 
 #include <libWetHair/HairFlow.h>
+#include <libWetHair/PolygonalCohesion.h>
 #include <libWetHair/fluidsim2D.h>
 #include <libWetHair/fluidsim3D.h>
-#include <libWetHair/PolygonalCohesion.h>
 
 #include "TwoDimensionalDisplayController.h"
 #include "openglutils.h"
@@ -206,7 +206,7 @@ void TwoDSceneRenderer<2>::renderSolidCircle(const Vector2s& center,
   glBegin(GL_TRIANGLE_FAN);
   glVertex2d(center.x(), center.y());
 
-  for (std::vector<std::pair<double, double> >::size_type i = 0;
+  for (std::vector<std::pair<double, double>>::size_type i = 0;
        i < m_circle_points.size(); ++i)
     glVertex2d(radius * m_circle_points[i].first + center.x(),
                radius * m_circle_points[i].second + center.y());
@@ -222,7 +222,7 @@ void TwoDSceneRenderer<3>::renderSolidCircle(const Vector3s& center,
   glBegin(GL_TRIANGLE_FAN);
   glVertex3dv(center.data());
 
-  for (std::vector<std::pair<double, double> >::size_type i = 0;
+  for (std::vector<std::pair<double, double>>::size_type i = 0;
        i < m_circle_points.size(); ++i)
     glVertex3d(radius * m_circle_points[i].first + center.x(),
                radius * m_circle_points[i].second + center.y(), center.z());

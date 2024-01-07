@@ -144,7 +144,7 @@ std::ostream& operator<<(std::ostream& os, const ThetaHessKType& HessKappa);
  * @brief Specialized template for vector quantities
  */
 template <typename ElemValueT, typename AllocatorT>
-class DependencyNode<std::vector<ElemValueT, AllocatorT> >
+class DependencyNode<std::vector<ElemValueT, AllocatorT>>
     : public DependencyBase {
  public:
   typedef std::vector<ElemValueT, AllocatorT> ValueT;

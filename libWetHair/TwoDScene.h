@@ -241,11 +241,11 @@ class TwoDScene {
 
   void insertHalfplane(const std::pair<VectorXs, VectorXs>& halfplane);
 
-  const std::vector<std::pair<int, int> >& getEdges() const;
+  const std::vector<std::pair<int, int>>& getEdges() const;
 
   // Each halfplane is a pair of two 2D vectors, a position and a normal.
   // The the Theme 02 Milestone 01 PDF for a description of these vectors.
-  const std::vector<std::pair<VectorXs, VectorXs> >& getHalfplanes() const;
+  const std::vector<std::pair<VectorXs, VectorXs>>& getHalfplanes() const;
 
   const std::pair<VectorXs, VectorXs>& getHalfplane(int idx) const;
 
@@ -467,7 +467,7 @@ class TwoDScene {
 
   const scalar& getSearchRadius() const;
 
-  const std::vector<std::vector<int> >& getParticleToEdge() const;
+  const std::vector<std::vector<int>>& getParticleToEdge() const;
 
   void preCompute(const VectorXs& dx, const VectorXs& dv, const scalar& dt);
 
@@ -567,17 +567,17 @@ class TwoDScene {
 
   const VectorXs& getFluidDragBuffer() const;
 
-  std::vector<std::unordered_set<int> >& getBroadPhasePEPairs();
+  std::vector<std::unordered_set<int>>& getBroadPhasePEPairs();
 
-  std::vector<std::unordered_set<int> >& getBroadPhasePPPairs();
+  std::vector<std::unordered_set<int>>& getBroadPhasePPPairs();
 
-  std::vector<std::unordered_set<int> >& getBroadPhaseEEPairs();
+  std::vector<std::unordered_set<int>>& getBroadPhaseEEPairs();
 
-  const std::vector<std::unordered_set<int> >& getBroadPhasePEPairs() const;
+  const std::vector<std::unordered_set<int>>& getBroadPhasePEPairs() const;
 
-  const std::vector<std::unordered_set<int> >& getBroadPhasePPPairs() const;
+  const std::vector<std::unordered_set<int>>& getBroadPhasePPPairs() const;
 
-  const std::vector<std::unordered_set<int> >& getBroadPhaseEEPairs() const;
+  const std::vector<std::unordered_set<int>>& getBroadPhaseEEPairs() const;
 
   const Vectors<DIM>& getBoundingBoxMin() const;
 
@@ -674,7 +674,7 @@ class TwoDScene {
 
   std::ofstream m_strout;
   // Vertex radii
-  std::vector<std::pair<int, int> > m_edges;
+  std::vector<std::pair<int, int>> m_edges;
   VectorXs m_edge_radii;
   VectorXs m_edge_rest_radii;
   VectorXs m_edge_rest_length;
@@ -683,7 +683,7 @@ class TwoDScene {
   std::vector<Force*> m_forces;
   std::vector<Force*> m_external_forces;
   std::vector<Force*> m_internal_forces;
-  std::vector<std::vector<Force*> >
+  std::vector<std::vector<Force*>>
       m_hair_internal_forces;  // hair idx -> forces only affecting that hair
   std::vector<Force*> m_inter_hair_forces;
   // String 'tags' assigned to particles. Can be used to identify and single out
@@ -696,17 +696,17 @@ class TwoDScene {
 
   std::vector<Vector3s> m_scripted_translate;
 
-  std::vector<Eigen::Quaternion<scalar> > m_scripted_rotation;
+  std::vector<Eigen::Quaternion<scalar>> m_scripted_rotation;
 
   std::vector<int> m_particle_to_hair_local_indices;
 
   std::vector<HairFlow<DIM>*> m_flows;
 
-  std::vector<std::vector<int> > m_particle_to_edge;
+  std::vector<std::vector<int>> m_particle_to_edge;
 
-  std::vector<std::unordered_set<int> > m_bp_edge_edge_pairs;
-  std::vector<std::unordered_set<int> > m_bp_particle_edge_pairs;
-  std::vector<std::unordered_set<int> > m_bp_particle_particle_pairs;
+  std::vector<std::unordered_set<int>> m_bp_edge_edge_pairs;
+  std::vector<std::unordered_set<int>> m_bp_particle_edge_pairs;
+  std::vector<std::unordered_set<int>> m_bp_particle_particle_pairs;
 
   std::vector<StrandParameters*> m_strandParameters;
   std::vector<StrandEquilibriumParameters*> m_strandEquilibriumParameters;

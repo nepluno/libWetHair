@@ -176,25 +176,34 @@ inline void update_minmax(T a1, T& amin, T& amax) {
 // swap so that a<b
 template <class T>
 inline void sort(T& a, T& b) {
-  if (a > b) swap(a, b);
+  if (a > b)
+    swap(a, b);
 }
 
 // swap so that a<b<c
 template <class T>
 inline void sort(T& a, T& b, T& c) {
-  if (a > b) swap(a, b);
-  if (a > c) swap(a, c);
-  if (b > c) swap(b, c);
+  if (a > b)
+    swap(a, b);
+  if (a > c)
+    swap(a, c);
+  if (b > c)
+    swap(b, c);
 }
 
 // swap so that a<b<c<d
 template <class T>
 inline void sort(T& a, T& b, T& c, T& d) {
-  if (a > b) swap(a, b);
-  if (c > d) swap(c, d);
-  if (a > c) swap(a, c);
-  if (b > d) swap(b, d);
-  if (b > c) swap(b, c);
+  if (a > b)
+    swap(a, b);
+  if (c > d)
+    swap(c, d);
+  if (a > c)
+    swap(a, c);
+  if (b > d)
+    swap(b, d);
+  if (b > c)
+    swap(b, c);
 }
 
 template <class T>
@@ -492,14 +501,16 @@ inline S cubic_interp(const S& value_neg1, const S& value0, const S& value1,
 
 template <class T>
 void zero(std::vector<T>& v) {
-  for (int i = (int)v.size() - 1; i >= 0; --i) v[i] = 0;
+  for (int i = (int)v.size() - 1; i >= 0; --i)
+    v[i] = 0;
 }
 
 template <class T>
 T abs_max(const std::vector<T>& v) {
   T m = 0;
   for (int i = (int)v.size() - 1; i >= 0; --i) {
-    if (std::fabs(v[i]) > m) m = std::fabs(v[i]);
+    if (std::fabs(v[i]) > m)
+      m = std::fabs(v[i]);
   }
   return m;
 }
@@ -507,14 +518,16 @@ T abs_max(const std::vector<T>& v) {
 template <class T>
 bool contains(const std::vector<T>& a, T e) {
   for (unsigned int i = 0; i < a.size(); ++i)
-    if (a[i] == e) return true;
+    if (a[i] == e)
+      return true;
   return false;
 }
 
 template <class T>
 void add_unique(std::vector<T>& a, T e) {
   for (unsigned int i = 0; i < a.size(); ++i)
-    if (a[i] == e) return;
+    if (a[i] == e)
+      return;
   a.push_back(e);
 }
 
@@ -528,13 +541,15 @@ void insert(std::vector<T>& a, unsigned int index, T e) {
 
 template <class T>
 void erase(std::vector<T>& a, unsigned int index) {
-  for (unsigned int i = index; i < a.size() - 1; ++i) a[i] = a[i + 1];
+  for (unsigned int i = index; i < a.size() - 1; ++i)
+    a[i] = a[i + 1];
   a.pop_back();
 }
 
 template <class T>
 void erase_swap(std::vector<T>& a, unsigned int index) {
-  for (unsigned int i = index; i < a.size() - 1; ++i) swap(a[i], a[i + 1]);
+  for (unsigned int i = index; i < a.size() - 1; ++i)
+    swap(a[i], a[i + 1]);
   a.pop_back();
 }
 
@@ -580,7 +595,8 @@ void write_matlab(std::ostream& output, const std::vector<T>& a,
     output << a[i] << " ";
   }
   output << "]";
-  if (column_vector) output << "'";
+  if (column_vector)
+    output << "'";
   output << ";" << std::endl;
   output.precision(old_precision);
 }
@@ -656,13 +672,16 @@ const static scalar gauss_legendre_weight[5][5] = {
 inline int find_gauss_legendre_index(const scalar& alpha, int N_GAUSS) {
   int i = N_GAUSS - 1;
   for (; i >= 0; --i) {
-    if (alpha >= gauss_legendre_point[N_GAUSS - 1][i]) return i;
+    if (alpha >= gauss_legendre_point[N_GAUSS - 1][i])
+      return i;
   }
 
   return i;
 }
 
-inline int mod(int x, int m) { return (x % m + m) % m; }
+inline int mod(int x, int m) {
+  return (x % m + m) % m;
+}
 
 bool approxSymmetric(const MatrixXs& A, const scalar& eps);
 
@@ -6082,7 +6101,8 @@ inline T det3(const Eigen::Matrix<T, 3, 1>& a, const Eigen::Matrix<T, 3, 1>& v1,
 
 template <typename T>
 T fraction_inside(const T& phi_left, const T& phi_right) {
-  if (phi_left < (T)0.0 && phi_right < (T)0.0) return (T)1.0;
+  if (phi_left < (T)0.0 && phi_right < (T)0.0)
+    return (T)1.0;
   if (phi_left < (T)0.0 && phi_right >= (T)0.0)
     return phi_left / (phi_left - phi_right);
   if (phi_left >= (T)0.0 && phi_right < (T)0.0)
@@ -6093,7 +6113,8 @@ T fraction_inside(const T& phi_left, const T& phi_right) {
 
 inline void cycle_array(scalar* arr, int size) {
   scalar t = arr[0];
-  for (int i = 0; i < size - 1; ++i) arr[i] = arr[i + 1];
+  for (int i = 0; i < size - 1; ++i)
+    arr[i] = arr[i + 1];
   arr[size - 1] = t;
 }
 
@@ -6309,7 +6330,7 @@ inline scalar compute_edge_area(const Vectors<DIM>& e0,
 
 template <int DIM>
 inline void compute_edge_area(const VectorXs& x,
-                              const std::vector<std::pair<int, int> >& edges,
+                              const std::vector<std::pair<int, int>>& edges,
                               VectorXs& area, TwoDScene<DIM>* scene) {
   int ne = edges.size();
   for (int i = 0; i < ne; ++i) {
@@ -6321,7 +6342,7 @@ inline void compute_edge_area(const VectorXs& x,
 
 template <int DIM>
 inline void compute_edge_dir(const VectorXs& x,
-                             const std::vector<std::pair<int, int> >& edges,
+                             const std::vector<std::pair<int, int>>& edges,
                              MatrixXs& dir, TwoDScene<DIM>* scene) {
   int ne = edges.size();
   for (int i = 0; i < ne; ++i) {
@@ -6350,7 +6371,7 @@ inline void compute_vertex_val(const T& u_k, const S& W_fv, T& u_vert) {
 }
 
 template <int DIM>
-inline void compute_vertex_area(const std::vector<std::pair<int, int> >& edges,
+inline void compute_vertex_area(const std::vector<std::pair<int, int>>& edges,
                                 const VectorXs& edge_area,
                                 VectorXs& vertex_area) {
   int ne = edges.size();
@@ -6461,7 +6482,7 @@ inline void compute_vertex_laplacian_matrix(const SparseXs& grad,
 }
 
 inline void compute_edge_to_vertex_matrix(
-    const std::vector<std::pair<int, int> >& edges, const VectorXs& vertex_area,
+    const std::vector<std::pair<int, int>>& edges, const VectorXs& vertex_area,
     const VectorXs& edge_area, SparseXs& W) {
   // W.resize(vertex_area.size(), edge_area.size());
   TripletXs tri;
@@ -6482,7 +6503,7 @@ inline void compute_edge_to_vertex_matrix(
 }
 
 inline void compute_edge_to_vertex_matrix(
-    const std::vector<std::pair<int, int> >& edges, const VectorXs& vertex_area,
+    const std::vector<std::pair<int, int>>& edges, const VectorXs& vertex_area,
     const VectorXs& edge_area, const VectorXi& ppp_count, SparseXs& W) {
   // W.resize(vertex_area.size(), edge_area.size());
   TripletXs tri;
@@ -6606,7 +6627,8 @@ inline scalar compute_hair_length_geodesic(const std::vector<int>& hair,
 
   for (int i = start_i; i <= end_i; ++i) {
     int inext = i + 1;
-    if (inext >= (int)hair.size()) break;
+    if (inext >= (int)hair.size())
+      break;
 
     accu_len += (x.segment<DIM>(scene->getDof(hair[inext])) -
                  x.segment<DIM>(scene->getDof(hair[i])))

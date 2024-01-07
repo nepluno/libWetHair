@@ -107,7 +107,8 @@ void TwistingForce<ViscousT>::accumulateIntegrationVars(
     for (int r = 0; r < 4; ++r) {
       J[idx_j + r] = Triplets(idx_pos, dfirst + r, gt(r));
       J[idx_j + 4 + r] = Triplets(idx_pos, dsecond + r, gt(r + 4));
-      if (r < 3) J[idx_j + 8 + r] = Triplets(idx_pos, dthird + r, gt(r + 8));
+      if (r < 3)
+        J[idx_j + 8 + r] = Triplets(idx_pos, dthird + r, gt(r + 8));
     }
 
     if (std::is_same<ViscousT, NonViscous>::value) {

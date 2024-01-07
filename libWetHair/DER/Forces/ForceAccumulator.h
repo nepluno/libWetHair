@@ -66,7 +66,8 @@ class ForceAccumulator {
       if (localJ.rows() > 6) {  // (Bending & Twisting)
         for (IndexType r = 0; r < localJ.rows(); ++r) {
           for (IndexType c = 0; c < localJ.cols(); ++c) {
-            if (isSmall(localJ(r, c))) continue;
+            if (isSmall(localJ(r, c)))
+              continue;
             hessianOfEnergy.push_back(
                 Triplets((vtx - 1) * 4 + r, (vtx - 1) * 4 + c, localJ(r, c)));
           }
@@ -82,7 +83,8 @@ class ForceAccumulator {
             if (c == 3) {  // skip twist dof
               ++tcCount;
             }
-            if (isSmall(localJ(r, c))) continue;
+            if (isSmall(localJ(r, c)))
+              continue;
             hessianOfEnergy.push_back(Triplets(
                 vtx * 4 + r + trCount, vtx * 4 + c + tcCount, localJ(r, c)));
           }

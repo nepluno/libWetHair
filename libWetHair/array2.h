@@ -20,7 +20,7 @@
 
 namespace libwethair {
 
-template <class T, class ArrayT = std::vector<T> >
+template <class T, class ArrayT = std::vector<T>>
 struct Array2 {
   // STL-friendly typedefs
 
@@ -267,29 +267,29 @@ struct Array2 {
 };
 
 // some common arrays
-typedef Array2<scalar, Array1<scalar> > Array2s;
-typedef Array2<double, Array1<double> > Array2d;
-typedef Array2<float, Array1<float> > Array2f;
-typedef Array2<long long, Array1<long long> > Array2ll;
-typedef Array2<unsigned long long, Array1<unsigned long long> > Array2ull;
-typedef Array2<int, Array1<int> > Array2i;
-typedef Array2<unsigned int, Array1<unsigned int> > Array2ui;
-typedef Array2<unsigned short, Array1<unsigned short> > Array2us;
-typedef Array2<char, Array1<char> > Array2c;
-typedef Array2<unsigned char, Array1<unsigned char> > Array2uc;
+typedef Array2<scalar, Array1<scalar>> Array2s;
+typedef Array2<double, Array1<double>> Array2d;
+typedef Array2<float, Array1<float>> Array2f;
+typedef Array2<long long, Array1<long long>> Array2ll;
+typedef Array2<unsigned long long, Array1<unsigned long long>> Array2ull;
+typedef Array2<int, Array1<int>> Array2i;
+typedef Array2<unsigned int, Array1<unsigned int>> Array2ui;
+typedef Array2<unsigned short, Array1<unsigned short>> Array2us;
+typedef Array2<char, Array1<char>> Array2c;
+typedef Array2<unsigned char, Array1<unsigned char>> Array2uc;
 
 // and wrapped versions
-typedef Array2<scalar, WrapArray1<scalar> > WrapArray2s;
-typedef Array2<double, WrapArray1<double> > WrapArray2d;
-typedef Array2<float, WrapArray1<float> > WrapArray2f;
-typedef Array2<long long, WrapArray1<long long> > WrapArray2ll;
-typedef Array2<unsigned long long, WrapArray1<unsigned long long> >
+typedef Array2<scalar, WrapArray1<scalar>> WrapArray2s;
+typedef Array2<double, WrapArray1<double>> WrapArray2d;
+typedef Array2<float, WrapArray1<float>> WrapArray2f;
+typedef Array2<long long, WrapArray1<long long>> WrapArray2ll;
+typedef Array2<unsigned long long, WrapArray1<unsigned long long>>
     WrapArray2ull;
-typedef Array2<int, WrapArray1<int> > WrapArray2i;
-typedef Array2<unsigned int, WrapArray1<unsigned int> > WrapArray2ui;
-typedef Array2<unsigned short, WrapArray1<unsigned short> > WrapArray2us;
-typedef Array2<char, WrapArray1<char> > WrapArray2c;
-typedef Array2<unsigned char, WrapArray1<unsigned char> > WrapArray2uc;
+typedef Array2<int, WrapArray1<int>> WrapArray2i;
+typedef Array2<unsigned int, WrapArray1<unsigned int>> WrapArray2ui;
+typedef Array2<unsigned short, WrapArray1<unsigned short>> WrapArray2us;
+typedef Array2<char, WrapArray1<char>> WrapArray2c;
+typedef Array2<unsigned char, WrapArray1<unsigned char>> WrapArray2uc;
 
 }  // namespace libwethair
 

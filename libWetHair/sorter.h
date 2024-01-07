@@ -92,7 +92,7 @@ class Sorter {
   }
 
   std::vector<uint64_t> array_idx;
-  std::vector<std::pair<int, int> > array_sup;
+  std::vector<std::pair<int, int>> array_sup;
 
   int ni;
   int nj;

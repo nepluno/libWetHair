@@ -29,8 +29,8 @@ namespace shallowflow {
 
 template <int DIM>
 inline void compute_edge_gradient_matrix(
-    const VectorXs& x, const std::vector<std::pair<int, int> >& edges,
-    const std::vector<std::pair<int, int> >& edge_local, const VectorXs& area_e,
+    const VectorXs& x, const std::vector<std::pair<int, int>>& edges,
+    const std::vector<std::pair<int, int>>& edge_local, const VectorXs& area_e,
     SparseXs& gradF, TwoDScene<DIM>* parent) {
   const int ne = edges.size();
 
@@ -94,7 +94,7 @@ inline void compute_edge_val(const MatrixXs& vert_val, const SparseXs& W_fv,
 }
 
 inline void compute_edge_val(const VectorXs& vert_val,
-                             const std::vector<std::pair<int, int> >& edges,
+                             const std::vector<std::pair<int, int>>& edges,
                              VectorXs& edge_val) {
   int ne = edges.size();
 
@@ -106,7 +106,7 @@ inline void compute_edge_val(const VectorXs& vert_val,
 }
 
 inline void compute_edge_val(const MatrixXs& vert_val,
-                             const std::vector<std::pair<int, int> >& edges,
+                             const std::vector<std::pair<int, int>>& edges,
                              MatrixXs& edge_val) {
   int ne = edges.size();
 
@@ -160,7 +160,8 @@ inline scalar compute_accumulated_edge_length(const VectorXs& area_e,
   scalar sum = 0.0;
   for (int i = 0; i < np; ++i) {
     area_e_accu(i) = sum;
-    if (i < ne) sum += area_e(i);
+    if (i < ne)
+      sum += area_e(i);
   }
 
   return sum;
@@ -298,7 +299,8 @@ inline void compute_next_velocity(
 
   int np = u_next.size();
 
-  if (friction == 0.0 || visc == 0.0) return;
+  if (friction == 0.0 || visc == 0.0)
+    return;
 
   for (int i = 0; i < np; ++i) {
     // Here we generalize [Gerbeau & Perthame 2000] for porous flow
@@ -358,7 +360,8 @@ inline void compute_stretched_liquid_height(const VectorXs& old_rad,
   int np = eta.size();
   for (int i = 0; i < np; ++i) {
     scalar na = new_area(i);
-    if (na == 0.0) continue;
+    if (na == 0.0)
+      continue;
 
     eta(i) = sqrt(
         std::max(0.0, new_rad(i) * new_rad(i) +
@@ -409,7 +412,7 @@ inline void compute_rest_length(const VectorXs& global_rest_e,
 
 inline scalar integrate_volume_difference(
     const VectorXs& eta, const VectorXs& old_eta, const VectorXs& area_e,
-    const std::vector<std::pair<int, int> >& edges) {
+    const std::vector<std::pair<int, int>>& edges) {
   int ne = edges.size();
 
   scalar sum = 0.0;

@@ -19,10 +19,10 @@ namespace libwethair {
 /**
  * Unit: no dimension
  */
-class Twists : public DependencyNode<std::vector<scalar> > {
+class Twists : public DependencyNode<std::vector<scalar>> {
  public:
   Twists(ReferenceTwists& refTwists, DOFs& dofs)
-      : DependencyNode<std::vector<scalar> >(1, dofs.getNumEdges()),
+      : DependencyNode<std::vector<scalar>>(1, dofs.getNumEdges()),
         m_refTwists(refTwists),
         m_dofs(dofs) {
     assert(size() == m_refTwists.size());

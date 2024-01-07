@@ -72,7 +72,8 @@ void FluidDragForce<2>::preCompute(const VectorXs& x, const VectorXs& v,
     m_liquid_u.segment<2>(j * 2) = vel;
 
     scalar particle_weight = fluid2d->getClampedLiquidPhiValue(pos);
-    if (particle_weight == 0.0) continue;
+    if (particle_weight == 0.0)
+      continue;
 
     Vector2s dv = v.segment<2>(pidx * 2) - vel;
 
@@ -135,7 +136,8 @@ void FluidDragForce<3>::preCompute(const VectorXs& x, const VectorXs& v,
     m_liquid_u.segment<3>(3 * j) = vel;
 
     scalar clamped_particle_weight = fluid3d->getClampedLiquidPhiValue(pos);
-    if (clamped_particle_weight == 0.0) continue;
+    if (clamped_particle_weight == 0.0)
+      continue;
 
     Vector3s dv = v.segment<3>(m_scene.getDof(pidx)) - vel;
 
@@ -296,7 +298,8 @@ void FluidDragForce<DIM>::addGradEToTotal(const VectorXs& x, const VectorXs& v,
 template <int DIM>
 bool FluidDragForce<DIM>::isContained(int colidx) {
   int idir = m_scene.getComponent(colidx);
-  if (idir == DIM) return false;
+  if (idir == DIM)
+    return false;
   int pidx = m_scene.getVertFromDof(colidx);
 
   const std::vector<int>& particle_hairs = m_scene.getParticleToHairs();

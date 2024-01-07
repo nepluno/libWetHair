@@ -106,7 +106,8 @@ bool CompliantImplicitEuler<DIM>::stepScene(TwoDScene<DIM>& scene, scalar dt,
     }
   }
 
-  if (updatePreCompute) scene.preCompute(dx_scripted, dv, dt);
+  if (updatePreCompute)
+    scene.preCompute(dx_scripted, dv, dt);
 
   t1 = timingutils::seconds();
   SceneStepper<DIM>::m_timing_statistics[0] += t1 - t0;  // local precomputation
@@ -132,7 +133,8 @@ bool CompliantImplicitEuler<DIM>::stepScene(TwoDScene<DIM>& scene, scalar dt,
       m_A_nz.end());
   m_A.setFromTriplets(m_A_nz.begin(), m_A_nz.end());
 
-  if (m_J.rows() != nconstraint) m_J.resize(nconstraint, ndof);
+  if (m_J.rows() != nconstraint)
+    m_J.resize(nconstraint, ndof);
   m_J_nz.erase(
       std::remove_if(m_J_nz.begin(), m_J_nz.end(),
                      [&](const Triplets& t) {
@@ -144,7 +146,8 @@ bool CompliantImplicitEuler<DIM>::stepScene(TwoDScene<DIM>& scene, scalar dt,
   m_J.makeCompressed();
 
   if (nconstraint_v > 0) {
-    if (m_Jv.rows() != nconstraint_v) m_Jv.resize(nconstraint_v, ndof);
+    if (m_Jv.rows() != nconstraint_v)
+      m_Jv.resize(nconstraint_v, ndof);
     m_Jv_nz.erase(
         std::remove_if(m_Jv_nz.begin(), m_Jv_nz.end(),
                        [&](const Triplets& t) {
@@ -155,7 +158,8 @@ bool CompliantImplicitEuler<DIM>::stepScene(TwoDScene<DIM>& scene, scalar dt,
     m_Jv.setFromTriplets(m_Jv_nz.begin(), m_Jv_nz.end());
     m_Jv.makeCompressed();
 
-    if (m_Jxv.rows() != nconstraint_v) m_Jxv.resize(nconstraint_v, ndof);
+    if (m_Jxv.rows() != nconstraint_v)
+      m_Jxv.resize(nconstraint_v, ndof);
     m_Jxv_nz.erase(
         std::remove_if(m_Jxv_nz.begin(), m_Jxv_nz.end(),
                        [&](const Triplets& t) {
@@ -167,7 +171,8 @@ bool CompliantImplicitEuler<DIM>::stepScene(TwoDScene<DIM>& scene, scalar dt,
     m_Jxv.makeCompressed();
   }
 
-  if (m_invC.rows() != nconstraint) m_invC.resize(nconstraint, nconstraint);
+  if (m_invC.rows() != nconstraint)
+    m_invC.resize(nconstraint, nconstraint);
   m_invC.setFromTriplets(m_invC_nz.begin(), m_invC_nz.end());
 
   if (m_invCv.rows() != nconstraint_v)
@@ -176,7 +181,8 @@ bool CompliantImplicitEuler<DIM>::stepScene(TwoDScene<DIM>& scene, scalar dt,
 
   m_JC = m_J.transpose() * m_invC;
 
-  if (nconstraint_v > 0) m_JvC = m_Jv.transpose() * m_invCv;
+  if (nconstraint_v > 0)
+    m_JvC = m_Jv.transpose() * m_invCv;
 
   if (nconstraint_v > 0)
     m_A += (m_JC * m_J) + (m_JvC * (m_Jv / dt + m_Jxv));

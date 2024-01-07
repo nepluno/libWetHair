@@ -17,13 +17,13 @@
 namespace libwethair {
 
 std::filesystem::path tempLogFile(const std::string_view prefix,
-                                  const char* timestamp_format)
-{
+                                  const char* timestamp_format) {
   const auto now =
-    std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+      std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
   std::stringstream name;
-  name << prefix << std::put_time(std::localtime(&now), timestamp_format) << ".log";
+  name << prefix << std::put_time(std::localtime(&now), timestamp_format)
+       << ".log";
   return std::filesystem::temp_directory_path() / name.str();
 }
 }  // namespace libwethair

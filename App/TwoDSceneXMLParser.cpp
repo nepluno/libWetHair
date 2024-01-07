@@ -17,8 +17,7 @@
 using namespace libwethair;
 
 void TwoDSceneXMLParser::loadExecutableSimulation(
-    GLFWwindow* window,
-    const std::string& file_name, const char* memory_str,
+    GLFWwindow* window, const std::string& file_name, const char* memory_str,
     const std::string& init_filename, bool simulate_comparison,
     bool rendering_enabled, ExecutableSimulation** execsim,
     renderingutils::Viewport& view, Camera& cam, scalar& max_time,
@@ -76,12 +75,14 @@ void TwoDSceneXMLParser::loadExecutableSimulation(
       simtype == "mass-spring") {
     switch (dimension) {
       case 2:
-        loadParticleSimulation<2>(window, simulate_comparison, rendering_enabled,
-                                  execsim, view, bgcolor, node, init_filename);
+        loadParticleSimulation<2>(window, simulate_comparison,
+                                  rendering_enabled, execsim, view, bgcolor,
+                                  node, init_filename);
         break;
       case 3:
-        loadParticleSimulation<3>(window, simulate_comparison, rendering_enabled,
-                                  execsim, view, bgcolor, node, init_filename);
+        loadParticleSimulation<3>(window, simulate_comparison,
+                                  rendering_enabled, execsim, view, bgcolor,
+                                  node, init_filename);
         break;
       default:
         std::cerr
@@ -93,8 +94,8 @@ void TwoDSceneXMLParser::loadExecutableSimulation(
         break;
     }
   } else if (simtype == "DiscreteElasticRods" && dimension == 3) {
-    loadDERSimulation(window, simulate_comparison, rendering_enabled, execsim, view,
-                      bgcolor, node, init_filename);
+    loadDERSimulation(window, simulate_comparison, rendering_enabled, execsim,
+                      view, bgcolor, node, init_filename);
   } else {
     std::cerr << "\033[31;1mERROR IN XMLSCENEPARSER:\033[m Invalid simtype '"
               << simtype
@@ -381,7 +382,8 @@ void TwoDSceneXMLParser::loadFluidSim(rapidxml::xml_node<>* node,
                                       TwoDScene<2>& twoscene) {
   rapidxml::xml_node<>* nd = node->first_node("fluidsim");
 
-  if (!nd) return;
+  if (!nd)
+    return;
 
   Vector2s origin;
   origin.setZero();
@@ -822,7 +824,8 @@ void TwoDSceneXMLParser::loadFluidSim(rapidxml::xml_node<>* node,
                                       TwoDScene<3>& twoscene) {
   rapidxml::xml_node<>* nd = node->first_node("fluidsim");
 
-  if (!nd) return;
+  if (!nd)
+    return;
 
   Vector3s origin;
   origin.setZero();
@@ -2080,8 +2083,7 @@ void TwoDSceneXMLParser::loadLinearBendingForces(rapidxml::xml_node<>* node,
 
 template <int DIM>
 void TwoDSceneXMLParser::loadParticleSimulation(
-    GLFWwindow* window,
-    bool simulate_comparison, bool rendering_enabled,
+    GLFWwindow* window, bool simulate_comparison, bool rendering_enabled,
     ExecutableSimulation** execsim, renderingutils::Viewport& view,
     renderingutils::Color& bgcolor, rapidxml::xml_node<>* node,
     const std::string& init_filename) {
@@ -2165,14 +2167,11 @@ void TwoDSceneXMLParser::loadParticleSimulation(
   }
 }
 
-void TwoDSceneXMLParser::loadDERSimulation(GLFWwindow* window,
-                                           bool simulate_comparison,
-                                           bool rendering_enabled,
-                                           ExecutableSimulation** execsim,
-                                           renderingutils::Viewport& view,
-                                           renderingutils::Color& bgcolor,
-                                           rapidxml::xml_node<>* node,
-                                           const std::string& init_filename) {
+void TwoDSceneXMLParser::loadDERSimulation(
+    GLFWwindow* window, bool simulate_comparison, bool rendering_enabled,
+    ExecutableSimulation** execsim, renderingutils::Viewport& view,
+    renderingutils::Color& bgcolor, rapidxml::xml_node<>* node,
+    const std::string& init_filename) {
   const int DIM = 3;
   TwoDScene<DIM>* scene = new TwoDScene<DIM>(false);
 
@@ -2291,11 +2290,13 @@ bool TwoDSceneXMLParser::loadTextFileIntoString(const std::string& filename,
                                                 std::string& filecontents) {
   // Attempt to open the text file for reading
   std::ifstream textfile(filename.c_str(), std::ifstream::in);
-  if (!textfile) return false;
+  if (!textfile)
+    return false;
 
   // Read the entire file into a single string
   std::string line;
-  while (getline(textfile, line)) filecontents.append(line);
+  while (getline(textfile, line))
+    filecontents.append(line);
 
   textfile.close();
 
@@ -2350,7 +2351,8 @@ void TwoDSceneXMLParser::loadFlow(rapidxml::xml_node<>* node,
         }
       }
 
-      if (idx == -1) continue;
+      if (idx == -1)
+        continue;
 
       scalar eta = -1e+20;
       if (subnd->first_attribute("eta")) {
@@ -2364,7 +2366,8 @@ void TwoDSceneXMLParser::loadFlow(rapidxml::xml_node<>* node,
         }
       }
 
-      if (eta < 0) continue;
+      if (eta < 0)
+        continue;
 
       bool isSource = false;
       if (subnd->first_attribute("source")) {
@@ -2712,7 +2715,8 @@ void TwoDSceneXMLParser::loadStrandParticleEdges(rapidxml::xml_node<>* node,
         exit(1);
       }
     }
-    if (nv < 2) continue;
+    if (nv < 2)
+      continue;
     numparticles += nv;
     numedges += nv - 1;
     ++numstrands;
@@ -2754,7 +2758,8 @@ void TwoDSceneXMLParser::loadStrandParticleEdges(rapidxml::xml_node<>* node,
         exit(1);
       }
     }
-    if (nv < 2) continue;
+    if (nv < 2)
+      continue;
     for (int i = 0; i < nv; ++i) {
       dofVars.segment<4>(dof) = dofs;
       dofVerts.segment<4>(dof).setConstant(numparticles);
@@ -2770,9 +2775,9 @@ void TwoDSceneXMLParser::loadStrandParticleEdges(rapidxml::xml_node<>* node,
 
   std::vector<std::string>& tags = scene.getParticleTags();
   int globalStrandID = 0;
-  std::vector<std::vector<int> > particle_indices_vec;
-  std::vector<std::vector<scalar> > particle_eta_vec;
-  std::vector<std::vector<unsigned char> > particle_state_vec;
+  std::vector<std::vector<int>> particle_indices_vec;
+  std::vector<std::vector<scalar>> particle_eta_vec;
+  std::vector<std::vector<unsigned char>> particle_state_vec;
   std::vector<LIQUID_SIM_TYPE> liquidtype_vec;
 
   std::vector<Vector3s> particle_pos;
@@ -3490,7 +3495,8 @@ void TwoDSceneXMLParser::loadSpringForces(rapidxml::xml_node<>* node,
 
     twodscene.insertForce(new SpringForce<DIM>(newedge, k, l0, &twodscene, b));
 
-    if (DIM == 2) twodscene.setEdgeRestLength(edge, l0);
+    if (DIM == 2)
+      twodscene.setEdgeRestLength(edge, l0);
 
     ++forcenum;
   }

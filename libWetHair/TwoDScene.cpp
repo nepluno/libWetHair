@@ -279,8 +279,7 @@ const scalar& TwoDScene<DIM>::getSearchRadius() const {
 }
 
 template <int DIM>
-const std::vector<std::vector<int> >& TwoDScene<DIM>::getParticleToEdge()
-    const {
+const std::vector<std::vector<int>>& TwoDScene<DIM>::getParticleToEdge() const {
   return m_particle_to_edge;
 }
 
@@ -306,7 +305,8 @@ void TwoDScene<DIM>::updateSearchRadius() {
   for (int i = 0; i < np; ++i) {
     sum += m_v.segment<DIM>(getDof(i)).norm();
   }
-  if (np) sum /= (scalar)np;
+  if (np)
+    sum /= (scalar)np;
 
   m_search_radius = std::min(
       m_collision_keep_proximity * m_parameters.max_limited_eta_prop * 6.0,
@@ -453,7 +453,8 @@ void TwoDScene<DIM>::addForceHairFlows(const VectorXs& accel,
 
 template <int DIM>
 void TwoDScene<DIM>::updateHairFlowsToGrid(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->prepare_update_from_hair();
 
@@ -481,7 +482,8 @@ const VectorXs& TwoDScene<DIM>::getFluidDragBuffer() const {
 
 template <int DIM>
 void TwoDScene<DIM>::updateHairFlowsFromGrid(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   const int nflows = m_flows.size();
   threadutils::thread_pool::ParallelFor(0, nflows, [&](int i) {
@@ -512,7 +514,8 @@ void TwoDScene<DIM>::updateHairFlowsHeight(const VectorXs& accel,
 
 template <int DIM>
 void TwoDScene<DIM>::advectRigidBodies(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->advect_boundary(dt);
 }
@@ -544,14 +547,16 @@ void TwoDScene<DIM>::uniformlyIncreaseHairLiquid(const scalar& dh,
 
 template <int DIM>
 void TwoDScene<DIM>::constrainHairParticles() {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->constrain_hair_particles();
 }
 
 template <int DIM>
 void TwoDScene<DIM>::advectFluidSim(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   std::cout << "[ADV: passively advect particles]" << std::endl;
   m_fluid_sim->advect_particles(dt);
@@ -559,7 +564,8 @@ void TwoDScene<DIM>::advectFluidSim(const scalar& dt) {
 
 template <int DIM>
 void TwoDScene<DIM>::addForceFluidSim(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->add_drag(dt);
 }
@@ -571,14 +577,16 @@ void TwoDScene<DIM>::addGravityFluidSim(const scalar& dt) {
 
 template <int DIM>
 void TwoDScene<DIM>::viscousSolveFluidSim(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->apply_viscosity(dt);
 }
 
 template <int DIM>
 void TwoDScene<DIM>::pressureSolveFluidSim(const scalar& dt) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->project(dt);
 
@@ -587,7 +595,8 @@ void TwoDScene<DIM>::pressureSolveFluidSim(const scalar& dt) {
 
 template <int DIM>
 void TwoDScene<DIM>::globalVolumeAdjust() {
-  if (!m_parameters.global_volume_control) return;
+  if (!m_parameters.global_volume_control)
+    return;
 
   updateVolumeRecord();
 
@@ -664,35 +673,41 @@ template <int DIM>
 void TwoDScene<DIM>::absorbReleaseParticleFlows(const scalar& dt, bool noabsorb,
                                                 bool nodripping) {
   if (m_fluid_sim) {
-    if (!noabsorb) m_fluid_sim->shareParticleWithHairs(m_x, dt);
-    if (!nodripping) m_fluid_sim->transferLiquidToGridParticle(dt);
+    if (!noabsorb)
+      m_fluid_sim->shareParticleWithHairs(m_x, dt);
+    if (!nodripping)
+      m_fluid_sim->transferLiquidToGridParticle(dt);
   }
 }
 
 template <int DIM>
 void TwoDScene<DIM>::computeLiquidPhi() {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->compute_liquid_phi();
 }
 
 template <int DIM>
 void TwoDScene<DIM>::combineVelocityField() {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->combine_velocity_field();
 }
 
 template <int DIM>
 void TwoDScene<DIM>::updateParticleFlowsToGrid(bool with_hair_particles) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->map_p2g(with_hair_particles);
 }
 
 template <int DIM>
 void TwoDScene<DIM>::updateParticleFlowsFromGrid() {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->map_g2p_apic();
 }
@@ -989,10 +1004,12 @@ template <int DIM>
 void TwoDScene<DIM>::applyScript(const scalar& dt) {
   const int np = getNumParticles();
   for (int i = 0; i < np; ++i) {
-    if (!isFixed(i)) continue;
+    if (!isFixed(i))
+      continue;
 
     int sg_idx = m_script_group[i];
-    if (sg_idx < 0 || sg_idx >= m_scripted_translate.size()) continue;
+    if (sg_idx < 0 || sg_idx >= m_scripted_translate.size())
+      continue;
 
     const Eigen::Quaternion<scalar>& q = m_scripted_rotation[sg_idx];
     const Vector3s& t = m_scripted_translate[sg_idx];
@@ -1111,7 +1128,8 @@ void TwoDScene<DIM>::resizeSystemDER(int num_particles, int num_edges,
 template <int DIM>
 void TwoDScene<DIM>::setPosition(int particle, const Vectors<DIM>& pos) {
   assert(particle >= 0);
-  if (DIM == 2) assert(particle < getNumParticles());
+  if (DIM == 2)
+    assert(particle < getNumParticles());
 
   m_x.segment<DIM>(getDof(particle)) = pos;
 }
@@ -1253,7 +1271,7 @@ void TwoDScene<DIM>::setEdge(int idx, const std::pair<int, int>& edge,
 }
 
 template <int DIM>
-const std::vector<std::pair<int, int> >& TwoDScene<DIM>::getEdges() const {
+const std::vector<std::pair<int, int>>& TwoDScene<DIM>::getEdges() const {
   return m_edges;
 }
 
@@ -1306,34 +1324,34 @@ scalar TwoDScene<DIM>::computeTotalEnergy() const {
 }
 
 template <int DIM>
-std::vector<std::unordered_set<int> >& TwoDScene<DIM>::getBroadPhasePEPairs() {
+std::vector<std::unordered_set<int>>& TwoDScene<DIM>::getBroadPhasePEPairs() {
   return m_bp_particle_edge_pairs;
 }
 
 template <int DIM>
-std::vector<std::unordered_set<int> >& TwoDScene<DIM>::getBroadPhasePPPairs() {
+std::vector<std::unordered_set<int>>& TwoDScene<DIM>::getBroadPhasePPPairs() {
   return m_bp_particle_particle_pairs;
 }
 
 template <int DIM>
-std::vector<std::unordered_set<int> >& TwoDScene<DIM>::getBroadPhaseEEPairs() {
+std::vector<std::unordered_set<int>>& TwoDScene<DIM>::getBroadPhaseEEPairs() {
   return m_bp_edge_edge_pairs;
 }
 
 template <int DIM>
-const std::vector<std::unordered_set<int> >&
+const std::vector<std::unordered_set<int>>&
 TwoDScene<DIM>::getBroadPhasePEPairs() const {
   return m_bp_particle_edge_pairs;
 }
 
 template <int DIM>
-const std::vector<std::unordered_set<int> >&
+const std::vector<std::unordered_set<int>>&
 TwoDScene<DIM>::getBroadPhasePPPairs() const {
   return m_bp_particle_particle_pairs;
 }
 
 template <int DIM>
-const std::vector<std::unordered_set<int> >&
+const std::vector<std::unordered_set<int>>&
 TwoDScene<DIM>::getBroadPhaseEEPairs() const {
   return m_bp_edge_edge_pairs;
 }
@@ -1488,7 +1506,7 @@ void TwoDScene<DIM>::checkConsistency() {
   assert((m_v.array() == m_v.array()).all());
   assert((m_m.array() == m_m.array()).all());
 
-  for (std::vector<std::pair<int, int> >::size_type i = 0; i < m_edges.size();
+  for (std::vector<std::pair<int, int>>::size_type i = 0; i < m_edges.size();
        ++i) {
     assert(m_edges[i].first >= 0);
     assert(m_edges[i].first < getNumParticles());
@@ -1574,7 +1592,8 @@ void TwoDScene<DIM>::preCompute(const VectorXs& dx, const VectorXs& dv,
 template <int DIM>
 void TwoDScene<DIM>::postCompute(const scalar& dt) {
   const int nforces = (int)m_forces.size();
-  for (int i = 0; i < nforces; ++i) m_forces[i]->postStepScene(dt);
+  for (int i = 0; i < nforces; ++i)
+    m_forces[i]->postStepScene(dt);
 }
 
 template <int DIM>
@@ -1809,7 +1828,8 @@ void TwoDScene<DIM>::getAffectedVars(int icol,
 template <int DIM>
 void TwoDScene<DIM>::getAffectedForces(int icol, std::vector<Force*>& forces) {
   for (std::vector<Force*>::size_type i = 0; i < m_forces.size(); ++i)
-    if (m_forces[i]->isContained(icol)) forces.push_back(m_forces[i]);
+    if (m_forces[i]->isContained(icol))
+      forces.push_back(m_forces[i]);
 }
 
 template <int DIM>
@@ -1939,7 +1959,8 @@ VectorXs& TwoDScene<DIM>::getLiquidRestLength() {
 
 template <int DIM>
 void TwoDScene<DIM>::saveFluidPressure(const std::string& szfn) {
-  if (!m_fluid_sim) return;
+  if (!m_fluid_sim)
+    return;
 
   m_fluid_sim->save_pressure(szfn);
 }
@@ -2001,7 +2022,8 @@ void TwoDScene<DIM>::categorizeForces() {
 
       if (!m_forces[i]->isInterHair()) {
         int hidx = m_forces[i]->getAffectedHair(m_particle_to_hairs);
-        if (hidx < 0) continue;
+        if (hidx < 0)
+          continue;
         m_hair_internal_forces[hidx].push_back(m_forces[i]);
       } else {
         m_inter_hair_forces.push_back(m_forces[i]);
@@ -2367,7 +2389,8 @@ Vector3s TwoDScene<3>::computeCombinedGridAngularMomentum() const {
 template <int DIM>
 bool TwoDScene<DIM>::confirmNotNeighborEdgesOnSameHair(
     const int& efirst, const int& esecond) const {
-  if (DIM == 2) return false;
+  if (DIM == 2)
+    return false;
 
   if (m_edge_to_hair[efirst] != m_edge_to_hair[esecond])
     return true;
@@ -2406,7 +2429,8 @@ void TwoDScene<DIM>::computeMassesAndRadiiFromStrands() {
   int nStrand = 0;
   for (int f = 0; f < m_forces.size(); ++f) {
     StrandForce* const strand = dynamic_cast<StrandForce*>(m_forces[f]);
-    if (strand == NULL) continue;
+    if (strand == NULL)
+      continue;
     m_strands[nStrand] = strand;
 
     if (strand->m_strandParams->m_straightHairs != 1.0) {

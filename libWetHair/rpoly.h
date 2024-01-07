@@ -35,7 +35,7 @@ namespace libwethair {
 
 class RootFinder {
  public:
-  int rpoly(const double *op, int degree, double *zeror, double *zeroi) {
+  int rpoly(const double* op, int degree, double* zeror, double* zeroi) {
     double t, aa, bb, cc, factor, rot;
     double lo, max, min, xx, yy, cosr, sinr, xxx, x, sc, bnd;
     double xm, ff, df, dx, infin, smalno, base;
@@ -58,7 +58,8 @@ class RootFinder {
     sinr = sin(rot);
     n = degree;
     /*  Algorithm fails of the leading coefficient is zero. */
-    if (op[0] == 0.0) return -1;
+    if (op[0] == 0.0)
+      return -1;
     /*  Remove the zeros at the origin, if any. */
     while (op[n] == 0.0) {
       j = degree - n;
@@ -66,7 +67,8 @@ class RootFinder {
       zeroi[j] = 0.0;
       n--;
     }
-    if (n < 1) return -1;
+    if (n < 1)
+      return -1;
     /*
      *  Allocate memory here
      */
@@ -76,7 +78,8 @@ class RootFinder {
     //		pt = new double [degree+1];
     //		svk = new double [degree+1];
     /*  Make a copy of the coefficients. */
-    for (i = 0; i <= n; i++) p[i] = op[i];
+    for (i = 0; i <= n; i++)
+      p[i] = op[i];
 
     /*  Start the algorithm for one zero. */
   _40:
@@ -98,8 +101,10 @@ class RootFinder {
     min = infin;
     for (i = 0; i <= n; i++) {
       x = fabs(p[i]);
-      if (x > max) max = x;
-      if (x != 0.0 && x < min) min = x;
+      if (x > max)
+        max = x;
+      if (x != 0.0 && x < min)
+        min = x;
     }
     /*  Scale if there are large or very small coefficients.
      *  Computes a scale factor to multiply the coefficients of the
@@ -108,15 +113,19 @@ class RootFinder {
      *  criterion. The factor is a power of the base.
      */
     sc = lo / min;
-    if (sc > 1.0 && infin / sc < max) goto _110;
+    if (sc > 1.0 && infin / sc < max)
+      goto _110;
     if (sc <= 1.0) {
-      if (max < 10.0) goto _110;
-      if (sc == 0.0) sc = smalno;
+      if (max < 10.0)
+        goto _110;
+      if (sc == 0.0)
+        sc = smalno;
     }
     l = (int)(log(sc) / log(base) + 0.5);
     factor = pow(base * 1.0, l);
     if (factor != 1.0) {
-      for (i = 0; i <= n; i++) p[i] = factor * p[i]; /* Scale polynomial. */
+      for (i = 0; i <= n; i++)
+        p[i] = factor * p[i]; /* Scale polynomial. */
     }
 
   _110:
@@ -130,14 +139,17 @@ class RootFinder {
     /*  If Newton step at the origin is better, use it. */
     if (pt[n - 1] != 0.0) {
       xm = -pt[n] / pt[n - 1];
-      if (xm < x) x = xm;
+      if (xm < x)
+        x = xm;
     }
     /*  Chop the interval (0,x) until ff <= 0 */
     while (1) {
       xm = x * 0.1;
       ff = pt[0];
-      for (i = 1; i <= n; i++) ff = ff * xm + pt[i];
-      if (ff <= 0.0) break;
+      for (i = 1; i <= n; i++)
+        ff = ff * xm + pt[i];
+      if (ff <= 0.0)
+        break;
       x = xm;
     }
     dx = x;
@@ -160,7 +172,8 @@ class RootFinder {
      *  and do 5 steps with no shift.
      */
     nm1 = n - 1;
-    for (i = 1; i < n; i++) k[i] = (double)(n - i) * p[i] / (double)n;
+    for (i = 1; i < n; i++)
+      k[i] = (double)(n - i) * p[i] / (double)n;
     k[0] = p[0];
     aa = p[n];
     bb = p[n - 1];
@@ -187,7 +200,8 @@ class RootFinder {
       }
     }
     /*  Save k for restarts with new shifts. */
-    for (i = 0; i < n; i++) temp[i] = k[i];
+    for (i = 0; i < n; i++)
+      temp[i] = k[i];
     /*  Loop to select the quadratic corresponding to each new shift. */
     for (cnt = 0; cnt < 20; cnt++) {
       /*  Quadratic corresponds to a double shift to a
@@ -213,7 +227,8 @@ class RootFinder {
         zeror[j] = szr;
         zeroi[j] = szi;
         n -= nz;
-        for (i = 0; i <= n; i++) p[i] = qp[i];
+        for (i = 0; i <= n; i++)
+          p[i] = qp[i];
         if (nz != 1) {
           zeror[j + 1] = lzr;
           zeroi[j + 1] = lzi;
@@ -253,7 +268,7 @@ class RootFinder {
    *  iterations and returns with the number of zeros
    *  found.
    */
-  void fxshfr(int l2, int *nz) {
+  void fxshfr(int l2, int* nz) {
     double svu, svv, ui, vi, s;
     double betas, betav, oss, ovv, ss, vv, ts, tv;
     double ots, otv, tvv, tss;
@@ -275,22 +290,29 @@ class RootFinder {
       vv = vi;
       /*  Estimate s. */
       ss = 0.0;
-      if (k[n - 1] != 0.0) ss = -p[n] / k[n - 1];
+      if (k[n - 1] != 0.0)
+        ss = -p[n] / k[n - 1];
       tv = 1.0;
       ts = 1.0;
-      if (j == 0 || type == 3) goto _70;
+      if (j == 0 || type == 3)
+        goto _70;
       /*  Compute relative measures of convergence of s and v sequences. */
-      if (vv != 0.0) tv = fabs((vv - ovv) / vv);
-      if (ss != 0.0) ts = fabs((ss - oss) / ss);
+      if (vv != 0.0)
+        tv = fabs((vv - ovv) / vv);
+      if (ss != 0.0)
+        ts = fabs((ss - oss) / ss);
       /*  If decreasing, multiply two most recent convergence measures. */
       tvv = 1.0;
-      if (tv < otv) tvv = tv * otv;
+      if (tv < otv)
+        tvv = tv * otv;
       tss = 1.0;
-      if (ts < ots) tss = ts * ots;
+      if (ts < ots)
+        tss = ts * ots;
       /*  Compare with convergence criteria. */
       vpass = (tvv < betav);
       spass = (tss < betas);
-      if (!(spass || vpass)) goto _70;
+      if (!(spass || vpass))
+        goto _70;
       /*  At least one sequence has passed the convergence test.
        *  Store variables before iterating.
        */
@@ -305,10 +327,12 @@ class RootFinder {
        */
       vtry = 0;
       stry = 0;
-      if ((spass && (!vpass)) || tss < tvv) goto _40;
+      if ((spass && (!vpass)) || tss < tvv)
+        goto _40;
     _20:
       quadit(&ui, &vi, nz);
-      if (*nz > 0) return;
+      if (*nz > 0)
+        return;
       /*  Quadratic iteration has failed. Flag that it has
        *  been tried and decrease the convergence criterion.
        */
@@ -317,19 +341,22 @@ class RootFinder {
       /*  Try linear iteration if it has not been tried and
        *  the S sequence is converging.
        */
-      if (stry || !spass) goto _50;
+      if (stry || !spass)
+        goto _50;
       for (i = 0; i < n; i++) {
         k[i] = svk[i];
       }
     _40:
       realit(&s, nz, &iflag);
-      if (*nz > 0) return;
+      if (*nz > 0)
+        return;
       /*  Linear iteration has failed. Flag that it has been
        *  tried and decrease the convergence criterion.
        */
       stry = 1;
       betas *= 0.25;
-      if (iflag == 0) goto _50;
+      if (iflag == 0)
+        goto _50;
       /*  If linear iteration signals an almost double real
        *  zero attempt quadratic iteration.
        */
@@ -346,7 +373,8 @@ class RootFinder {
       /*  Try quadratic iteration if it has not been tried
        *  and the V sequence is convergin.
        */
-      if (vpass && !vtry) goto _20;
+      if (vpass && !vtry)
+        goto _20;
       /*  Recompute QP and scalar values to continue the
        *  second stage.
        */
@@ -365,7 +393,7 @@ class RootFinder {
    *  uu, vv - coefficients of starting quadratic.
    *  nz - number of zeros found.
    */
-  void quadit(double *uu, double *vv, int *nz) {
+  void quadit(double* uu, double* vv, int* nz) {
     double ui, vi;
     double mp, omp, ee, relstp, t, zm;
     int type, i, j, tried;
@@ -382,7 +410,8 @@ class RootFinder {
      *  close to multiple or nearly equal and of opposite
      *  sign.
      */
-    if (fabs(fabs(szr) - fabs(lzr)) > 0.01 * fabs(lzr)) return;
+    if (fabs(fabs(szr) - fabs(lzr)) > 0.01 * fabs(lzr))
+      return;
     /*  Evaluate polynomial by quadratic synthetic division. */
     quadsd(n, &u, &v, p, qp, &a, &b);
     mp = fabs(a - szr * b) + fabs(szi * b);
@@ -408,14 +437,18 @@ class RootFinder {
     }
     j++;
     /*  Stop iteration after 20 steps. */
-    if (j > 20) return;
-    if (j < 2) goto _50;
-    if (relstp > 0.01 || mp < omp || tried) goto _50;
+    if (j > 20)
+      return;
+    if (j < 2)
+      goto _50;
+    if (relstp > 0.01 || mp < omp || tried)
+      goto _50;
     /*  A cluster appears to be stalling the convergence.
      *  Five fixed shift steps are taken with a u,v close
      *  to the cluster.
      */
-    if (relstp < eta) relstp = eta;
+    if (relstp < eta)
+      relstp = eta;
     relstp = sqrt(relstp);
     u = u - u * relstp;
     v = v + v * relstp;
@@ -434,7 +467,8 @@ class RootFinder {
     calcsc(&type);
     newest(type, &ui, &vi);
     /*  If vi is zero the iteration is not converging. */
-    if (vi == 0.0) return;
+    if (vi == 0.0)
+      return;
     relstp = fabs((vi - v) / vi);
     u = ui;
     v = vi;
@@ -445,7 +479,7 @@ class RootFinder {
    *  nz  - number of zeros found
    *  iflag - flag to indicate a pair of zeros near real axis.
    */
-  void realit(double *sss, int *nz, int *iflag) {
+  void realit(double* sss, int* nz, int* iflag) {
     double pv, kv, t, s;
     double ms, mp, omp, ee;
     int i, j;
@@ -481,9 +515,12 @@ class RootFinder {
       }
       j++;
       /*  Stop iteration after 10 steps. */
-      if (j > 10) return;
-      if (j < 2) goto _50;
-      if (fabs(t) > 0.001 * fabs(s - t) || mp < omp) goto _50;
+      if (j > 10)
+        return;
+      if (j < 2)
+        goto _50;
+      if (fabs(t) > 0.001 * fabs(s - t) || mp < omp)
+        goto _50;
       /*  A cluster of zeros near the real axis has been
        *  encountered. Return with iflag set to initiate a
        *  quadratic iteration.
@@ -522,7 +559,8 @@ class RootFinder {
         kv = kv * s + k[i];
       }
       t = 0.0;
-      if (fabs(kv) > fabs(k[n - 1] * 10.0 * eta)) t = -pv / kv;
+      if (fabs(kv) > fabs(k[n - 1] * 10.0 * eta))
+        t = -pv / kv;
       s += t;
     }
   }
@@ -533,11 +571,13 @@ class RootFinder {
    *  type - integer variable set here indicating how the
    *  calculations are normalized to avoid overflow.
    */
-  void calcsc(int *type) {
+  void calcsc(int* type) {
     /*  Synthetic division of k by the quadratic 1,u,v */
     quadsd(n - 1, &u, &v, k, qk, &c, &d);
-    if (fabs(c) > fabs(k[n - 1] * 100.0 * eta)) goto _10;
-    if (fabs(d) > fabs(k[n - 2] * 100.0 * eta)) goto _10;
+    if (fabs(c) > fabs(k[n - 1] * 100.0 * eta))
+      goto _10;
+    if (fabs(d) > fabs(k[n - 2] * 100.0 * eta))
+      goto _10;
     *type = 3;
     /*  Type=3 indicates the quadratic is almost a factor of k. */
     return;
@@ -567,7 +607,7 @@ class RootFinder {
   /*  Computes the next k polynomials using scalars
    *  computed in calcsc.
    */
-  void nextk(int *type) {
+  void nextk(int* type) {
     double temp;
     int i;
 
@@ -581,7 +621,8 @@ class RootFinder {
       return;
     }
     temp = a;
-    if (*type == 1) temp = b;
+    if (*type == 1)
+      temp = b;
     if (fabs(a1) <= fabs(temp) * eta * 10.0) {
       /*  If a1 is nearly zero then use a special form of the
        *  recurrence.
@@ -605,7 +646,7 @@ class RootFinder {
   /*  Compute new estimates of the quadratic coefficients
    *  using the scalars computed in calcsc.
    */
-  void newest(int type, double *uu, double *vv) {
+  void newest(int type, double* uu, double* vv) {
     double a4, a5, b1, b2, c1, c2, c3, c4, temp;
 
     /* Use formulas appropriate to setting of type. */
@@ -643,8 +684,8 @@ class RootFinder {
   /*  Divides p by the quadratic 1,u,v placing the quotient
    *  in q and the remainder in a,b.
    */
-  void quadsd(int nn, double *u, double *v, double *p, double *q, double *a,
-              double *b) {
+  void quadsd(int nn, double* u, double* v, double* p, double* q, double* a,
+              double* b) {
     double c;
     int i;
     *b = p[0];
@@ -664,8 +705,8 @@ class RootFinder {
    *  are complex. The smaller real zero is found directly from
    *  the product of the zeros c/a.
    */
-  void quad(double a, double b1, double c, double *sr, double *si, double *lr,
-            double *li) {
+  void quad(double a, double b1, double c, double* sr, double* si, double* lr,
+            double* li) {
     double b, d, e;
 
     if (a == 0.0) { /* less than two roots */
@@ -708,7 +749,8 @@ class RootFinder {
         d = -d;
       *lr = (-b + d) / a;
       *sr = 0.0;
-      if (*lr != 0.0) *sr = (c / *lr) / a;
+      if (*lr != 0.0)
+        *sr = (c / *lr) / a;
       *si = 0.0;
       *li = 0.0;
     }

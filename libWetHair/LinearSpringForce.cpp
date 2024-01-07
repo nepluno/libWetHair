@@ -145,7 +145,8 @@ template <int DIM>
 void LinearSpringForce<DIM>::getAffectedVars(int colidx,
                                              std::unordered_set<int>& vars) {
   int idir = m_scene->getComponent(colidx);
-  if (idir == DIM) return;
+  if (idir == DIM)
+    return;
   int ip = m_scene->getVertFromDof(colidx);
 
   if (ip == m_endpoints.first || ip == m_endpoints.second) {
@@ -165,7 +166,8 @@ int LinearSpringForce<DIM>::getAffectedHair(
 template <int DIM>
 bool LinearSpringForce<DIM>::isContained(int colidx) {
   int idir = m_scene->getComponent(colidx);
-  if (idir == DIM) return false;
+  if (idir == DIM)
+    return false;
   int ip = m_scene->getVertFromDof(colidx);
 
   if (ip == m_endpoints.first || ip == m_endpoints.second)
@@ -178,7 +180,8 @@ template <int DIM>
 void LinearSpringForce<DIM>::storeLambda(const VectorXs& lambda,
                                          const VectorXs& lambda_v) {
   m_lambda = lambda.segment<DIM>(m_internal_index_pos);
-  if (m_b > 0.0) m_lambda_v = lambda_v.segment<DIM>(m_internal_index_vel);
+  if (m_b > 0.0)
+    m_lambda_v = lambda_v.segment<DIM>(m_internal_index_vel);
 }
 
 // explicit instantiations at bottom

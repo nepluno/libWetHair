@@ -133,7 +133,8 @@ inline Eigen::Matrix<scalar, Eigen::Dynamic, 1> findNormal(
       v[i] = 1;
       goto finished;
     }
-    if (fabs(u[i]) > fabs(u[maxCoordinate])) maxCoordinate = i;
+    if (fabs(u[i]) > fabs(u[maxCoordinate]))
+      maxCoordinate = i;
   }
   {
     const int otherCoordinate = (maxCoordinate + 1) % n;
@@ -161,7 +162,8 @@ finished:
 inline scalar signedAngle(const Vec3& u, const Vec3& v, const Vec3& n) {
   Vec3 w = u.cross(v);
   scalar angle = atan2(w.norm(), u.dot(v));
-  if (n.dot(w) < 0) return -angle;
+  if (n.dot(w) < 0)
+    return -angle;
   return angle;
 }
 
@@ -179,7 +181,8 @@ inline void rotateAxisAngle(typename Eigen::Matrix<scalarT, 3, 1>& v,
                             const scalarT theta) {
   assert(isApproxUnit(z));
 
-  if (theta == 0) return;
+  if (theta == 0)
+    return;
 
   const scalarT c = cos(theta);
   const scalarT s = sin(theta);
@@ -241,7 +244,8 @@ inline void symBProduct(Eigen::Matrix<scalar, n, n>& result, const Mat2& B,
 template <typename VectorT, typename scalarT>
 inline VectorT vectorSlerp(const VectorT& v0, const VectorT& v1, scalarT t) {
   const scalarT angle = std::acos(clamp(v0.dot(v1), -1., 1.));
-  if (isSmall(angle)) return v0;
+  if (isSmall(angle))
+    return v0;
   const scalarT invSin = 1. / std::sin(angle);
   return invSin * (std::sin((1. - t) * angle) * v0 + std::sin(t * angle) * v1);
 }
@@ -266,8 +270,10 @@ bool containsNans(const VecX& dofs);
  */
 inline scalar clamp2Pi(scalar angle) {
   scalar theta = angle;
-  while (theta > M_PI) theta -= 2. * M_PI;
-  while (theta <= -M_PI) theta += 2. * M_PI;
+  while (theta > M_PI)
+    theta -= 2. * M_PI;
+  while (theta <= -M_PI)
+    theta += 2. * M_PI;
 
   return theta;
 }

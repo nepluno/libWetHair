@@ -41,7 +41,8 @@ class Camera {
             const double newy);
   void pan(const double oldx, const double oldy, const double newx,
            const double newy);
-  void rotate(const libwethair::Vector3s& axis, const libwethair::scalar& angle, bool global);
+  void rotate(const libwethair::Vector3s& axis, const libwethair::scalar& angle,
+              bool global);
   void project_to_sphere(const double& radius, Eigen::Vector3d& p) const;
   friend std::ostream& operator<<(std::ostream& output, const Camera& cam);
 };

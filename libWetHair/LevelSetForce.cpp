@@ -81,8 +81,8 @@ void LevelSetForce<3>::preCompute(const VectorXs& x, const VectorXs& v,
 
   // for each edge
   int ne = flow->getGlobalEdges().size();
-  const std::vector<std::pair<int, int> >& edges = flow->getGlobalEdges();
-  const std::vector<std::pair<int, int> >& local_edges = flow->getLocalEdges();
+  const std::vector<std::pair<int, int>>& edges = flow->getGlobalEdges();
+  const std::vector<std::pair<int, int>>& local_edges = flow->getLocalEdges();
 
   for (int i = 0; i < ne; ++i) {
     const std::pair<int, int>& e = edges[i];
@@ -113,7 +113,8 @@ void LevelSetForce<3>::preCompute(const VectorXs& x, const VectorXs& v,
         }
         alpha_1 = mathutils::clamp(
             (pair_0.max_dist - (pair_0.dist - r0i)) / ddiv, min_alpha, 1.0);
-        if (alpha_1 == min_alpha) continue;
+        if (alpha_1 == min_alpha)
+          continue;
       }
     } else if (pair_1.valid) {
       const scalar& r0i = radii(e.first);
@@ -129,7 +130,8 @@ void LevelSetForce<3>::preCompute(const VectorXs& x, const VectorXs& v,
         }
         alpha_0 = mathutils::clamp(
             (pair_0.max_dist - (pair_0.dist - r0i)) / ddiv, 0.0, max_alpha);
-        if (alpha_0 == max_alpha) continue;
+        if (alpha_0 == max_alpha)
+          continue;
       }
     }
 
@@ -235,8 +237,8 @@ void LevelSetForce<2>::preCompute(const VectorXs& x, const VectorXs& v,
 
   // for each edge
   int ne = flow->getGlobalEdges().size();
-  const std::vector<std::pair<int, int> >& edges = flow->getGlobalEdges();
-  const std::vector<std::pair<int, int> >& local_edges = flow->getLocalEdges();
+  const std::vector<std::pair<int, int>>& edges = flow->getGlobalEdges();
+  const std::vector<std::pair<int, int>>& local_edges = flow->getLocalEdges();
 
   scalar bb = m_parent->getParameter().damping_multiplier_planar;
   scalar friction = m_parent->getParameter().friction_multiplier_planar;
@@ -270,7 +272,8 @@ void LevelSetForce<2>::preCompute(const VectorXs& x, const VectorXs& v,
         }
         alpha_1 = mathutils::clamp(
             (pair_0.max_dist - (pair_0.dist - r0i)) / ddiv, min_alpha, 1.0);
-        if (min_alpha == alpha_1) continue;
+        if (min_alpha == alpha_1)
+          continue;
       }
     } else if (pair_1.valid) {
       const scalar& r0i = radii(e.first);
@@ -286,7 +289,8 @@ void LevelSetForce<2>::preCompute(const VectorXs& x, const VectorXs& v,
         }
         alpha_0 = mathutils::clamp(
             (pair_0.max_dist - (pair_0.dist - r0i)) / ddiv, 0.0, max_alpha);
-        if (alpha_0 == max_alpha) continue;
+        if (alpha_0 == max_alpha)
+          continue;
       }
     }
 
@@ -352,7 +356,8 @@ template <int DIM>
 void LevelSetForce<DIM>::getAffectedVars(int pidx,
                                          std::unordered_set<int>& vars) {
   int ip = m_parent->getVertFromDof(pidx);
-  for (int r = 0; r < DIM; ++r) vars.insert(m_parent->getDof(ip) + r);
+  for (int r = 0; r < DIM; ++r)
+    vars.insert(m_parent->getDof(ip) + r);
 }
 
 template <int DIM>
@@ -373,7 +378,8 @@ const char* LevelSetForce<DIM>::name() {
 
 template <int DIM>
 bool LevelSetForce<DIM>::isContained(int pidx) {
-  if (m_parent->getComponent(pidx) < DIM) return true;
+  if (m_parent->getComponent(pidx) < DIM)
+    return true;
   return false;
 }
 
@@ -439,7 +445,7 @@ void LevelSetForce<2>::computeIntegrationVars(
   int nplp = m_point_ls_pairs.size();
 
   const HairFlow<2>* flow = m_parent->getFilmFlows()[m_hidx];
-  const std::vector<std::pair<int, int> >& edges = flow->getGlobalEdges();
+  const std::vector<std::pair<int, int>>& edges = flow->getGlobalEdges();
   const VectorXs& radii = m_parent->getRadii();
   const scalar& cohesion_multiplier =
       m_parent->getHairSolidCohesionMultiplier();
@@ -542,7 +548,7 @@ void LevelSetForce<3>::computeIntegrationVars(
   int nplp = m_point_ls_pairs.size();
 
   const HairFlow<3>* flow = m_parent->getFilmFlows()[m_hidx];
-  const std::vector<std::pair<int, int> >& edges = flow->getGlobalEdges();
+  const std::vector<std::pair<int, int>>& edges = flow->getGlobalEdges();
   const VectorXs& radii = m_parent->getRadii();
   const scalar& cohesion_multiplier =
       m_parent->getHairSolidCohesionMultiplier();

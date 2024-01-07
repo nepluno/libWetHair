@@ -66,14 +66,16 @@ void print(const T& x, const char* name = NULL, bool override = false) {
 #ifndef OVERRIDE
   if (override) {
 #endif
-    if (name) std::cout << std::string(name) << ":" << std::endl;
+    if (name)
+      std::cout << std::string(name) << ":" << std::endl;
     std::cout << x << std::endl;
     std::cout << std::endl;
 #ifndef OVERRIDE
   } else {
 #ifndef NDEBUG
 #ifndef FORCE_NO_PRINT
-    if (name) std::cout << std::string(name) << ":" << std::endl;
+    if (name)
+      std::cout << std::string(name) << ":" << std::endl;
     std::cout << x << std::endl;
     std::cout << std::endl;
 #endif

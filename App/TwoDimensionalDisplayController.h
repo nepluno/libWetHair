@@ -109,7 +109,7 @@ class TwoDimensionalDisplayController {
   Camera m_camera;
 
   std::stack<Camera> m_cam_stack;
-    
+
   GLFWwindow* m_window;
 };
 

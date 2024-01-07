@@ -21,22 +21,23 @@ namespace libwethair {
 using namespace Eigen;
 using namespace std;
 
-bool TimeInterval::overlap(const TimeInterval &t1, const TimeInterval &t2) {
+bool TimeInterval::overlap(const TimeInterval& t1, const TimeInterval& t2) {
   return !(t1.l > t2.u || t2.l > t1.u);
 }
 
-bool TimeInterval::overlap(const std::vector<TimeInterval> &intervals) {
+bool TimeInterval::overlap(const std::vector<TimeInterval>& intervals) {
   for (std::vector<TimeInterval>::const_iterator it1 = intervals.begin();
        it1 != intervals.end(); ++it1) {
     std::vector<TimeInterval>::const_iterator it2 = it1;
     for (++it2; it2 != intervals.end(); ++it2)
-      if (!overlap(*it1, *it2)) return false;
+      if (!overlap(*it1, *it2))
+        return false;
   }
   return true;
 }
 
 TimeInterval TimeInterval::intersect(
-    const std::vector<TimeInterval> &intervals) {
+    const std::vector<TimeInterval>& intervals) {
   TimeInterval isect(0.0, 1.0);
   for (std::vector<TimeInterval>::const_iterator it = intervals.begin();
        it != intervals.end(); ++it) {
@@ -46,11 +47,12 @@ TimeInterval TimeInterval::intersect(
   return isect;
 }
 
-int CTCD::getQuadRoots(double a, double b, double c, double &t0, double &t1) {
+int CTCD::getQuadRoots(double a, double b, double c, double& t0, double& t1) {
   int roots = 0;
   int sign = 1;
 
-  if (b < 0) sign = -1;
+  if (b < 0)
+    sign = -1;
 
   double D = b * b - 4 * a * c;
   if (D >= 0) {
@@ -58,13 +60,14 @@ int CTCD::getQuadRoots(double a, double b, double c, double &t0, double &t1) {
     double q = -0.5 * (b + sign * sqrt(D));
     t0 = q / a;
     t1 = c / q;
-    if (t0 > t1) std::swap(t1, t0);
+    if (t0 > t1)
+      std::swap(t1, t0);
   }
   return roots;
 }
 
-void CTCD::checkInterval(double t1, double t2, double *op, int degree,
-                         vector<TimeInterval> &intervals, bool pos) {
+void CTCD::checkInterval(double t1, double t2, double* op, int degree,
+                         vector<TimeInterval>& intervals, bool pos) {
   // clamp values
   t1 = max(0.0, t1);
   t2 = max(0.0, t2);
@@ -84,19 +87,21 @@ void CTCD::checkInterval(double t1, double t2, double *op, int degree,
     intervals.push_back(TimeInterval(t1, t2));
 }
 
-bool CTCD::couldHaveRoots(double *op, int degree, bool pos) {
+bool CTCD::couldHaveRoots(double* op, int degree, bool pos) {
   double result = 0;
-  if ((pos && op[0] > 0) || (!pos && op[0] < 0)) result = op[0];
+  if ((pos && op[0] > 0) || (!pos && op[0] < 0))
+    result = op[0];
   for (int i = 1; i < degree; i++) {
     result *= 1.0;
-    if ((pos && op[i] > 0) || (!pos && op[i] < 0)) result += op[i];
+    if ((pos && op[i] > 0) || (!pos && op[i] < 0))
+      result += op[i];
   }
   result *= 1.0;
   result += op[degree];
   return !((pos && result < 0) || (!pos && result > 0));
 }
 
-void CTCD::findIntervals(double *op, int n, vector<TimeInterval> &intervals,
+void CTCD::findIntervals(double* op, int n, vector<TimeInterval>& intervals,
                          bool pos) {
   int roots = 0;
   int reducedDegree = n;
@@ -112,9 +117,11 @@ void CTCD::findIntervals(double *op, int n, vector<TimeInterval> &intervals,
 
   // normalize
   double maxval = 0;
-  for (int i = 0; i <= n; i++) maxval = std::max(maxval, fabs(op[i]));
+  for (int i = 0; i <= n; i++)
+    maxval = std::max(maxval, fabs(op[i]));
   if (maxval != 0)
-    for (int i = 0; i <= n; i++) op[i] /= maxval;
+    for (int i = 0; i <= n; i++)
+      op[i] /= maxval;
 
   for (int i = 0; i < n; i++) {
     if (op[i] == 0)
@@ -124,11 +131,13 @@ void CTCD::findIntervals(double *op, int n, vector<TimeInterval> &intervals,
   }
 
   if (reducedDegree < n) {
-    for (int i = 0; i <= reducedDegree; i++) op[i] = op[i + n - reducedDegree];
+    for (int i = 0; i <= reducedDegree; i++)
+      op[i] = op[i + n - reducedDegree];
   }
 
   if (reducedDegree > 2) {
-    if (!couldHaveRoots(op, reducedDegree, pos)) return;
+    if (!couldHaveRoots(op, reducedDegree, pos))
+      return;
 
     RootFinder rf;
 
@@ -162,10 +171,10 @@ void CTCD::findIntervals(double *op, int n, vector<TimeInterval> &intervals,
   }
 }
 
-void CTCD::barycentricPoly3D(const Vector3d &x10, const Vector3d &x20,
-                             const Vector3d &x30, const Vector3d &v10,
-                             const Vector3d &v20, const Vector3d &v30,
-                             vector<TimeInterval> &result) {
+void CTCD::barycentricPoly3D(const Vector3d& x10, const Vector3d& x20,
+                             const Vector3d& x30, const Vector3d& v10,
+                             const Vector3d& v20, const Vector3d& v30,
+                             vector<TimeInterval>& result) {
   // alpha > 0
   double A = x10.dot(x10);
   double B = 2 * x10.dot(v10);
@@ -194,10 +203,10 @@ void CTCD::barycentricPoly3D(const Vector3d &x10, const Vector3d &x20,
   findIntervals(op, 4, result, true);
 }
 
-void CTCD::planePoly3D(const Vector3d &x10, const Vector3d &x20,
-                       const Vector3d &x30, const Vector3d &v10,
-                       const Vector3d &v20, const Vector3d &v30,
-                       vector<TimeInterval> &result) {
+void CTCD::planePoly3D(const Vector3d& x10, const Vector3d& x20,
+                       const Vector3d& x30, const Vector3d& v10,
+                       const Vector3d& v20, const Vector3d& v30,
+                       vector<TimeInterval>& result) {
   double op[4];
   op[0] = v10.dot(v20.cross(v30));
   op[1] = x10.dot(v20.cross(v30)) + v10.dot(x20.cross(v30)) +
@@ -208,10 +217,10 @@ void CTCD::planePoly3D(const Vector3d &x10, const Vector3d &x20,
   findIntervals(op, 3, result, true);
 }
 
-void CTCD::distancePoly3D(const Vector3d &x10, const Vector3d &x20,
-                          const Vector3d &x30, const Vector3d &v10,
-                          const Vector3d &v20, const Vector3d &v30,
-                          double minDSquared, vector<TimeInterval> &result) {
+void CTCD::distancePoly3D(const Vector3d& x10, const Vector3d& x20,
+                          const Vector3d& x30, const Vector3d& v10,
+                          const Vector3d& v20, const Vector3d& v30,
+                          double minDSquared, vector<TimeInterval>& result) {
   double A = v10.dot(v20.cross(v30));
   double B = x10.dot(v20.cross(v30)) + v10.dot(x20.cross(v30)) +
              v10.dot(v20.cross(x30));
@@ -233,14 +242,14 @@ void CTCD::distancePoly3D(const Vector3d &x10, const Vector3d &x20,
   findIntervals(op, 6, result, false);
 }
 
-bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d &q0start,
-                        const Eigen::Vector3d &p0start,
-                        const Eigen::Vector3d &q1start,
-                        const Eigen::Vector3d &p1start,
-                        const Eigen::Vector3d &q0end,
-                        const Eigen::Vector3d &p0end,
-                        const Eigen::Vector3d &q1end,
-                        const Eigen::Vector3d &p1end, double eta, double &t) {
+bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d& q0start,
+                        const Eigen::Vector3d& p0start,
+                        const Eigen::Vector3d& q1start,
+                        const Eigen::Vector3d& p1start,
+                        const Eigen::Vector3d& q0end,
+                        const Eigen::Vector3d& p0end,
+                        const Eigen::Vector3d& q1end,
+                        const Eigen::Vector3d& p1end, double eta, double& t) {
   double minD = eta * eta;
 
   // time intervals during which v is colinear with the edge, on the side of e1
@@ -291,7 +300,8 @@ bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d &q0start,
     }
   }
 
-  if (coplane.empty()) return false;
+  if (coplane.empty())
+    return false;
 
   x10 = p1start - q1start;
   v10 = vp1 - vq1;
@@ -300,14 +310,16 @@ bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d &q0start,
   x30 = q0start - q1start;
   v30 = vq0 - vq1;
   barycentricPoly3D(x10, x20, x30, v10, v20, v30, a0);
-  if (a0.empty()) return false;
+  if (a0.empty())
+    return false;
 
   x20 = q0start - p0start;
   v20 = vq0 - vp0;
   x30 = p0start - q1start;
   v30 = vp0 - vq1;
   barycentricPoly3D(x10, x20, x30, v10, v20, v30, a1);
-  if (a1.empty()) return false;
+  if (a1.empty())
+    return false;
 
   x10 = p0start - q0start;
   v10 = vp0 - vq0;
@@ -316,7 +328,8 @@ bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d &q0start,
   x30 = q1start - q0start;
   v30 = vq1 - vq0;
   barycentricPoly3D(x10, x20, x30, v10, v20, v30, b0);
-  if (b0.empty()) return false;
+  if (b0.empty())
+    return false;
 
   // x10 = p0 - q0;
   // v10 = vp0 - vq0;
@@ -326,7 +339,8 @@ bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d &q0start,
   v30 = vp1 - vq0;
 
   barycentricPoly3D(x10, x20, x30, v10, v20, v30, b1);
-  if (b1.empty()) return false;
+  if (b1.empty())
+    return false;
 
   // check intervals for overlap
   bool col = false;
@@ -372,11 +386,11 @@ bool CTCD::edgeEdgeCTCD(const Eigen::Vector3d &q0start,
   return false;
 }
 
-bool CTCD::vertexFaceCTCD(const Vector3d &q0start, const Vector3d &q1start,
-                          const Vector3d &q2start, const Vector3d &q3start,
-                          const Vector3d &q0end, const Vector3d &q1end,
-                          const Vector3d &q2end, const Vector3d &q3end,
-                          double eta, double &t) {
+bool CTCD::vertexFaceCTCD(const Vector3d& q0start, const Vector3d& q1start,
+                          const Vector3d& q2start, const Vector3d& q3start,
+                          const Vector3d& q0end, const Vector3d& q1end,
+                          const Vector3d& q2end, const Vector3d& q3end,
+                          double eta, double& t) {
   double minD = eta * eta;
   Vector3d v0 = q0end - q0start;
   Vector3d v1 = q1end - q1start;
@@ -396,7 +410,8 @@ bool CTCD::vertexFaceCTCD(const Vector3d &q0start, const Vector3d &q1start,
   Vector3d v30 = v3 - v1;
   planePoly3D(x10, x20, x30, v10, v20, v30, e1);
 
-  if (e1.empty()) return false;
+  if (e1.empty())
+    return false;
 
   x10 = q0start - q2start;
   v10 = v0 - v2;
@@ -406,7 +421,8 @@ bool CTCD::vertexFaceCTCD(const Vector3d &q0start, const Vector3d &q1start,
   v30 = v1 - v2;
   planePoly3D(x10, x20, x30, v10, v20, v30, e2);
 
-  if (e2.empty()) return false;
+  if (e2.empty())
+    return false;
 
   x10 = q0start - q3start;
   v10 = v0 - v3;
@@ -416,7 +432,8 @@ bool CTCD::vertexFaceCTCD(const Vector3d &q0start, const Vector3d &q1start,
   v30 = v2 - v3;
   planePoly3D(x10, x20, x30, v10, v20, v30, e3);
 
-  if (e3.empty()) return false;
+  if (e3.empty())
+    return false;
 
   x10 = q0start - q1start;
   x20 = q2start - q1start;
@@ -426,7 +443,8 @@ bool CTCD::vertexFaceCTCD(const Vector3d &q0start, const Vector3d &q1start,
   v30 = v3 - v1;
   distancePoly3D(x10, x20, x30, v10, v20, v30, minD, coplane);
 
-  if (coplane.empty()) return false;
+  if (coplane.empty())
+    return false;
 
   bool col = false;
   double mint = 1.0;
@@ -455,10 +473,10 @@ bool CTCD::vertexFaceCTCD(const Vector3d &q0start, const Vector3d &q1start,
   return false;
 }
 
-bool CTCD::vertexEdgeCTCD(const Vector3d &q0start, const Vector3d &q1start,
-                          const Vector3d &q2start, const Vector3d &q0end,
-                          const Vector3d &q1end, const Vector3d &q2end,
-                          double eta, double &t) {
+bool CTCD::vertexEdgeCTCD(const Vector3d& q0start, const Vector3d& q1start,
+                          const Vector3d& q2start, const Vector3d& q0end,
+                          const Vector3d& q1end, const Vector3d& q2end,
+                          double eta, double& t) {
   double op[5];
   double minD = eta * eta;
   Vector3d v0 = q0end - q0start;
@@ -483,7 +501,8 @@ bool CTCD::vertexEdgeCTCD(const Vector3d &q0start, const Vector3d &q1start,
   op[1] = b;
   op[2] = c;
   findIntervals(op, 2, e1, true);
-  if (e1.empty()) return false;
+  if (e1.empty())
+    return false;
 
   c = ab.dot(cb);
   b = cb.dot(vab) + ab.dot(vcb);
@@ -493,7 +512,8 @@ bool CTCD::vertexEdgeCTCD(const Vector3d &q0start, const Vector3d &q1start,
   op[1] = b;
   op[2] = c;
   findIntervals(op, 2, e2, true);
-  if (e2.empty()) return false;
+  if (e2.empty())
+    return false;
 
   double A = ab.dot(ab);
   double B = 2 * ab.dot(vab);
@@ -510,7 +530,8 @@ bool CTCD::vertexEdgeCTCD(const Vector3d &q0start, const Vector3d &q1start,
   op[1] = B * F + C * E - 2 * H * I;
   op[0] = C * F - I * I;
   findIntervals(op, 4, colin, false);
-  if (colin.empty()) return false;
+  if (colin.empty())
+    return false;
 
   double mint = 1.0;
   bool col = false;
@@ -536,9 +557,9 @@ bool CTCD::vertexEdgeCTCD(const Vector3d &q0start, const Vector3d &q1start,
   return false;
 }
 
-bool CTCD::vertexVertexCTCD(const Vector3d &q1start, const Vector3d &q2start,
-                            const Vector3d &q1end, const Vector3d &q2end,
-                            double eta, double &t) {
+bool CTCD::vertexVertexCTCD(const Vector3d& q1start, const Vector3d& q2start,
+                            const Vector3d& q1end, const Vector3d& q2end,
+                            double eta, double& t) {
   int roots = 0;
   double min_d = eta * eta;
   double t1 = 0, t2 = 0;
@@ -610,14 +631,14 @@ bool CTCD::vertexVertexCTCD(const Vector3d &q1start, const Vector3d &q2start,
   return false;
 }
 
-bool CTCD::checkEEContact(const Eigen::Vector3d &q0start,
-                          const Eigen::Vector3d &p0start,
-                          const Eigen::Vector3d &q1start,
-                          const Eigen::Vector3d &p1start,
-                          const Eigen::Vector3d &q0end,
-                          const Eigen::Vector3d &p0end,
-                          const Eigen::Vector3d &q1end,
-                          const Eigen::Vector3d &p1end, double eta, double &t) {
+bool CTCD::checkEEContact(const Eigen::Vector3d& q0start,
+                          const Eigen::Vector3d& p0start,
+                          const Eigen::Vector3d& q1start,
+                          const Eigen::Vector3d& p1start,
+                          const Eigen::Vector3d& q0end,
+                          const Eigen::Vector3d& p0end,
+                          const Eigen::Vector3d& q1end,
+                          const Eigen::Vector3d& p1end, double eta, double& t) {
   if (edgeEdgeCTCD(q0start, p0start, q1start, p1start, q0end, p0end, q1end,
                    p1end, eta, t)) {
     return true;
@@ -664,10 +685,10 @@ EIGEN_STRONG_INLINE ComparableT clamp(const ComparableT x, const ComparableT l,
 // S2(t)=P2+t*(Q2-P2), returning s and t. Function result is squared
 // distance between between S1(s) and S2(t).
 // TODO: Explore behavior in degenerate case more closely.
-double CTCD::ClosestPtSegmentSegment(const Vector3d &p1, const Vector3d &q1,
-                                     const Vector3d &p2, const Vector3d &q2,
-                                     double &s, double &t, Vector3d &c1,
-                                     Vector3d &c2) {
+double CTCD::ClosestPtSegmentSegment(const Vector3d& p1, const Vector3d& q1,
+                                     const Vector3d& p2, const Vector3d& q2,
+                                     double& s, double& t, Vector3d& c1,
+                                     Vector3d& c2) {
   double EPSILON = 1.0e-12;
 
   Vector3d d1 = q1 - p1;  // Direction vector of segment S1

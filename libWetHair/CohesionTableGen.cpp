@@ -133,7 +133,8 @@ scalar CohesionTable::interpolate_table(const scalar& A, const scalar& d0,
   scalar a_inc0 = (m_max_As(ip0) - m_min_As(ip0)) / m_discretization;
   scalar a_inc1 = (m_max_As(ip1) - m_min_As(ip1)) / m_discretization;
 
-  if (a_inc0 == 0.0 || a_inc1 == 0.0) return 0.0;
+  if (a_inc0 == 0.0 || a_inc1 == 0.0)
+    return 0.0;
 
   scalar q0 =
       (std::max(m_min_As(ip0), std::min(m_max_As(ip0), A)) - m_min_As(ip0)) /
@@ -198,7 +199,8 @@ scalar CohesionTable::interpolate_table_grad(const scalar& A, const scalar& d0,
   scalar a_inc0 = (m_max_As(ip0) - m_min_As(ip0)) / m_discretization;
   scalar a_inc1 = (m_max_As(ip1) - m_min_As(ip1)) / m_discretization;
 
-  if (a_inc0 == 0.0 || a_inc1 == 0.0) return 0.0;
+  if (a_inc0 == 0.0 || a_inc1 == 0.0)
+    return 0.0;
 
   scalar q0 =
       (std::max(m_min_As(ip0), std::min(m_max_As(ip0), A)) - m_min_As(ip0)) /
@@ -272,7 +274,9 @@ void CohesionTable::setParameter(const scalar& sigma, const scalar& theta,
   m_max_alpha = M_PI - m_theta;
 }
 
-scalar CohesionTable::getRadii() const { return m_radii; }
+scalar CohesionTable::getRadii() const {
+  return m_radii;
+}
 
 scalar CohesionTable::computeH(const scalar& R, const scalar& alpha) const {
   return m_radii * sin(alpha) - R * (1.0 - sin(m_theta + alpha));
@@ -523,7 +527,8 @@ scalar CohesionTable::computeApproxdEddPlanar(const scalar& alpha,
 
 scalar CohesionTable::computedEddAreaDist(const scalar& A_target,
                                           const scalar& d0) const {
-  if (d0 < getDStar()) return computedEddAreaDist(A_target, getDStar());
+  if (d0 < getDStar())
+    return computedEddAreaDist(A_target, getDStar());
 
   if (d0 <
       2.0 * sqrt(A_target / M_PI + 2.0 * m_radii * m_radii) - m_radii * 2.0)
@@ -839,7 +844,9 @@ scalar CohesionTable::getStiffnessPlanar(const scalar& d0,
   }
 }
 
-scalar CohesionTable::getDMinPlanar() const { return m_min_d0_planar; }
+scalar CohesionTable::getDMinPlanar() const {
+  return m_min_d0_planar;
+}
 
 scalar CohesionTable::getDHatPlanar() const {
   return getDMinPlanar() * (2.0 * m_radius_multiplier_planar - 1.0);
@@ -849,7 +856,9 @@ scalar CohesionTable::getDStarPlanar() const {
   return getDMinPlanar() * m_radius_multiplier_planar;
 }
 
-scalar CohesionTable::getDMin() const { return m_min_d0; }
+scalar CohesionTable::getDMin() const {
+  return m_min_d0;
+}
 
 scalar CohesionTable::getDHat() const {
   return getDMin() * (2.0 * m_radius_multiplier - 1.0);

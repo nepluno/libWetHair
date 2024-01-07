@@ -14,10 +14,10 @@
 namespace libwethair {
 
 template <class T>
-void levelGen<T>::generateRP(const robertbridson::FixedSparseMatrix<T> &A,
-                             robertbridson::FixedSparseMatrix<T> &R,
-                             robertbridson::FixedSparseMatrix<T> &P,
-                             int ni, int nj, int nk) {
+void levelGen<T>::generateRP(const robertbridson::FixedSparseMatrix<T>& A,
+                             robertbridson::FixedSparseMatrix<T>& R,
+                             robertbridson::FixedSparseMatrix<T>& P, int ni,
+                             int nj, int nk) {
   int nni = ceil((float)ni / 2.0);
   int nnj = ceil((float)nj / 2.0);
   int nnk = ceil((float)nk / 2.0);

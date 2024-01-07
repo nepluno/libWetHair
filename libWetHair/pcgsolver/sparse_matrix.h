@@ -27,9 +27,9 @@ namespace robertbridson {
 template <class T>
 struct SparseMatrix {
   unsigned int n;  // dimension
-  std::vector<std::vector<unsigned int> >
+  std::vector<std::vector<unsigned int>>
       index;  // for each row, a list of all column indices (sorted)
-  std::vector<std::vector<T> > value;  // values corresponding to index
+  std::vector<std::vector<T>> value;  // values corresponding to index
 
   explicit SparseMatrix(unsigned int n_ = 0,
                         unsigned int expected_nonzeros_per_row = 7)
@@ -102,8 +102,8 @@ struct SparseMatrix {
   }
 
   // assumes indices is already sorted
-  void add_sparse_row(unsigned int i, const std::vector<unsigned int> &indices,
-                      const std::vector<T> &values) {
+  void add_sparse_row(unsigned int i, const std::vector<unsigned int>& indices,
+                      const std::vector<T>& values) {
     unsigned int j = 0, k = 0;
     while (j < indices.size() && k < index[i].size()) {
       if (index[i][k] < indices[j]) {
@@ -141,7 +141,7 @@ struct SparseMatrix {
     value[i].resize(0);
   }
 
-  void write_matlab(std::ostream &output, const char *variable_name) {
+  void write_matlab(std::ostream& output, const char* variable_name) {
     output << variable_name << "=sparse([";
     for (unsigned int i = 0; i < n; ++i) {
       for (unsigned int j = 0; j < index[i].size(); ++j) {
@@ -169,8 +169,8 @@ typedef SparseMatrix<double> SparseMatrixd;
 
 // perform result=matrix*x
 template <class T>
-void multiply(const SparseMatrix<T> &matrix, const std::vector<T> &x,
-              std::vector<T> &result) {
+void multiply(const SparseMatrix<T>& matrix, const std::vector<T>& x,
+              std::vector<T>& result) {
   // needs parallel
   // assert(matrix.n==x.size());
   result.resize(matrix.n);
@@ -191,8 +191,8 @@ void multiply(const SparseMatrix<T> &matrix, const std::vector<T> &x,
 
 // perform result=result-matrix*x
 template <class T>
-void multiply_and_subtract(const SparseMatrix<T> &matrix,
-                           const std::vector<T> &x, std::vector<T> &result) {
+void multiply_and_subtract(const SparseMatrix<T>& matrix,
+                           const std::vector<T>& x, std::vector<T>& result) {
   // needs parallel
   assert(matrix.n == x.size());
   result.resize(matrix.n);
@@ -242,7 +242,7 @@ struct FixedSparseMatrix {
     rowstart.resize(n + 1);
   }
 
-  void construct_from_matrix(const SparseMatrix<T> &matrix) {
+  void construct_from_matrix(const SparseMatrix<T>& matrix) {
     resize(matrix.n);
     rowstart[0] = 0;
     for (unsigned int i = 0; i < n; ++i) {
@@ -260,7 +260,7 @@ struct FixedSparseMatrix {
     }
   }
 
-  void write_matlab(std::ostream &output, const char *variable_name) {
+  void write_matlab(std::ostream& output, const char* variable_name) {
     output << variable_name << "=sparse([";
     for (unsigned int i = 0; i < n; ++i) {
       for (unsigned int j = rowstart[i]; j < rowstart[i + 1]; ++j) {
@@ -288,8 +288,8 @@ typedef FixedSparseMatrix<double> FixedSparseMatrixd;
 
 // perform result=matrix*x
 template <class T>
-void multiply(const FixedSparseMatrix<T> &matrix, const std::vector<T> &x,
-              std::vector<T> &result) {
+void multiply(const FixedSparseMatrix<T>& matrix, const std::vector<T>& x,
+              std::vector<T>& result) {
   // needs parallel
   // assert(matrix.n==x.size());
   result.resize(matrix.n);
@@ -311,8 +311,8 @@ void multiply(const FixedSparseMatrix<T> &matrix, const std::vector<T> &x,
 
 // perform C=scale*A*B
 template <class T>
-void multiplyMat(const FixedSparseMatrix<T> &A, const FixedSparseMatrix<T> &B,
-                 FixedSparseMatrix<T> &C, T scale) {
+void multiplyMat(const FixedSparseMatrix<T>& A, const FixedSparseMatrix<T>& B,
+                 FixedSparseMatrix<T>& C, T scale) {
   // needs parallel
   C.clear();
   SparseMatrix<T> c;
@@ -346,7 +346,7 @@ void multiplyMat(const FixedSparseMatrix<T> &A, const FixedSparseMatrix<T> &B,
 
 // perform A = coef*B'
 template <class T>
-void transposeMat(const FixedSparseMatrix<T> &B, FixedSparseMatrix<T> &A,
+void transposeMat(const FixedSparseMatrix<T>& B, FixedSparseMatrix<T>& A,
                   T coef) {
   A.clear();
 
@@ -386,8 +386,8 @@ void transposeMat(const FixedSparseMatrix<T> &B, FixedSparseMatrix<T> &A,
 
 // perform result=result-matrix*x
 template <class T>
-void multiply_and_subtract(const FixedSparseMatrix<T> &matrix,
-                           const std::vector<T> &x, std::vector<T> &result) {
+void multiply_and_subtract(const FixedSparseMatrix<T>& matrix,
+                           const std::vector<T>& x, std::vector<T>& result) {
   // needs parallel
   assert(matrix.n == x.size());
   // result.resize(matrix.n);

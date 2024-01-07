@@ -215,22 +215,23 @@ void StrandForce::recomputeGlobal() {
 
 template <typename AccumulatedT>
 void StrandForce::accumulateQuantity(AccumulatedT& accumulated) {
-  ForceAccumulator<StretchingForce<NonViscous> >::accumulate(accumulated,
-                                                             *this);
-  ForceAccumulator<TwistingForce<NonViscous> >::accumulate(accumulated, *this);
-  ForceAccumulator<BendingForce<NonViscous> >::accumulate(accumulated, *this);
+  ForceAccumulator<StretchingForce<NonViscous>>::accumulate(accumulated, *this);
+  ForceAccumulator<TwistingForce<NonViscous>>::accumulate(accumulated, *this);
+  ForceAccumulator<BendingForce<NonViscous>>::accumulate(accumulated, *this);
 
   if (m_strandParams->m_accumulateWithViscous) {
     if (!m_strandParams->m_accumulateViscousOnlyForBendingModes) {
-      ForceAccumulator<StretchingForce<Viscous> >::accumulate(accumulated,
-                                                              *this);
+      ForceAccumulator<StretchingForce<Viscous>>::accumulate(accumulated,
+                                                             *this);
     }
-    ForceAccumulator<TwistingForce<Viscous> >::accumulate(accumulated, *this);
-    ForceAccumulator<BendingForce<Viscous> >::accumulate(accumulated, *this);
+    ForceAccumulator<TwistingForce<Viscous>>::accumulate(accumulated, *this);
+    ForceAccumulator<BendingForce<Viscous>>::accumulate(accumulated, *this);
   }
 }
 
-Force* StrandForce::createNewCopy() { return new StrandForce(*this); }
+Force* StrandForce::createNewCopy() {
+  return new StrandForce(*this);
+}
 
 void StrandForce::preCompute(const VecX& x, const VecX& v, const VecX& m,
                              const scalar& dt) {
@@ -368,7 +369,9 @@ int StrandForce::numJv() {  // viscous now treated via positions
   return 0;
 }
 
-int StrandForce::numJxv() { return numJv(); }
+int StrandForce::numJxv() {
+  return numJv();
+}
 
 int StrandForce::numTildeK() {  // number of nonzeros in hessian, split up by
                                 // force
@@ -393,7 +396,9 @@ bool StrandForce::isParallelized() {
   return false;  // TODO, could PARALLELIZE each force calls
 }
 
-bool StrandForce::isPrecomputationParallelized() { return false; }
+bool StrandForce::isPrecomputationParallelized() {
+  return false;
+}
 
 int StrandForce::numConstraintPos() {
   int numConstraintPos = numConstraintNonViscous();
@@ -456,9 +461,11 @@ void StrandForce::getAffectedVars(int colidx, std::unordered_set<int>& vars) {
   for (int v = 0; v < getNumVertices(); ++v) {
     if (m_verts[v] == ip) {
       if (m_scene->isTip(ip)) {
-        for (int r = 0; r < 3; ++r) vars.insert(m_scene->getDof(ip) + r);
+        for (int r = 0; r < 3; ++r)
+          vars.insert(m_scene->getDof(ip) + r);
       } else {
-        for (int r = 0; r < 4; ++r) vars.insert(m_scene->getDof(ip) + r);
+        for (int r = 0; r < 4; ++r)
+          vars.insert(m_scene->getDof(ip) + r);
       }
 
       // include previous and next vertices affected by this vert's
@@ -477,7 +484,7 @@ void StrandForce::getAffectedVars(int colidx, std::unordered_set<int>& vars) {
 }
 
 void StrandForce::getLocalAffectedVars(
-    int colidx, std::vector<std::pair<int, int> >& vars) {  // local, global
+    int colidx, std::vector<std::pair<int, int>>& vars) {  // local, global
   int ip = m_scene->getVertFromDof(colidx);
   for (int v = 0; v < getNumVertices(); ++v) {
     if (m_verts[v] == ip) {
@@ -524,6 +531,8 @@ bool StrandForce::isContained(int pidx) {
   return false;
 }
 
-const char* StrandForce::name() { return "Strand Material Forces"; }
+const char* StrandForce::name() {
+  return "Strand Material Forces";
+}
 
 }  // namespace libwethair

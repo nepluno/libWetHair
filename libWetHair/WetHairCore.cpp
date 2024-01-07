@@ -74,7 +74,8 @@ void WetHairCore<DIM>::stepSystem() {
 #else
     scalar substep = dt;
 #endif
-    if (t + substep > dt) substep = dt - t;
+    if (t + substep > dt)
+      substep = dt - t;
 
     VectorXs oldpos = m_scene->getX();
     VectorXs oldvel = m_scene->getV();
@@ -82,7 +83,8 @@ void WetHairCore<DIM>::stepSystem() {
     scalar t1;
 
     bool updateSDF = false;
-    if (m_script_callback) updateSDF = m_script_callback(substep);
+    if (m_script_callback)
+      updateSDF = m_script_callback(substep);
 
     m_scene->getFluidSim()->controlSources(m_current_time, dt);
 
@@ -93,7 +95,8 @@ void WetHairCore<DIM>::stepSystem() {
 
     if (updateSDF) {
       FluidSim* fluidsim = m_scene->getFluidSim();
-      if (fluidsim) fluidsim->update_boundary();
+      if (fluidsim)
+        fluidsim->update_boundary();
     }
 
     // 0. advect the free-flow particles (Sec. 4.2).
@@ -344,10 +347,14 @@ void WetHairCore<2>::getBoundingBox(Vectors<2>& bb_min, Vectors<2>& bb_max) {
   scalar max_y = -std::numeric_limits<scalar>::infinity();
   scalar min_y = std::numeric_limits<scalar>::infinity();
   for (int i = 0; i < getScene()->getNumParticles(); ++i) {
-    if (x(2 * i) > max_x) max_x = x(2 * i);
-    if (x(2 * i) < min_x) min_x = x(2 * i);
-    if (x(2 * i + 1) > max_y) max_y = x(2 * i + 1);
-    if (x(2 * i + 1) < min_y) min_y = x(2 * i + 1);
+    if (x(2 * i) > max_x)
+      max_x = x(2 * i);
+    if (x(2 * i) < min_x)
+      min_x = x(2 * i);
+    if (x(2 * i + 1) > max_y)
+      max_y = x(2 * i + 1);
+    if (x(2 * i + 1) < min_y)
+      min_y = x(2 * i + 1);
   }
 
   if (!parameter.no_fluids) {
@@ -383,12 +390,18 @@ void WetHairCore<3>::getBoundingBox(Vectors<3>& bb_min, Vectors<3>& bb_max) {
   scalar max_z = -std::numeric_limits<scalar>::infinity();
   scalar min_z = std::numeric_limits<scalar>::infinity();
   for (int i = 0; i < m_scene->getNumParticles(); ++i) {
-    if (x(m_scene->getDof(i)) > max_x) max_x = x(m_scene->getDof(i));
-    if (x(m_scene->getDof(i)) < min_x) min_x = x(m_scene->getDof(i));
-    if (x(m_scene->getDof(i) + 1) > max_y) max_y = x(m_scene->getDof(i) + 1);
-    if (x(m_scene->getDof(i) + 1) < min_y) min_y = x(m_scene->getDof(i) + 1);
-    if (x(m_scene->getDof(i) + 2) > max_z) max_z = x(m_scene->getDof(i) + 2);
-    if (x(m_scene->getDof(i) + 2) < min_z) min_z = x(m_scene->getDof(i) + 2);
+    if (x(m_scene->getDof(i)) > max_x)
+      max_x = x(m_scene->getDof(i));
+    if (x(m_scene->getDof(i)) < min_x)
+      min_x = x(m_scene->getDof(i));
+    if (x(m_scene->getDof(i) + 1) > max_y)
+      max_y = x(m_scene->getDof(i) + 1);
+    if (x(m_scene->getDof(i) + 1) < min_y)
+      min_y = x(m_scene->getDof(i) + 1);
+    if (x(m_scene->getDof(i) + 2) > max_z)
+      max_z = x(m_scene->getDof(i) + 2);
+    if (x(m_scene->getDof(i) + 2) < min_z)
+      min_z = x(m_scene->getDof(i) + 2);
   }
 
   if (!parameter.no_fluids) {

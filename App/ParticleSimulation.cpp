@@ -26,11 +26,8 @@ using namespace libwethair;
 
 template <int DIM>
 ParticleSimulation<DIM>::ParticleSimulation(
-    GLFWwindow* window,
-    TwoDScene<DIM>* scene,
-    SceneStepper<DIM>* scene_stepper,
-    TwoDSceneRenderer<DIM>* scene_renderer,
-    const std::vector<Script>& scripts)
+    GLFWwindow* window, TwoDScene<DIM>* scene, SceneStepper<DIM>* scene_stepper,
+    TwoDSceneRenderer<DIM>* scene_renderer, const std::vector<Script>& scripts)
     : m_scene(scene),
       m_scene_stepper(scene_stepper),
       m_scene_renderer(scene_renderer),
@@ -245,11 +242,10 @@ void ParticleSimulation<DIM>::initializeOpenGLRenderer() {
   TwAddVarRW(bar, "volume summary", TW_TYPE_BOOL8, &parameters.volume_summary,
              " help='Turn On to Summarize for Volume Info' ");
 
-  TwEnumVal massmodeEV[MUM_COUNT] = {
-    {MUM_MOMENTUM, "Update Momentum"},
-    {MUM_MASS_ONLY, "Mass-Only"},
-    {MUM_DIRECT_DIV, "Velocity-Scaling"},
-    {MUM_NONE, "Constant Mass"}};
+  TwEnumVal massmodeEV[MUM_COUNT] = {{MUM_MOMENTUM, "Update Momentum"},
+                                     {MUM_MASS_ONLY, "Mass-Only"},
+                                     {MUM_DIRECT_DIV, "Velocity-Scaling"},
+                                     {MUM_NONE, "Constant Mass"}};
 
   TwType massmodeType = TwDefineEnum("MassModeType", massmodeEV, MUM_COUNT);
 
@@ -299,9 +295,11 @@ void ParticleSimulation<2>::computeCameraCenter(
 
   // Set the zoom such that all particles are in view
   view.rx = 0.5 * (bb_max(0) - bb_min(0));
-  if (view.rx == 0.0) view.rx = 1.0;
+  if (view.rx == 0.0)
+    view.rx = 1.0;
   view.ry = 0.5 * (bb_max(1) - bb_min(1));
-  if (view.ry == 0.0) view.ry = 1.0;
+  if (view.ry == 0.0)
+    view.ry = 1.0;
 }
 
 template <>
@@ -317,11 +315,14 @@ void ParticleSimulation<3>::computeCameraCenter(
 
   // Set the zoom such that all particles are in view
   view.rx = 0.5 * (bb_max(0) - bb_min(0));
-  if (view.rx == 0.0) view.rx = 1.0;
+  if (view.rx == 0.0)
+    view.rx = 1.0;
   view.ry = 0.5 * (bb_max(1) - bb_min(1));
-  if (view.ry == 0.0) view.ry = 1.0;
+  if (view.ry == 0.0)
+    view.ry = 1.0;
   view.rz = 0.5 * (bb_max(2) - bb_min(2));
-  if (view.rz == 0.0) view.rz = 1.0;
+  if (view.rz == 0.0)
+    view.rz = 1.0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -562,7 +563,8 @@ inline scalar weno_ease_function(const scalar& t, const scalar& dt,
                                  const scalar& t0, const scalar& t1,
                                  const scalar& base_dt, const scalar& cur_pos,
                                  const std::vector<scalar>& bases) {
-  if (t < t0 || t > t1) return 0.0;
+  if (t < t0 || t > t1)
+    return 0.0;
 
   scalar spos = (t - t0) / base_dt;
   int ipos = (int)spos;
@@ -621,7 +623,8 @@ bool ParticleSimulation<DIM>::stepScript(const scalar& dt) {
           }
           StrandEquilibriumParameters* parameter =
               m_scene->getStrandEquilibriumParameters(script.index);
-          if (!parameter || !parameter->m_valid) break;
+          if (!parameter || !parameter->m_valid)
+            break;
           parameter->m_curl_radius += vel * dt;
           parameter->m_dirty = true;
         } break;
@@ -639,7 +642,8 @@ bool ParticleSimulation<DIM>::stepScript(const scalar& dt) {
           }
           StrandEquilibriumParameters* parameter =
               m_scene->getStrandEquilibriumParameters(script.index);
-          if (!parameter || !parameter->m_valid) break;
+          if (!parameter || !parameter->m_valid)
+            break;
           parameter->m_curl_density += vel * dt;
           parameter->m_dirty = true;
         } break;
