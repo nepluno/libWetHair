@@ -15,6 +15,7 @@
 #include <numeric>
 #include <sstream>
 #include <ostream>
+#include <random>
 
 #include "AlgebraicMultigrid.h"
 #include "FluidDragForce.h"
@@ -2151,6 +2152,11 @@ void FluidSim3D::init_hair_particles() {
   }
 }
 
+void FluidSim3D::set_particle_seed(const std::size_t seed)
+{
+    particle_seed = seed;
+}
+
 void FluidSim3D::init_random_particles(const scalar& rl, const scalar& rr,
                                        const scalar& rb, const scalar& rt,
                                        const scalar& rf, const scalar& rk) {
@@ -2169,19 +2175,16 @@ void FluidSim3D::init_random_particles(const scalar& rl, const scalar& rr,
   scalar srf = rf * nk * dx;
   scalar srk = rk * nk * dx;
 
+  std::mt19937 generator(particle_seed);
+  std::uniform_real_distribution<scalar> distribution(-0.5, 0.5);
+
   for (int k = 0; k < nk; ++k) {
     for (int i = 0; i < ni; ++i) {
       for (int j = 0; j < nj; ++j) {
         for (int r = 0; r < default_particle_in_cell(); ++r) {
-          scalar x = ((scalar)i + 0.5 +
-                      (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0)) *
-                     dx;
-          scalar y = ((scalar)j + 0.5 +
-                      (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0)) *
-                     dx;
-          scalar z = ((scalar)k + 0.5 +
-                      (((scalar)rand() / (scalar)RAND_MAX) * 2.0 - 1.0)) *
-                     dx;
+          scalar x = ((scalar)i + distribution(generator)) * dx;
+          scalar y = ((scalar)j + distribution(generator)) * dx;
+          scalar z = ((scalar)k + distribution(generator)) * dx;
           Vector3s pt = Vector3s(x, y, z) + origin;
 
           Vector3s vel;

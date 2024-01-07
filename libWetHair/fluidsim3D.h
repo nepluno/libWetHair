@@ -44,6 +44,7 @@ class FluidSim3D : public FluidSim {
 
   virtual void advect_boundary(const scalar& dt);
   virtual void update_boundary();
+  virtual void set_particle_seed(const std::size_t seed);
   virtual void init_random_particles(const scalar& rl, const scalar& rr,
                                      const scalar& rb, const scalar& rt,
                                      const scalar& rf, const scalar& rk);
@@ -286,6 +287,9 @@ class FluidSim3D : public FluidSim {
   std::vector<int> m_hair_particle_affected;
 
   int ryoichi_correction_counter;
+
+  std::size_t particle_seed = 665;
+
 };
 
 }  // namespace libwethair
