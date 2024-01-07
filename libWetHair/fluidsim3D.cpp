@@ -13,9 +13,9 @@
 
 #include <iomanip>
 #include <numeric>
-#include <sstream>
 #include <ostream>
 #include <random>
+#include <sstream>
 
 #include "AlgebraicMultigrid.h"
 #include "FluidDragForce.h"
@@ -69,10 +69,13 @@ scalar FluidSim3D::default_radius_multiplier() const {
   return 1.0 / sqrt(2.0) / 2.0;
 }
 
-int FluidSim3D::default_particle_in_cell() const { return 8; }
+int FluidSim3D::default_particle_in_cell() const {
+  return 8;
+}
 
 FluidSim3D::~FluidSim3D() {
-  if (m_sorter) delete m_sorter;
+  if (m_sorter)
+    delete m_sorter;
 }
 
 FluidSim3D::FluidSim3D(const Vector3s& origin_, scalar width, int ni_, int nj_,
@@ -266,14 +269,17 @@ void FluidSim3D::update_boundary() {
   });
 }
 
-int FluidSim3D::num_particles() const { return particles.size(); }
+int FluidSim3D::num_particles() const {
+  return particles.size();
+}
 
 scalar FluidSim3D::computeOverallDivergence() {
   scalar div_sum = 0;
   for (int k = 0; k < nk; ++k)
     for (int j = 0; j < nj; ++j)
       for (int i = 0; i < ni; ++i) {
-        if (liquid_phi(i, j, k) > 0) continue;
+        if (liquid_phi(i, j, k) > 0)
+          continue;
         scalar divi = (u_weights(i + 1, j, k) * u(i + 1, j, k) -
                        u_weights(i, j, k) * u(i, j, k) +
                        v_weights(i, j + 1, k) * v(i, j + 1, k) -
@@ -343,10 +349,13 @@ void FluidSim3D::transferLiquidToGridParticle(const scalar& dt) {
     scalar u_vn = actual_u_v.row(iend_local).dot(tan_v.row(iend_local));
 
     int count_pool = 0;
-    if (dripping_zero_end && u_v0 < -epsilon) ++count_pool;
-    if (dripping_far_end && u_vn > epsilon) ++count_pool;
+    if (dripping_zero_end && u_v0 < -epsilon)
+      ++count_pool;
+    if (dripping_far_end && u_vn > epsilon)
+      ++count_pool;
 
-    if (!count_pool) return;
+    if (!count_pool)
+      return;
     scalar each_pool_liquid = hair->getPoolSize() / (scalar)count_pool;
 
     if (dripping_zero_end && u_v0 < -epsilon)
@@ -467,7 +476,8 @@ void FluidSim3D::transferLiquidToGridParticle(const scalar& dt) {
 
         scalar total_liquid = total_regular_liquid + total_pool_liquid;
 
-        if (total_liquid == 0.0) continue;
+        if (total_liquid == 0.0)
+          continue;
 
         avg_pos /= total_liquid;
         avg_vel /= total_liquid;
@@ -625,7 +635,7 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
     const VectorXs& area_e = hair->getAreaE();
     const VectorXs& radii_e = hair->getRadiiE();
     const VectorXs& radii_v = hair->getRadiiV();
-    std::vector<std::vector<int> >& edge_bridges = hair->getEdgeBridges();
+    std::vector<std::vector<int>>& edge_bridges = hair->getEdgeBridges();
     edge_bridges.resize(edges.size());
 
     m_hair_bridge_buffer[i].resize(0);
@@ -645,7 +655,8 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
 
       scalar Hj = sqrt((H0 * H0 + H1 * H1) * 0.5);
 
-      if (Hj > radii_e(j) * maxetaprop) continue;
+      if (Hj > radii_e(j) * maxetaprop)
+        continue;
 
       auto& e = edges[j];
       // construct bounding box
@@ -684,7 +695,8 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
           for (int r = imin_x; r <= imax_x; ++r) {
             m_sorter->getCellAt(r, s, t, [&](int pidx) {
               Particle<3>& p = particles[pidx];
-              if (p.type != PT_LIQUID) return;
+              if (p.type != PT_LIQUID)
+                return;
 
               scalar vol_particle = dropvol(p.radii);
 
@@ -722,7 +734,7 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
   int kidx = 0;
   for (int i = 0; i < nhair; ++i) {
     HairFlow<3>* hair = hairs[i];
-    std::vector<std::vector<int> >& edge_bridges = hair->getEdgeBridges();
+    std::vector<std::vector<int>>& edge_bridges = hair->getEdgeBridges();
     auto& buffer = m_hair_bridge_buffer[i];
     int nb = buffer.size();
 
@@ -736,15 +748,18 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
     kidx += nb;
   }
 
-  if (m_bridges.size() == 0) return;
+  if (m_bridges.size() == 0)
+    return;
 
   // distribute liquid to bridges
   threadutils::thread_pool::ParallelFor(0, np, [&](int i) {
     auto& p = particles[i];
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     auto& bridge_indices = p.bridges;
-    if (bridge_indices.size() == 0) return;
+    if (bridge_indices.size() == 0)
+      return;
 
     scalar vol_particle = dropvol(p.radii);
     scalar vol_bridge = vol_particle / (scalar)bridge_indices.size();
@@ -770,7 +785,7 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
     VectorXs& eta = hair->getEta();
     const VectorXs& area_v = hair->getAreaVHair();
     const VectorXs& area_e = hair->getAreaE();
-    std::vector<std::vector<int> >& edge_bridges = hair->getEdgeBridges();
+    std::vector<std::vector<int>>& edge_bridges = hair->getEdgeBridges();
     const VectorXs& radii_v = hair->getRadiiV();
     const std::vector<int>& particle_indices = hair->getParticleIndices();
     VectorXs& velocity_e = hair->getVelocity();
@@ -795,7 +810,8 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
 
       scalar max_diff_vol = max_liq_vol - old_liq_vol;
 
-      if (max_diff_vol <= 0.0) continue;
+      if (max_diff_vol <= 0.0)
+        continue;
 
       scalar sum_liq_vol = 0.0;
 
@@ -805,15 +821,18 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
 
       for (int k = 0; k < 2; ++k) {
         int local_eidx = local_eidxs[k];
-        if (local_eidx < 0 || local_eidx >= ne) continue;
+        if (local_eidx < 0 || local_eidx >= ne)
+          continue;
 
         auto& bridges_indices = edge_bridges[local_eidx];
         for (int bidx : bridges_indices) {
-          if (bidx < 0 || bidx >= (int)m_bridges.size()) continue;
+          if (bidx < 0 || bidx >= (int)m_bridges.size())
+            continue;
 
           auto& bridge = m_bridges[bidx];
 
-          if (bridge.volume <= 0.0) continue;
+          if (bridge.volume <= 0.0)
+            continue;
 
           if (k == 0) {
             sum_num_bridges += bridge.alpha;
@@ -823,23 +842,28 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
         }
       }
 
-      if (sum_num_bridges == 0.0) continue;
+      if (sum_num_bridges == 0.0)
+        continue;
 
       scalar avg_absorb_vol = max_diff_vol / sum_num_bridges;
 
       for (int k = 0; k < 2; ++k) {
         int local_eidx = local_eidxs[k];
-        if (local_eidx < 0 || local_eidx >= ne) continue;
+        if (local_eidx < 0 || local_eidx >= ne)
+          continue;
 
         auto& bridges_indices = edge_bridges[local_eidx];
-        if (bridges_indices.size() == 0) continue;
+        if (bridges_indices.size() == 0)
+          continue;
 
         for (int bidx : bridges_indices) {
-          if (bidx < 0 || bidx >= (int)m_bridges.size()) continue;
+          if (bidx < 0 || bidx >= (int)m_bridges.size())
+            continue;
 
           auto& bridge = m_bridges[bidx];
 
-          if (bridge.volume <= 0.0) continue;
+          if (bridge.volume <= 0.0)
+            continue;
 
           scalar actual_vol;
           if (k == 0) {
@@ -901,7 +925,8 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
           v.segment<3>(idof).setZero();
       }
 
-      if (mum != MUM_NONE) m.segment<3>(idof).setConstant(new_modified_mass);
+      if (mum != MUM_NONE)
+        m.segment<3>(idof).setConstant(new_modified_mass);
 
       // update hair vertex angular momentum
       if (!m_parent->isMassSpring() && j != np - 1) {
@@ -927,14 +952,16 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
             v(idof + 3) = 0.0;
         }
 
-        if (mum != MUM_NONE) m(idof + 3) = new_total_moment_inertia;
+        if (mum != MUM_NONE)
+          m(idof + 3) = new_total_moment_inertia;
       }
 
       const int local_neighbor_idx[] = {j - 1, j + 1};
       // tangent momentum
       for (int k = 0; k < 2; ++k) {
         int local_eidx = local_eidxs[k];
-        if (local_eidx < 0 || local_eidx >= ne) continue;
+        if (local_eidx < 0 || local_eidx >= ne)
+          continue;
 
         int local_nj = local_neighbor_idx[k];
 
@@ -971,10 +998,12 @@ void FluidSim3D::shareParticleWithHairs(VectorXs& x, scalar dt) {
   // particles absorb remain liquid on bridges
   threadutils::thread_pool::ParallelFor(0, np, [&](int i) {
     auto& p = particles[i];
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     auto& bridge_indices = p.bridges;
-    if (bridge_indices.size() == 0) return;
+    if (bridge_indices.size() == 0)
+      return;
 
     scalar sum_vol = 0.0;
     for (int bidx : bridge_indices) {
@@ -1036,11 +1065,13 @@ void FluidSim3D::resample(Vector3s& p, Vector3s& u, Matrix3s& c) {
 void FluidSim3D::correct(scalar dt) {
   int ryoichi_correction_step = m_parent->getParameter().fluidcorrectionsteps;
 
-  if (!ryoichi_correction_step) return;
+  if (!ryoichi_correction_step)
+    return;
 
   int np = (int)particles.size();
 
-  if (!np) return;
+  if (!np)
+    return;
 
 #ifdef USE_MERGE_PARTICLES
 
@@ -1074,7 +1105,8 @@ void FluidSim3D::correct(scalar dt) {
             // for each pair, check their add-up volume
             scalar vol_j = dropvol(particles[pidx_j].radii);
             scalar combined_vol = vol_i + vol_j;
-            if (combined_vol > maximal_vol) return;
+            if (combined_vol > maximal_vol)
+              return;
 
             scalar dist = (particles[pidx_j].x - particles[pidx_i].x).norm();
             if (dist > particles[pidx_i].radii + particles[pidx_j].radii)
@@ -1113,7 +1145,8 @@ void FluidSim3D::correct(scalar dt) {
   threadutils::thread_pool::ParallelFor(0, np, [&](int n) {
     Particle<3>& p = particles[n];
 
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     if (n % ryoichi_correction_step !=
         ryoichi_correction_counter % ryoichi_correction_step) {
@@ -1158,7 +1191,8 @@ void FluidSim3D::correct(scalar dt) {
   // Update
   threadutils::thread_pool::ParallelFor(0, np, [&](int n) {
     Particle<3>& p = particles[n];
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     if (n % ryoichi_correction_step !=
         ryoichi_correction_counter % ryoichi_correction_step) {
@@ -1341,7 +1375,9 @@ void FluidSim3D::constrain_velocity() {
 }
 
 // Add a tracer particle for visualization
-void FluidSim3D::add_particle(const Particle<3>& p) { particles.push_back(p); }
+void FluidSim3D::add_particle(const Particle<3>& p) {
+  particles.push_back(p);
+}
 
 // move the particles in the fluid
 void FluidSim3D::advect_particles(scalar dt) {
@@ -1408,7 +1444,8 @@ void FluidSim3D::advect_particles(scalar dt) {
   scalar inserted_volume = 0.0;
 
   for (SourceBoundary<3>* s : sources) {
-    if (!s->activated) continue;
+    if (!s->activated)
+      continue;
 
     scalar generate_radius = s->drop_radius_prop * default_radius;
     scalar generate_vol = dropvol(generate_radius);
@@ -1519,7 +1556,7 @@ void FluidSim3D::constrain_hair_particles() {
   int np = particles.size();
 
   const VectorXs& x = m_parent->getX();
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
   const std::vector<HairFlow<3>*>& flows = m_parent->getFilmFlows();
   const std::vector<int>& particle_hairs = m_parent->getParticleToHairs();
   const std::vector<int>& local_indices =
@@ -1824,7 +1861,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
             matrix.add_to_element(dof_idx, dof_index(i + 1, j, k), -term);
           } else {
             scalar theta = fraction_inside(centre_phi, right_phi);
-            if (theta < 0.01) theta = 0.01;
+            if (theta < 0.01)
+              theta = 0.01;
             matrix.add_to_element(dof_idx, dof_idx, term / theta);
           }
         }
@@ -1842,7 +1880,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
             matrix.add_to_element(dof_idx, dof_index(i - 1, j, k), -term);
           } else {
             scalar theta = fraction_inside(centre_phi, left_phi);
-            if (theta < 0.01) theta = 0.01;
+            if (theta < 0.01)
+              theta = 0.01;
             matrix.add_to_element(dof_idx, dof_idx, term / theta);
           }
         }
@@ -1859,7 +1898,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
             matrix.add_to_element(dof_idx, dof_index(i, j + 1, k), -term);
           } else {
             scalar theta = fraction_inside(centre_phi, top_phi);
-            if (theta < 0.01) theta = 0.01;
+            if (theta < 0.01)
+              theta = 0.01;
             matrix.add_to_element(dof_idx, dof_idx, term / theta);
           }
         }
@@ -1877,7 +1917,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
             matrix.add_to_element(dof_idx, dof_index(i, j - 1, k), -term);
           } else {
             scalar theta = fraction_inside(centre_phi, bot_phi);
-            if (theta < 0.01) theta = 0.01;
+            if (theta < 0.01)
+              theta = 0.01;
             matrix.add_to_element(dof_idx, dof_idx, term / theta);
           }
         }
@@ -1894,7 +1935,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
             matrix.add_to_element(dof_idx, dof_index(i, j, k + 1), -term);
           } else {
             scalar theta = fraction_inside(centre_phi, far_phi);
-            if (theta < 0.01) theta = 0.01;
+            if (theta < 0.01)
+              theta = 0.01;
             matrix.add_to_element(dof_idx, dof_idx, term / theta);
           }
         }
@@ -1912,7 +1954,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
             matrix.add_to_element(dof_idx, dof_index(i, j, k - 1), -term);
           } else {
             scalar theta = fraction_inside(centre_phi, near_phi);
-            if (theta < 0.01) theta = 0.01;
+            if (theta < 0.01)
+              theta = 0.01;
             matrix.add_to_element(dof_idx, dof_idx, term / theta);
           }
         }
@@ -1937,9 +1980,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
 #endif
 
   if (!success) {
-    std::cerr <<
-      "WARNING: Pressure solve "
-      "failed!************************************************\n";
+    std::cerr << "WARNING: Pressure solve "
+                 "failed!************************************************\n";
 
     auto write_error_log = [&](std::ostream& out) {
       out << "rhs=[";
@@ -2016,7 +2058,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
           if (liquid_phi(i, j, k) >= 0 || liquid_phi(i - 1, j, k) >= 0)
             theta =
                 fraction_inside(liquid_phi(i - 1, j, k), liquid_phi(i, j, k));
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           scalar pressure_grad =
               (pressure[index] - pressure[index - 1]) / dx / theta;
           u(i, j, k) = u_particle(i, j, k) - dt * pressure_grad / rho;
@@ -2045,7 +2088,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
           if (liquid_phi(i, j, k) >= 0 || liquid_phi(i, j - 1, k) >= 0)
             theta =
                 fraction_inside(liquid_phi(i, j - 1, k), liquid_phi(i, j, k));
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           scalar pressure_grad =
               (pressure[index] - pressure[index - ni]) / dx / theta;
           v(i, j, k) = v_particle(i, j, k) - dt * pressure_grad / rho;
@@ -2074,7 +2118,8 @@ void FluidSim3D::solve_pressure(scalar dt) {
           if (liquid_phi(i, j, k) >= 0 || liquid_phi(i, j, k - 1) >= 0)
             theta =
                 fraction_inside(liquid_phi(i, j, k - 1), liquid_phi(i, j, k));
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           scalar pressure_grad =
               (pressure[index] - pressure[index - ni * nj]) / dx / theta;
           w(i, j, k) = w_particle(i, j, k) - dt * pressure_grad / rho;
@@ -2093,7 +2138,8 @@ scalar FluidSim3D::compute_phi_vel(const Vector3s& pos, Vector3s& vel) const {
 
   vel.setZero();
   for (auto& b : boundaries) {
-    if (!b->is_root()) continue;
+    if (!b->is_root())
+      continue;
     Vector3s temp_vel;
     scalar phi = b->compute_phi_vel(pos, temp_vel);
     if (phi < min_phi) {
@@ -2109,7 +2155,7 @@ void FluidSim3D::init_hair_particles() {
   const std::vector<HairFlow<3>*>& flows = m_parent->getFilmFlows();
   const VectorXs& x = m_parent->getX();
   const VectorXs& v = m_parent->getV();
-  const std::vector<std::pair<int, int> > edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>> edges = m_parent->getEdges();
 
   const scalar release_radius = dx * sqrt(3.0) * 0.25;
   // const scalar default_distance = release_radius / sqrt(3.0);
@@ -2129,7 +2175,8 @@ void FluidSim3D::init_hair_particles() {
       int ipos;
       scalar alpha;
       flow->geodesic_to_local(accu_length, ipos, alpha);
-      if (ipos >= np - 1) break;
+      if (ipos >= np - 1)
+        break;
 
       const Vector3s& x0 = x.segment<3>(m_parent->getDof(indices[ipos]));
       const Vector3s& x1 = x.segment<3>(m_parent->getDof(indices[ipos + 1]));
@@ -2152,9 +2199,8 @@ void FluidSim3D::init_hair_particles() {
   }
 }
 
-void FluidSim3D::set_particle_seed(const std::size_t seed)
-{
-    particle_seed = seed;
+void FluidSim3D::set_particle_seed(const std::size_t seed) {
+  particle_seed = seed;
 }
 
 void FluidSim3D::init_random_particles(const scalar& rl, const scalar& rr,
@@ -2225,14 +2271,16 @@ void FluidSim3D::map_p2g(bool with_hair_particles) {
         m_sorter->getNeigboringParticles_cell(
             i, j, k, -1, 0, -1, 1, -1, 1, [&](int pidx) {
               const Particle<3>& p = particles[pidx];
-              if (!with_hair_particles && p.type == PT_HAIR) return;
+              if (!with_hair_particles && p.type == PT_HAIR)
+                return;
 
               Vector3s diff = p.x - pos;
 
               scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
               sumu += w * (p.v(0) - p.c.col(0).dot(diff));
               sumw += w;
-              if (p.type == PT_LIQUID) sumw_pure += w;
+              if (p.type == PT_LIQUID)
+                sumw_pure += w;
             });
 
         u_particle(i, j, k) = sumw ? sumu / sumw : 0.0;
@@ -2254,13 +2302,15 @@ void FluidSim3D::map_p2g(bool with_hair_particles) {
         m_sorter->getNeigboringParticles_cell(
             i, j, k, -1, 1, -1, 0, -1, 1, [&](int pidx) {
               const Particle<3>& p = particles[pidx];
-              if (!with_hair_particles && p.type == PT_HAIR) return;
+              if (!with_hair_particles && p.type == PT_HAIR)
+                return;
               Vector3s diff = p.x - pos;
 
               scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
               sumu += w * (p.v(1) - p.c.col(1).dot(diff));
               sumw += w;
-              if (p.type == PT_LIQUID) sumw_pure += w;
+              if (p.type == PT_LIQUID)
+                sumw_pure += w;
             });
 
         v_particle(i, j, k) = sumw ? sumu / sumw : 0.0;
@@ -2281,13 +2331,15 @@ void FluidSim3D::map_p2g(bool with_hair_particles) {
         m_sorter->getNeigboringParticles_cell(
             i, j, k, -1, 1, -1, 1, -1, 0, [&](int pidx) {
               const Particle<3>& p = particles[pidx];
-              if (!with_hair_particles && p.type == PT_HAIR) return;
+              if (!with_hair_particles && p.type == PT_HAIR)
+                return;
               Vector3s diff = p.x - pos;
 
               scalar w = dropvol(p.radii) * linear_kernel(diff, dx);
               sumu += w * (p.v(2) - p.c.col(2).dot(diff));
               sumw += w;
-              if (p.type == PT_LIQUID) sumw_pure += w;
+              if (p.type == PT_LIQUID)
+                sumw_pure += w;
             });
 
         w_particle(i, j, k) = sumw ? sumu / sumw : 0.0;
@@ -2308,9 +2360,12 @@ void FluidSim3D::map_g2p_apic() {
 
 void FluidSim3D::prepare_update_from_hair() {
   int nflows = m_parent->getNumFlows();
-  if (u_edge_vel_drag.size() != nflows) u_edge_vel_drag.resize(nflows);
-  if (v_edge_vel_drag.size() != nflows) v_edge_vel_drag.resize(nflows);
-  if (w_edge_vel_drag.size() != nflows) w_edge_vel_drag.resize(nflows);
+  if (u_edge_vel_drag.size() != nflows)
+    u_edge_vel_drag.resize(nflows);
+  if (v_edge_vel_drag.size() != nflows)
+    v_edge_vel_drag.resize(nflows);
+  if (w_edge_vel_drag.size() != nflows)
+    w_edge_vel_drag.resize(nflows);
 
   if (u_num_edge_voxel_intersections.size() != nflows)
     u_num_edge_voxel_intersections.resize(nflows);
@@ -2322,7 +2377,8 @@ void FluidSim3D::prepare_update_from_hair() {
 
 void FluidSim3D::done_update_from_hair() {
   int nflows = m_parent->getNumFlows();
-  if (!nflows) return;
+  if (!nflows)
+    return;
 
   threadutils::thread_pool::ParallelFor(0, nflows, [&](int i) {
     u_num_edge_voxel_intersections[i] = u_edge_vel_drag[i].size();
@@ -2344,7 +2400,8 @@ void FluidSim3D::done_update_from_hair() {
   int vsize = v_num_edge_voxel_intersections[nflows - 1];
   int wsize = w_num_edge_voxel_intersections[nflows - 1];
 
-  if (usize == 0 && vsize == 0 && wsize == 0) return;
+  if (usize == 0 && vsize == 0 && wsize == 0)
+    return;
 
   u_vel_drag.resize(usize);
   v_vel_drag.resize(vsize);
@@ -2489,9 +2546,12 @@ scalar FluidSim3D::cfl() {
   const int npu = u.a.size();
   const int npv = v.a.size();
   const int npw = w.a.size();
-  for (int i = 0; i < npu; ++i) maxvel = max(maxvel, fabs(u.a[i]));
-  for (int i = 0; i < npv; ++i) maxvel = max(maxvel, fabs(v.a[i]));
-  for (int i = 0; i < npw; ++i) maxvel = max(maxvel, fabs(w.a[i]));
+  for (int i = 0; i < npu; ++i)
+    maxvel = max(maxvel, fabs(u.a[i]));
+  for (int i = 0; i < npv; ++i)
+    maxvel = max(maxvel, fabs(v.a[i]));
+  for (int i = 0; i < npw; ++i)
+    maxvel = max(maxvel, fabs(w.a[i]));
   return dx / maxvel;
 }
 
@@ -2505,52 +2565,80 @@ const std::vector<FluidSim3D::SourceBoundary<3>*>& FluidSim3D::get_sources()
   return sources;
 }
 
-const Vector3s& FluidSim3D::get_origin() const { return origin; }
+const Vector3s& FluidSim3D::get_origin() const {
+  return origin;
+}
 
-int FluidSim3D::get_ni() const { return ni; }
+int FluidSim3D::get_ni() const {
+  return ni;
+}
 
-int FluidSim3D::get_nj() const { return nj; }
+int FluidSim3D::get_nj() const {
+  return nj;
+}
 
-int FluidSim3D::get_nk() const { return nk; }
+int FluidSim3D::get_nk() const {
+  return nk;
+}
 
-int FluidSim3D::get_u_ni() const { return u.ni; }
+int FluidSim3D::get_u_ni() const {
+  return u.ni;
+}
 
-int FluidSim3D::get_v_ni() const { return v.ni; }
+int FluidSim3D::get_v_ni() const {
+  return v.ni;
+}
 
-int FluidSim3D::get_w_ni() const { return w.ni; }
+int FluidSim3D::get_w_ni() const {
+  return w.ni;
+}
 
-int FluidSim3D::get_u_nj() const { return u.nj; }
+int FluidSim3D::get_u_nj() const {
+  return u.nj;
+}
 
-int FluidSim3D::get_v_nj() const { return v.nj; }
+int FluidSim3D::get_v_nj() const {
+  return v.nj;
+}
 
-int FluidSim3D::get_w_nj() const { return w.nj; }
+int FluidSim3D::get_w_nj() const {
+  return w.nj;
+}
 
-int FluidSim3D::get_u_nk() const { return u.nk; }
+int FluidSim3D::get_u_nk() const {
+  return u.nk;
+}
 
-int FluidSim3D::get_v_nk() const { return v.nk; }
+int FluidSim3D::get_v_nk() const {
+  return v.nk;
+}
 
-int FluidSim3D::get_w_nk() const { return w.nk; }
+int FluidSim3D::get_w_nk() const {
+  return w.nk;
+}
 
-std::vector<std::vector<EdgeVelDragIntersection<3> > >&
+std::vector<std::vector<EdgeVelDragIntersection<3>>>&
 FluidSim3D::get_u_edge_vel_drag() {
   return u_edge_vel_drag;
 }
 
-std::vector<std::vector<EdgeVelDragIntersection<3> > >&
+std::vector<std::vector<EdgeVelDragIntersection<3>>>&
 FluidSim3D::get_v_edge_vel_drag() {
   return v_edge_vel_drag;
 }
 
-std::vector<std::vector<EdgeVelDragIntersection<3> > >&
+std::vector<std::vector<EdgeVelDragIntersection<3>>>&
 FluidSim3D::get_w_edge_vel_drag() {
   return w_edge_vel_drag;
 }
 
-const std::vector<Particle<3> >& FluidSim3D::get_particles() const {
+const std::vector<Particle<3>>& FluidSim3D::get_particles() const {
   return particles;
 }
 
-scalar FluidSim3D::cellsize() const { return dx; }
+scalar FluidSim3D::cellsize() const {
+  return dx;
+}
 
 void FluidSim3D::save_pressure(const std::string szfn) {
   using namespace std;
@@ -2908,7 +2996,8 @@ Vector3s FluidSim3D::computeReweightedParticleGridAngularMomentum() {
 scalar FluidSim3D::computeTotalLiquidVol() const {
   scalar sum = 0.0;
   for (auto& p : particles) {
-    if (p.type != PT_LIQUID) continue;
+    if (p.type != PT_LIQUID)
+      continue;
     sum += 4.0 / 3.0 * M_PI * p.radii * p.radii * p.radii;
   }
   return sum;
@@ -3019,7 +3108,7 @@ void FluidSim3D::controlSources(const scalar& current_time, const scalar& dt) {
 
 void FluidSim3D::writeReadable(std::vector<std::ostringstream>& oss) const {
   const scalar default_radius = dx * default_radius_multiplier();
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
   const VectorXs& radius = m_parent->getRadii();
 
   for (auto& p : particles) {
@@ -3027,7 +3116,8 @@ void FluidSim3D::writeReadable(std::vector<std::ostringstream>& oss) const {
       const std::pair<int, int>& e = edges[p.edge_idx];
       const scalar radii_c =
           mathutils::lerp(radius(e.first), radius(e.second), p.edge_alpha);
-      if (p.radii < 1.01 * radii_c) continue;
+      if (p.radii < 1.01 * radii_c)
+        continue;
     }
 
     int level =
@@ -3061,7 +3151,8 @@ void FluidSim3D::write(std::vector<scalar>& data) const {
   }
 
   for (auto& b : boundaries) {
-    if (b->type == BT_UNION || b->type == BT_INTERSECT) continue;
+    if (b->type == BT_UNION || b->type == BT_INTERSECT)
+      continue;
     b->write(data);
   }
 
@@ -3125,7 +3216,8 @@ size_t FluidSim3D::particle_size() const {
 size_t FluidSim3D::boundary_size() const {
   int sum = 0;
   for (auto& b : boundaries) {
-    if (b->type == BT_UNION || b->type == BT_INTERSECT) continue;
+    if (b->type == BT_UNION || b->type == BT_INTERSECT)
+      continue;
     sum += b->size();
   }
 

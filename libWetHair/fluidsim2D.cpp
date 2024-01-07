@@ -16,8 +16,8 @@
 #include <random>
 
 #include "FluidDragForce.h"
-#include "MathUtilities.h"
 #include "LogUtilities.h"
+#include "MathUtilities.h"
 #include "ThreadUtils.h"
 #include "TwoDScene.h"
 #include "array2_utils.h"
@@ -54,7 +54,8 @@ static void sorter_callback(int pidx, int& i, int& j, int& k) {
 }
 
 FluidSim2D::~FluidSim2D() {
-  if (m_sorter) delete m_sorter;
+  if (m_sorter)
+    delete m_sorter;
 }
 
 FluidSim2D::FluidSim2D(const Vector2s& origin_, scalar width, int ni_, int nj_,
@@ -201,7 +202,8 @@ scalar FluidSim2D::computeOverallDivergence() {
   scalar div_sum = 0;
   for (int j = 0; j < nj; ++j)
     for (int i = 0; i < ni; ++i) {
-      if (liquid_phi(i, j) > 0) continue;
+      if (liquid_phi(i, j) > 0)
+        continue;
       scalar divi =
           (u_weights(i + 1, j) * u(i + 1, j) - u_weights(i, j) * u(i, j) +
            v_weights(i, j + 1) * v(i, j + 1) - v_weights(i, j) * v(i, j)) /
@@ -266,10 +268,13 @@ void FluidSim2D::transferLiquidToGridParticle(const scalar& dt) {
     scalar u_vn = actual_u_v.row(iend_local).dot(tan_v.row(iend_local));
 
     int count_pool = 0;
-    if (dripping_zero_end && u_v0 < -epsilon) ++count_pool;
-    if (dripping_far_end && u_vn > epsilon) ++count_pool;
+    if (dripping_zero_end && u_v0 < -epsilon)
+      ++count_pool;
+    if (dripping_far_end && u_vn > epsilon)
+      ++count_pool;
 
-    if (!count_pool) return;
+    if (!count_pool)
+      return;
     scalar each_pool_liquid = hair->getPoolSize() / (scalar)count_pool;
 
     if (dripping_zero_end && u_v0 < -epsilon)
@@ -388,7 +393,8 @@ void FluidSim2D::transferLiquidToGridParticle(const scalar& dt) {
 
       scalar total_liquid = total_regular_liquid + total_pool_liquid;
 
-      if (total_liquid == 0.0) continue;
+      if (total_liquid == 0.0)
+        continue;
 
       avg_pos /= total_liquid;
       avg_vel /= total_liquid;
@@ -533,7 +539,7 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
     const VectorXs& area_e = hair->getAreaE();
     const VectorXs& radii_e = hair->getRadiiE();
     const VectorXs& radii_v = hair->getRadiiV();
-    std::vector<std::vector<int> >& edge_bridges = hair->getEdgeBridges();
+    std::vector<std::vector<int>>& edge_bridges = hair->getEdgeBridges();
     edge_bridges.resize(edges.size());
 
     m_hair_bridge_buffer[i].resize(0);
@@ -550,7 +556,8 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
 
       scalar Hj = sqrt((H0 * H0 + H1 * H1) * 0.5);
 
-      if (Hj > radii_e(j) * maxetaprop) continue;
+      if (Hj > radii_e(j) * maxetaprop)
+        continue;
 
       auto& e = edges[j];
       // construct bounding box
@@ -582,7 +589,8 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
         for (int r = imin_x; r <= imax_x; ++r) {
           m_sorter->getCellAt(r, s, 0, [&](int pidx) {
             Particle<2>& p = particles[pidx];
-            if (p.type != PT_LIQUID) return;
+            if (p.type != PT_LIQUID)
+              return;
 
             scalar vol_particle = dropvol(p.radii);
 
@@ -619,7 +627,7 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
   int kidx = 0;
   for (int i = 0; i < nhair; ++i) {
     HairFlow<2>* hair = hairs[i];
-    std::vector<std::vector<int> >& edge_bridges = hair->getEdgeBridges();
+    std::vector<std::vector<int>>& edge_bridges = hair->getEdgeBridges();
     auto& buffer = m_hair_bridge_buffer[i];
     int nb = buffer.size();
 
@@ -636,10 +644,12 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
   // distribute liquid to bridges
   threadutils::thread_pool::ParallelFor(0, np, [&](int i) {
     auto& p = particles[i];
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     auto& bridge_indices = p.bridges;
-    if (bridge_indices.size() == 0) return;
+    if (bridge_indices.size() == 0)
+      return;
 
     scalar vol_particle = dropvol(p.radii);
     scalar vol_bridge = vol_particle / (scalar)bridge_indices.size();
@@ -665,7 +675,7 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
     VectorXs& eta = hair->getEta();
     const VectorXs& area_v = hair->getAreaVHair();
     const VectorXs& area_e = hair->getAreaE();
-    std::vector<std::vector<int> >& edge_bridges = hair->getEdgeBridges();
+    std::vector<std::vector<int>>& edge_bridges = hair->getEdgeBridges();
     const VectorXs& radii_v = hair->getRadiiV();
     const std::vector<int>& particle_indices = hair->getParticleIndices();
     VectorXs& velocity_e = hair->getVelocity();
@@ -689,7 +699,8 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
 
       scalar max_diff_vol = max_liq_vol - old_liq_vol;
 
-      if (max_diff_vol <= 0.0) continue;
+      if (max_diff_vol <= 0.0)
+        continue;
 
       scalar sum_liq_vol = 0.0;
 
@@ -699,15 +710,18 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
 
       for (int k = 0; k < 2; ++k) {
         int local_eidx = local_eidxs[k];
-        if (local_eidx < 0 || local_eidx >= ne) continue;
+        if (local_eidx < 0 || local_eidx >= ne)
+          continue;
 
         auto& bridges_indices = edge_bridges[local_eidx];
         for (int bidx : bridges_indices) {
-          if (bidx < 0 || bidx >= (int)m_bridges.size()) continue;
+          if (bidx < 0 || bidx >= (int)m_bridges.size())
+            continue;
 
           auto& bridge = m_bridges[bidx];
 
-          if (bridge.volume <= 0.0) continue;
+          if (bridge.volume <= 0.0)
+            continue;
 
           if (k == 0) {
             sum_num_bridges += bridge.alpha;
@@ -717,23 +731,28 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
         }
       }
 
-      if (sum_num_bridges == 0.0) continue;
+      if (sum_num_bridges == 0.0)
+        continue;
 
       scalar avg_absorb_vol = max_diff_vol / sum_num_bridges;
 
       for (int k = 0; k < 2; ++k) {
         int local_eidx = local_eidxs[k];
-        if (local_eidx < 0 || local_eidx >= ne) continue;
+        if (local_eidx < 0 || local_eidx >= ne)
+          continue;
 
         auto& bridges_indices = edge_bridges[local_eidx];
-        if (bridges_indices.size() == 0) continue;
+        if (bridges_indices.size() == 0)
+          continue;
 
         for (int bidx : bridges_indices) {
-          if (bidx < 0 || bidx >= (int)m_bridges.size()) continue;
+          if (bidx < 0 || bidx >= (int)m_bridges.size())
+            continue;
 
           auto& bridge = m_bridges[bidx];
 
-          if (bridge.volume <= 0.0) continue;
+          if (bridge.volume <= 0.0)
+            continue;
 
           scalar actual_vol;
           if (k == 0) {
@@ -795,14 +814,16 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
           v.segment<2>(idof).setZero();
       }
 
-      if (mum != MUM_NONE) m.segment<2>(idof).setConstant(new_modified_mass);
+      if (mum != MUM_NONE)
+        m.segment<2>(idof).setConstant(new_modified_mass);
 
       // update hair vertex angular momentum
       const int local_neighbor_idx[] = {j - 1, j + 1};
       // tangent momentum
       for (int k = 0; k < 2; ++k) {
         int local_eidx = local_eidxs[k];
-        if (local_eidx < 0 || local_eidx >= ne) continue;
+        if (local_eidx < 0 || local_eidx >= ne)
+          continue;
 
         int local_nj = local_neighbor_idx[k];
 
@@ -839,10 +860,12 @@ void FluidSim2D::shareParticleWithHairs(VectorXs& x, scalar dt) {
   // particles absorb remain liquid on bridges
   threadutils::thread_pool::ParallelFor(0, np, [&](int i) {
     auto& p = particles[i];
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     auto& bridge_indices = p.bridges;
-    if (bridge_indices.size() == 0) return;
+    if (bridge_indices.size() == 0)
+      return;
 
     scalar sum_vol = 0.0;
     for (int bidx : bridge_indices) {
@@ -903,7 +926,8 @@ void FluidSim2D::resample(Vector2s& p, Vector2s& u, Matrix2s& c) {
 void FluidSim2D::correct(scalar dt) {
   int np = (int)particles.size();
 
-  if (!np) return;
+  if (!np)
+    return;
 
 #ifdef USE_MERGE_PARTICLES
 
@@ -934,10 +958,12 @@ void FluidSim2D::correct(scalar dt) {
 
           // for each pair, check their add-up volume
           scalar vol_j = dropvol(particles[pidx_j].radii);
-          if (vol_i + vol_j > maximal_vol) return;
+          if (vol_i + vol_j > maximal_vol)
+            return;
 
           scalar dist = (particles[pidx_j].x - particles[pidx_i].x).norm();
-          if (dist > particles[pidx_i].radii + particles[pidx_j].radii) return;
+          if (dist > particles[pidx_i].radii + particles[pidx_j].radii)
+            return;
 
           // combine if their distance < add-up radius and add-up volume <
           // maximal volume
@@ -972,7 +998,8 @@ void FluidSim2D::correct(scalar dt) {
   threadutils::thread_pool::ParallelFor(0, np, [&](int n) {
     Particle<2>& p = particles[n];
 
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     if (n % ryoichi_correction_step !=
         ryoichi_correction_counter % ryoichi_correction_step) {
@@ -1015,7 +1042,8 @@ void FluidSim2D::correct(scalar dt) {
   // Update
   threadutils::thread_pool::ParallelFor(0, np, [&](int n) {
     Particle<2>& p = particles[n];
-    if (p.type != PT_LIQUID) return;
+    if (p.type != PT_LIQUID)
+      return;
 
     if (n % ryoichi_correction_step !=
         ryoichi_correction_counter % ryoichi_correction_step) {
@@ -1115,7 +1143,9 @@ void FluidSim2D::constrain_velocity() {
 }
 
 // Add a tracer particle for visualization
-void FluidSim2D::add_particle(const Particle<2>& p) { particles.push_back(p); }
+void FluidSim2D::add_particle(const Particle<2>& p) {
+  particles.push_back(p);
+}
 
 // move the particles in the fluid
 void FluidSim2D::advect_particles(scalar dt) {
@@ -1141,7 +1171,8 @@ void FluidSim2D::advect_particles(scalar dt) {
   sort_particles();
 
   for (SourceBoundary<2>* s : sources) {
-    if (!s->activated) continue;
+    if (!s->activated)
+      continue;
 
     for (const Vector2s& p : s->detectors) {
       if (p(0) < origin(0) || p(0) > origin(0) + ((scalar)ni + 1.) * dx ||
@@ -1155,7 +1186,8 @@ void FluidSim2D::advect_particles(scalar dt) {
 
       int num_p_need = 2;
       m_sorter->getCellAt(ix, iy, 0, [&](int i) {
-        if (num_p_need <= 0) return;
+        if (num_p_need <= 0)
+          return;
         num_p_need--;
       });
 
@@ -1196,7 +1228,7 @@ void FluidSim2D::constrain_hair_particles() {
   int np = particles.size();
 
   const VectorXs& x = m_parent->getX();
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
   const std::vector<HairFlow<2>*>& flows = m_parent->getFilmFlows();
   const std::vector<int>& particle_hairs = m_parent->getParticleToHairs();
   const std::vector<int>& local_indices =
@@ -1254,7 +1286,8 @@ void FluidSim2D::compute_liquid_phi() {
         float solid_phi_val =
             0.25 * (nodal_solid_phi(i, j) + nodal_solid_phi(i + 1, j) +
                     nodal_solid_phi(i, j + 1) + nodal_solid_phi(i + 1, j + 1));
-        if (solid_phi_val < 0) liquid_phi(i, j) = -0.5 * dx;
+        if (solid_phi_val < 0)
+          liquid_phi(i, j) = -0.5 * dx;
       }
     }
   });
@@ -1451,7 +1484,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
           matrix.add_to_element(index, index + 1, -term);
         } else {
           scalar theta = mathutils::fraction_inside(centre_phi, right_phi);
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           matrix.add_to_element(index, index, term / theta);
         }
         rhs[index] -= u_weights(i + 1, j) * u(i + 1, j) / dx;
@@ -1464,7 +1498,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
           matrix.add_to_element(index, index - 1, -term);
         } else {
           scalar theta = mathutils::fraction_inside(centre_phi, left_phi);
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           matrix.add_to_element(index, index, term / theta);
         }
         rhs[index] += u_weights(i, j) * u(i, j) / dx;
@@ -1477,7 +1512,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
           matrix.add_to_element(index, index + ni, -term);
         } else {
           scalar theta = mathutils::fraction_inside(centre_phi, top_phi);
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           matrix.add_to_element(index, index, term / theta);
         }
         rhs[index] -= v_weights(i, j + 1) * v(i, j + 1) / dx;
@@ -1490,7 +1526,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
           matrix.add_to_element(index, index - ni, -term);
         } else {
           scalar theta = mathutils::fraction_inside(centre_phi, bot_phi);
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           matrix.add_to_element(index, index, term / theta);
         }
         rhs[index] += v_weights(i, j) * v(i, j) / dx;
@@ -1504,9 +1541,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
   int iterations;
   bool success = solver.solve(matrix, rhs, pressure, tolerance, iterations);
   if (!success) {
-    std::cerr <<
-      "WARNING: Pressure solve "
-      "failed!************************************************\n";
+    std::cerr << "WARNING: Pressure solve "
+                 "failed!************************************************\n";
     auto write_error_log = [&](std::ostream& out) {
       out << "rhs=[";
       for (scalar s : rhs) {
@@ -1564,7 +1600,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
           if (liquid_phi(i, j) >= 0 || liquid_phi(i - 1, j) >= 0)
             theta = mathutils::fraction_inside(liquid_phi(i - 1, j),
                                                liquid_phi(i, j));
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           scalar pressure_grad =
               (pressure[index] - pressure[index - 1]) / dx / theta;
           u(i, j) = u_particle(i, j) - dt * pressure_grad / rho;
@@ -1585,7 +1622,8 @@ void FluidSim2D::solve_pressure(scalar dt) {
           if (liquid_phi(i, j) >= 0 || liquid_phi(i, j - 1) >= 0)
             theta = mathutils::fraction_inside(liquid_phi(i, j - 1),
                                                liquid_phi(i, j));
-          if (theta < 0.01) theta = 0.01;
+          if (theta < 0.01)
+            theta = 0.01;
           scalar pressure_grad =
               (pressure[index] - pressure[index - ni]) / dx / theta;
           v(i, j) = v_particle(i, j) - dt * pressure_grad / rho;
@@ -1600,12 +1638,14 @@ void FluidSim2D::solve_pressure(scalar dt) {
 
   num = u_valid.a.size();
   threadutils::thread_pool::ParallelFor(0, num, [&](int i) {
-    if (u_valid.a[i] == 0) u.a[i] = 0;
+    if (u_valid.a[i] == 0)
+      u.a[i] = 0;
   });
 
   num = v_valid.a.size();
   threadutils::thread_pool::ParallelFor(0, num, [&](int i) {
-    if (v_valid.a[i] == 0) v.a[i] = 0;
+    if (v_valid.a[i] == 0)
+      v.a[i] = 0;
   });
 }
 
@@ -1614,7 +1654,8 @@ scalar FluidSim2D::compute_phi_vel(const Vector2s& pos, Vector2s& vel) const {
 
   vel.setZero();
   for (auto& b : boundaries) {
-    if (!b->is_root()) continue;
+    if (!b->is_root())
+      continue;
     Vector2s temp_vel;
     scalar phi = b->compute_phi_vel(pos, temp_vel);
     if (phi < min_phi) {
@@ -1630,7 +1671,7 @@ void FluidSim2D::init_hair_particles() {
   const std::vector<HairFlow<2>*>& flows = m_parent->getFilmFlows();
   const VectorXs& x = m_parent->getX();
   const VectorXs& v = m_parent->getV();
-  const std::vector<std::pair<int, int> > edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>> edges = m_parent->getEdges();
 
   const scalar default_radius = dx / sqrt(3.0) * 0.25;
   const scalar default_distance = default_radius / sqrt(2.0);
@@ -1640,8 +1681,7 @@ void FluidSim2D::init_hair_particles() {
     scalar accu_next = 0.0;
 
     const std::vector<int>& edge_indices = flow->getEdgeIndices();
-    const std::vector<std::pair<int, int> >& local_edges =
-        flow->getLocalEdges();
+    const std::vector<std::pair<int, int>>& local_edges = flow->getLocalEdges();
     const VectorXs& eta = flow->getEta();
     const VectorXs& radii_v = flow->getRadiiV();
     int ne = edge_indices.size();
@@ -1682,9 +1722,8 @@ void FluidSim2D::init_hair_particles() {
   }
 }
 
-void FluidSim2D::set_particle_seed(const std::size_t seed)
-{
-    particle_seed = seed;
+void FluidSim2D::set_particle_seed(const std::size_t seed) {
+  particle_seed = seed;
 }
 
 void FluidSim2D::init_random_particles(const scalar& rl, const scalar& rr,
@@ -1781,8 +1820,10 @@ void FluidSim2D::map_g2p_apic() {
 
 void FluidSim2D::prepare_update_from_hair() {
   int nflows = m_parent->getNumFlows();
-  if (u_edge_vel_drag.size() != nflows) u_edge_vel_drag.resize(nflows);
-  if (v_edge_vel_drag.size() != nflows) v_edge_vel_drag.resize(nflows);
+  if (u_edge_vel_drag.size() != nflows)
+    u_edge_vel_drag.resize(nflows);
+  if (v_edge_vel_drag.size() != nflows)
+    v_edge_vel_drag.resize(nflows);
 
   if (u_num_edge_voxel_intersections.size() != nflows)
     u_num_edge_voxel_intersections.resize(nflows);
@@ -1792,7 +1833,8 @@ void FluidSim2D::prepare_update_from_hair() {
 
 void FluidSim2D::done_update_from_hair() {
   int nflows = m_parent->getNumFlows();
-  if (!nflows) return;
+  if (!nflows)
+    return;
 
   threadutils::thread_pool::ParallelFor(0, nflows, [&](int i) {
     u_num_edge_voxel_intersections[i] = u_edge_vel_drag[i].size();
@@ -1809,7 +1851,8 @@ void FluidSim2D::done_update_from_hair() {
   int usize = u_num_edge_voxel_intersections[nflows - 1];
   int vsize = v_num_edge_voxel_intersections[nflows - 1];
 
-  if (usize == 0 && vsize == 0) return;
+  if (usize == 0 && vsize == 0)
+    return;
 
   u_vel_drag.resize(usize);
   v_vel_drag.resize(vsize);
@@ -1907,7 +1950,7 @@ void FluidSim2D::done_update_from_hair() {
   });
 }
 
-const std::vector<Particle<2> >& FluidSim2D::get_particles() const {
+const std::vector<Particle<2>>& FluidSim2D::get_particles() const {
   return particles;
 }
 
@@ -1915,8 +1958,10 @@ scalar FluidSim2D::cfl() {
   scalar maxvel = 0;
   const int npu = u.a.size();
   const int npv = v.a.size();
-  for (int i = 0; i < npu; ++i) maxvel = max(maxvel, fabs(u.a[i]));
-  for (int i = 0; i < npv; ++i) maxvel = max(maxvel, fabs(v.a[i]));
+  for (int i = 0; i < npu; ++i)
+    maxvel = max(maxvel, fabs(u.a[i]));
+  for (int i = 0; i < npv; ++i)
+    maxvel = max(maxvel, fabs(v.a[i]));
   return dx / maxvel;
 }
 
@@ -1930,26 +1975,40 @@ const std::vector<FluidSim2D::SourceBoundary<2>*>& FluidSim2D::get_sources()
   return sources;
 }
 
-const Vector2s& FluidSim2D::get_origin() const { return origin; }
+const Vector2s& FluidSim2D::get_origin() const {
+  return origin;
+}
 
-int FluidSim2D::get_ni() const { return ni; }
+int FluidSim2D::get_ni() const {
+  return ni;
+}
 
-int FluidSim2D::get_nj() const { return nj; }
+int FluidSim2D::get_nj() const {
+  return nj;
+}
 
-int FluidSim2D::get_u_ni() const { return u.ni; }
+int FluidSim2D::get_u_ni() const {
+  return u.ni;
+}
 
-int FluidSim2D::get_v_ni() const { return v.ni; }
+int FluidSim2D::get_v_ni() const {
+  return v.ni;
+}
 
-int FluidSim2D::get_u_nj() const { return u.nj; }
+int FluidSim2D::get_u_nj() const {
+  return u.nj;
+}
 
-int FluidSim2D::get_v_nj() const { return v.nj; }
+int FluidSim2D::get_v_nj() const {
+  return v.nj;
+}
 
-std::vector<std::vector<EdgeVelDragIntersection<2> > >&
+std::vector<std::vector<EdgeVelDragIntersection<2>>>&
 FluidSim2D::get_u_edge_vel_drag() {
   return u_edge_vel_drag;
 }
 
-std::vector<std::vector<EdgeVelDragIntersection<2> > >&
+std::vector<std::vector<EdgeVelDragIntersection<2>>>&
 FluidSim2D::get_v_edge_vel_drag() {
   return v_edge_vel_drag;
 }
@@ -1962,7 +2021,9 @@ scalar FluidSim2D::dropradius(const scalar& vol) const {
   return sqrt(vol / M_PI / dz);
 }
 
-scalar FluidSim2D::cellsize() const { return dx; }
+scalar FluidSim2D::cellsize() const {
+  return dx;
+}
 
 void FluidSim2D::save_pressure(const std::string szfn) {
   using namespace std;
@@ -2066,7 +2127,9 @@ scalar FluidSim2D::computeParticleAngularMomentum() {
   return sum;
 }
 
-int FluidSim2D::num_particles() const { return particles.size(); }
+int FluidSim2D::num_particles() const {
+  return particles.size();
+}
 
 scalar FluidSim2D::computeParticleGridAngularMomentum() {
   scalar sum = 0.0;
@@ -2495,7 +2558,7 @@ void FluidSim2D::read(const scalar* data, size_t size_particles,
 
 void FluidSim2D::writeReadable(std::vector<std::ostringstream>& oss) const {
   const scalar default_radius = dx * default_radius_multiplier();
-  const std::vector<std::pair<int, int> >& edges = m_parent->getEdges();
+  const std::vector<std::pair<int, int>>& edges = m_parent->getEdges();
   const VectorXs& radius = m_parent->getRadii();
 
   for (auto& p : particles) {
@@ -2503,7 +2566,8 @@ void FluidSim2D::writeReadable(std::vector<std::ostringstream>& oss) const {
       const std::pair<int, int>& e = edges[p.edge_idx];
       const scalar radii_c =
           mathutils::lerp(radius(e.first), radius(e.second), p.edge_alpha);
-      if (p.radii < 1.01 * radii_c) continue;
+      if (p.radii < 1.01 * radii_c)
+        continue;
     }
 
     int level =
@@ -2525,7 +2589,8 @@ size_t FluidSim2D::particle_size() const {
 size_t FluidSim2D::boundary_size() const {
   int sum = 0;
   for (auto& b : boundaries) {
-    if (b->type == BT_UNION || b->type == BT_INTERSECT) continue;
+    if (b->type == BT_UNION || b->type == BT_INTERSECT)
+      continue;
     sum += b->size();
   }
 
@@ -2566,7 +2631,9 @@ scalar FluidSim2D::default_radius_multiplier() const {
   return 1.0 / sqrt(2.0) / 2.0;
 }
 
-int FluidSim2D::default_particle_in_cell() const { return 4; }
+int FluidSim2D::default_particle_in_cell() const {
+  return 4;
+}
 
 void FluidSim2D::apply_viscosity(scalar dt) {
   std::cerr << "FluidSim2D::apply_viscosity UNIMPLIMENTED!" << std::endl;
@@ -2587,8 +2654,10 @@ void extrapolate(Array2s& grid, Array2s& old_grid, const Array2s& grid_weight,
                  const Array2s& grid_liquid_weight, Array2c& valid,
                  Array2c old_valid, const Vector2i& offset) {
   // Initialize the list of valid cells
-  for (int j = 0; j < valid.nj; ++j) valid(0, j) = valid(valid.ni - 1, j) = 0;
-  for (int i = 0; i < valid.ni; ++i) valid(i, 0) = valid(i, valid.nj - 1) = 0;
+  for (int j = 0; j < valid.nj; ++j)
+    valid(0, j) = valid(valid.ni - 1, j) = 0;
+  for (int i = 0; i < valid.ni; ++i)
+    valid(i, 0) = valid(i, valid.nj - 1) = 0;
 
   for (int j = 1; j < grid.nj - 1; ++j)
     for (int i = 1; i < grid.ni - 1; ++i)

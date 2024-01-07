@@ -171,7 +171,7 @@ class FluidSim {
     virtual void advance(const scalar& dt);
 
     FluidSim* last_parent;
-    std::vector<Vectors<DIM> > detectors;
+    std::vector<Vectors<DIM>> detectors;
     Vectors<DIM> eject_vel;
     bool activated;
     scalar start;

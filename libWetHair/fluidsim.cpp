@@ -188,7 +188,8 @@ scalar FluidSim::SolidBoundary<2>::compute_phi_vel(const Vectors<2>& pos,
 
 template <>
 void FluidSim::SourceBoundary<2>::sample(FluidSim* parent) {
-  if (!parent) return;
+  if (!parent)
+    return;
 
   FluidSim2D* fluid2d = (FluidSim2D*)parent;
 
@@ -214,7 +215,8 @@ void FluidSim::SourceBoundary<2>::sample(FluidSim* parent) {
 
 template <>
 void FluidSim::SourceBoundary<3>::sample(FluidSim* parent) {
-  if (!parent) return;
+  if (!parent)
+    return;
 
   FluidSim3D* fluid3d = (FluidSim3D*)parent;
 
@@ -392,7 +394,8 @@ scalar FluidSim::OperatorBoundary<DIM>::compute_phi_vel(
 
 template <int DIM>
 void FluidSim::OperatorBoundary<DIM>::write(std::vector<scalar>& buf) const {
-  for (const Boundary<DIM>* child : children) child->write(buf);
+  for (const Boundary<DIM>* child : children)
+    child->write(buf);
 }
 
 template <int DIM>
@@ -407,7 +410,8 @@ void FluidSim::OperatorBoundary<DIM>::read(const scalar* data) {
 template <int DIM>
 size_t FluidSim::OperatorBoundary<DIM>::size() const {
   int sum = 0;
-  for (const Boundary<DIM>* child : children) sum += child->size();
+  for (const Boundary<DIM>* child : children)
+    sum += child->size();
 
   return sum;
 }

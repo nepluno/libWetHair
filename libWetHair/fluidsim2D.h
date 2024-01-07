@@ -50,7 +50,7 @@ class FluidSim2D : public FluidSim {
   virtual void init_hair_particles();
   virtual void controlSources(const scalar& current_time, const scalar& dt);
 
-  const std::vector<Particle<2> >& get_particles() const;
+  const std::vector<Particle<2>>& get_particles() const;
   const std::vector<Boundary<2>*>& get_boundaries() const;
   const std::vector<SourceBoundary<2>*>& get_sources() const;
   const Vector2s& get_origin() const;
@@ -78,8 +78,8 @@ class FluidSim2D : public FluidSim {
   Vector2s get_particle_drag(const Vector2s& position) const;
   Matrix2s get_affine_matrix(const Vector2s& position) const;
 
-  std::vector<std::vector<EdgeVelDragIntersection<2> > >& get_u_edge_vel_drag();
-  std::vector<std::vector<EdgeVelDragIntersection<2> > >& get_v_edge_vel_drag();
+  std::vector<std::vector<EdgeVelDragIntersection<2>>>& get_u_edge_vel_drag();
+  std::vector<std::vector<EdgeVelDragIntersection<2>>>& get_v_edge_vel_drag();
 
   scalar getLiquidPhiValue(const Vector2s& position) const;
   scalar getClampedLiquidPhiValue(const Vector2s& position) const;
@@ -244,17 +244,17 @@ class FluidSim2D : public FluidSim {
   Array2s u_solid, v_solid;
 
   // Hair -> Voxel Intersections
-  std::vector<std::vector<EdgeVelDragIntersection<2> > > u_edge_vel_drag;
-  std::vector<std::vector<EdgeVelDragIntersection<2> > > v_edge_vel_drag;
+  std::vector<std::vector<EdgeVelDragIntersection<2>>> u_edge_vel_drag;
+  std::vector<std::vector<EdgeVelDragIntersection<2>>> v_edge_vel_drag;
 
   std::vector<int> u_num_edge_voxel_intersections;
   std::vector<int> v_num_edge_voxel_intersections;
 
-  std::vector<EdgeVelDragIntersection<2> > u_vel_drag;
-  std::vector<EdgeVelDragIntersection<2> > v_vel_drag;
+  std::vector<EdgeVelDragIntersection<2>> u_vel_drag;
+  std::vector<EdgeVelDragIntersection<2>> v_vel_drag;
 
   // Tracer particles
-  std::vector<Particle<2> > particles;
+  std::vector<Particle<2>> particles;
 
   // Static geometry representation
   Array2s nodal_solid_phi;
@@ -280,13 +280,13 @@ class FluidSim2D : public FluidSim {
   TwoDScene<2>* m_parent;
   Sorter* m_sorter;
 
-  std::vector<std::vector<int> > m_pool_liquid_index_cache;
-  std::vector<std::vector<Particle<2> > > m_pool_liquid_particle_cache;
-  std::vector<std::vector<Particle<2> > > m_regular_liquid_particle_cache;
+  std::vector<std::vector<int>> m_pool_liquid_index_cache;
+  std::vector<std::vector<Particle<2>>> m_pool_liquid_particle_cache;
+  std::vector<std::vector<Particle<2>>> m_regular_liquid_particle_cache;
   VectorXs m_pool_liquid_vol_cache;
 
-  std::vector<HairParticleBridge<2> > m_bridges;
-  std::vector<std::vector<HairParticleBridge<2> > > m_hair_bridge_buffer;
+  std::vector<HairParticleBridge<2>> m_bridges;
+  std::vector<std::vector<HairParticleBridge<2>>> m_hair_bridge_buffer;
 
   std::vector<int> m_hair_particle_affected;
 
