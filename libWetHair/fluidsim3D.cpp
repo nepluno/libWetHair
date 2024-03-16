@@ -573,7 +573,8 @@ void FluidSim3D::transferLiquidToGridParticle(const scalar& dt) {
                 int idof = m_parent->getDof(pidx);
                 scalar new_total_mass = rest_m(idof) + new_mass_liq;
                 m.segment<3>(idof).setConstant(new_total_mass);
-                if (!m_parent->isMassSpring() && local_idx != eta_v.size()) {
+                const int local_tip_idx = eta_v.size() - 1;
+                if (!m_parent->isMassSpring() && local_idx != local_tip_idx) {
                   scalar new_inertia =
                       rest_m(idof + 3) +
                       new_mass_liq *
