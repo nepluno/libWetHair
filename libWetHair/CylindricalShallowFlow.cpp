@@ -1872,6 +1872,7 @@ void CylindricalShallowFlow<DIM>::updateHairFlowHeight(const scalar& dt) {
         }
       }
     } else if (mum == MUM_MOMENTUM) {
+      const scalar old_v_norm = v.norm();
       for (int i = 0; i < np; ++i) {
         int pidx = HairFlow<DIM>::m_particle_indices[i];
         int idof = HairFlow<DIM>::m_parent->getDof(pidx);
@@ -1922,6 +1923,12 @@ void CylindricalShallowFlow<DIM>::updateHairFlowHeight(const scalar& dt) {
             m(idof + 3) = I * M_PI * HairFlow<DIM>::m_area_v_hair(i);
           }
         }
+      }
+      if (const scalar max_velocity_ratio =
+          HairFlow<DIM>::m_parent->getMaxVelocityRatio();
+          (v.norm() / old_v_norm) >= max_velocity_ratio) {
+          throw std::runtime_error("Unstable momentum update detected, "
+                                   "please increase the reduced liquid substeps.");
       }
     }
   } else {

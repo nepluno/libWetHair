@@ -146,6 +146,10 @@ struct WetHairParameter {
   MASS_UPDATE_MODE mass_update_mode;
   Vector3s gravity;
 
+  // The max ratio allowed between the magnitude of the new and old
+  // velocity.  Going over this will cause a runtime exception.
+  scalar max_velocity_ratio;
+
   WetHairParameter();
 };
 
@@ -191,6 +195,8 @@ class TwoDScene {
   const scalar& getLiquidShell() const;
 
   scalar& getLiquidShell();
+
+  const scalar getMaxVelocityRatio() const;
 
   const VectorXs& getHairRestMass() const;
 

@@ -72,7 +72,8 @@ WetHairParameter::WetHairParameter()
       viscous_solve(false),
       apply_coriolis(false),
       mass_update_mode(MUM_MOMENTUM),
-      gravity(0.0, -981.0, 0.0) {}
+      gravity(0.0, -981.0, 0.0),
+      max_velocity_ratio(100.0) {}
 
 template <int DIM>
 TwoDScene<DIM>::TwoDScene(const bool& isMassSpring)
@@ -1945,6 +1946,11 @@ const scalar& TwoDScene<DIM>::getLiquidShell() const {
 template <int DIM>
 scalar& TwoDScene<DIM>::getLiquidShell() {
   return m_parameters.regularizer_shell;
+}
+
+template <int DIM>
+const scalar TwoDScene<DIM>::getMaxVelocityRatio() const {
+  return m_parameters.max_velocity_ratio;
 }
 
 template <int DIM>
